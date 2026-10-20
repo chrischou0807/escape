@@ -17,7 +17,7 @@ button.g{border-color:var(--line);color:var(--dim)}input[type=text],textarea{bac
 <div id="win"><div class="box"><h2>🎉 成功</h2><div id="revealTxt"></div><p><button onclick="location.reload()">再玩一次</button></p></div></div>
 <script>
 // ===== 老師改這裡 CONFIG =====
-const CFG={"title": "實驗室開關面板", "intro": "依規則把該打開的開關打開。全部正確，隱藏的訊息就會出現。", "rule": "規則：只有『酸性』的液體，要把它的閥門打開。", "switches": [{"t": "檸檬汁", "on": true}, {"t": "肥皂水", "on": false}, {"t": "食醋", "on": true}, {"t": "小蘇打水", "on": false}, {"t": "汽水", "on": true}, {"t": "清潔劑", "on": false}], "reveal": "通道開啟！\\n暗格裡有一把鑰匙，編號 7。", "hint": "想一想：哪些是酸味、哪些滑滑的？"};
+const CFG={"title": "實驗室開關面板", "intro": "依規則把該打開的開關打開。全部正確，隱藏的訊息就會出現。", "rule": "規則：只有『酸性』的液體，要把它的閥門打開。", "switches": [{"t": "檸檬汁", "on": true}, {"t": "肥皂水", "on": false}, {"t": "食醋", "on": true}, {"t": "小蘇打水", "on": false}, {"t": "汽水", "on": true}, {"t": "清潔劑", "on": false}], "reveal": "通道開啟！\n暗格裡有一把鑰匙，編號 7。", "hint": "想一想：哪些是酸味、哪些滑滑的？"};
 // ===== 以下是機關程式 =====
 const $=id=>document.getElementById(id);const rnd=n=>Math.floor(Math.random()*n);
 const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]]}return a};

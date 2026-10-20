@@ -17,7 +17,7 @@ button.g{border-color:var(--line);color:var(--dim)}input[type=text],textarea{bac
 <div id="win"><div class="box"><h2>🎉 成功</h2><div id="revealTxt"></div><p><button onclick="location.reload()">再玩一次</button></p></div></div>
 <script>
 // ===== 老師改這裡 CONFIG =====
-const CFG={"title": "燈謎", "intro": "猜對每一個燈謎，會得到一個字。把字湊起來，就是最後的通關詞。", "riddles": [{"q": "上有一點，下有一橫（打一字）", "a": ["六"], "give": "一"}, {"q": "十字加一撇（打一字）", "a": ["千"], "give": "期"}, {"q": "日月合在一起（打一字）", "a": ["明"], "give": "待"}], "reveal": "通關詞：一期待\\n（把得到的字依序排好）", "hint": "字謎可以拆字、合字來想。"};
+const CFG={"title": "燈謎", "intro": "猜對每一個燈謎，會得到一個字。把字湊起來，就是最後的通關詞。", "riddles": [{"q": "上有一點，下有一橫（打一字）", "a": ["六"], "give": "一"}, {"q": "十字加一撇（打一字）", "a": ["千"], "give": "期"}, {"q": "日月合在一起（打一字）", "a": ["明"], "give": "待"}], "reveal": "通關詞：一期待\n（把得到的字依序排好）", "hint": "字謎可以拆字、合字來想。"};
 // ===== 以下是機關程式 =====
 const $=id=>document.getElementById(id);const rnd=n=>Math.floor(Math.random()*n);
 const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]]}return a};

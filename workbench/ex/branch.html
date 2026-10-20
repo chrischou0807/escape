@@ -17,7 +17,7 @@ button.g{border-color:var(--line);color:var(--dim)}input[type=text],textarea{bac
 <div id="win"><div class="box"><h2>🎉 成功</h2><div id="revealTxt"></div><p><button onclick="location.reload()">再玩一次</button></p></div></div>
 <script>
 // ===== 老師改這裡 CONFIG =====
-const CFG={"title": "深夜的實驗室", "intro": "做出選擇，故事就會往不同方向走。", "start": "a", "nodes": {"a": {"t": "深夜，你發現實驗室的燈還亮著。桌上有一瓶沒有標籤的液體，正在冒煙。", "c": [{"t": "靠近看看", "to": "b"}, {"t": "先關掉電源通知老師", "to": "c"}]}, "b": {"t": "刺鼻的氣味讓你頭暈。", "c": [{"t": "用手搧聞聞看", "to": "d"}, {"t": "立刻退後、打開窗戶", "to": "c"}]}, "c": {"t": "你保持距離，通知了老師。老師戴上手套與護目鏡處理，你學到了正確的做法。", "end": true, "good": true}, "d": {"t": "你吸入了蒸氣，需要被送去醫務室。這不是好的處理方式。", "end": true, "good": false}}, "reveal": "你走到了安全的結局。\\n實驗室守則第一條：不明液體，保持距離並通知老師。", "hint": "遇到不明的危險，先退後再通知大人。"};
+const CFG={"title": "深夜的實驗室", "intro": "做出選擇，故事就會往不同方向走。", "start": "a", "nodes": {"a": {"t": "深夜，你發現實驗室的燈還亮著。桌上有一瓶沒有標籤的液體，正在冒煙。", "c": [{"t": "靠近看看", "to": "b"}, {"t": "先關掉電源通知老師", "to": "c"}]}, "b": {"t": "刺鼻的氣味讓你頭暈。", "c": [{"t": "用手搧聞聞看", "to": "d"}, {"t": "立刻退後、打開窗戶", "to": "c"}]}, "c": {"t": "你保持距離，通知了老師。老師戴上手套與護目鏡處理，你學到了正確的做法。", "end": true, "good": true}, "d": {"t": "你吸入了蒸氣，需要被送去醫務室。這不是好的處理方式。", "end": true, "good": false}}, "reveal": "你走到了安全的結局。\n實驗室守則第一條：不明液體，保持距離並通知老師。", "hint": "遇到不明的危險，先退後再通知大人。"};
 // ===== 以下是機關程式 =====
 const $=id=>document.getElementById(id);const rnd=n=>Math.floor(Math.random()*n);
 const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]]}return a};

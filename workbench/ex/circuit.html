@@ -17,7 +17,7 @@ svg{width:100%;background:#120f0c;border:1px solid var(--line);border-radius:12p
 <div id="win"><div class="box"><h2>🎉 成功</h2><div id="revealTxt"></div><p><button onclick="location.reload()">再玩一次</button></p></div></div>
 <script>
 // ===== 老師改這裡 CONFIG =====
-const CFG={"title": "接電路", "intro": "點一個接點，再點另一個接點，把它們用導線連起來。讓燈泡亮起來；開關也要記得關上。", "reveal": "燈亮了！電路是一個完整的迴路。\\n密碼的第一位是 4。", "hint": "電流要從電池正極出發，經過開關、燈泡，再回到負極。小心不要讓電池的兩端直接相連（短路）。"};
+const CFG={"title": "接電路", "intro": "點一個接點，再點另一個接點，把它們用導線連起來。讓燈泡亮起來；開關也要記得關上。", "reveal": "燈亮了！電路是一個完整的迴路。\n密碼的第一位是 4。", "hint": "電流要從電池正極出發，經過開關、燈泡，再回到負極。小心不要讓電池的兩端直接相連（短路）。"};
 // ===== 以下是機關程式 =====
 const $=id=>document.getElementById(id);const rnd=n=>Math.floor(Math.random()*n);
 const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]]}return a};

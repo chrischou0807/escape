@@ -17,7 +17,7 @@ button.g{border-color:var(--line);color:var(--dim)}input[type=text],textarea{bac
 <div id="win"><div class="box"><h2>🎉 成功</h2><div id="revealTxt"></div><p><button onclick="location.reload()">再玩一次</button></p></div></div>
 <script>
 // ===== 老師改這裡 CONFIG =====
-const CFG={"title": "範圍搜尋", "intro": "畫面上分成幾個區域。只在指定的區域裡找出目標，其他區域的同樣東西不算。", "zoneName": "實驗室", "target": "🧪", "count": 3, "zones": [{"n": "圖書館", "c": "#2a2118"}, {"n": "實驗室", "c": "#1b2a22"}, {"n": "操場", "c": "#1d2330"}, {"n": "福利社", "c": "#2c1d23"}], "fill": ["📚", "🔬", "⚽", "🥤", "🧪", "🧫", "📏", "🔭", "🍙"], "reveal": "實驗室裡的 3 支試管都找到了！\\n櫃子密碼是 2580。", "hint": "先確認哪一區是『實驗室』，再慢慢找。其他區也有同樣的圖示，點到會算錯。"};
+const CFG={"title": "範圍搜尋", "intro": "畫面上分成幾個區域。只在指定的區域裡找出目標，其他區域的同樣東西不算。", "zoneName": "實驗室", "target": "🧪", "count": 3, "zones": [{"n": "圖書館", "c": "#2a2118"}, {"n": "實驗室", "c": "#1b2a22"}, {"n": "操場", "c": "#1d2330"}, {"n": "福利社", "c": "#2c1d23"}], "fill": ["📚", "🔬", "⚽", "🥤", "🧪", "🧫", "📏", "🔭", "🍙"], "reveal": "實驗室裡的 3 支試管都找到了！\n櫃子密碼是 2580。", "hint": "先確認哪一區是『實驗室』，再慢慢找。其他區也有同樣的圖示，點到會算錯。"};
 // ===== 以下是機關程式 =====
 const $=id=>document.getElementById(id);const rnd=n=>Math.floor(Math.random()*n);
 const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]]}return a};

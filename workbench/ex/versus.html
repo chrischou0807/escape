@@ -17,7 +17,7 @@ button.g{border-color:var(--line);color:var(--dim)}input[type=text],textarea{bac
 <div id="win"><div class="box"><h2>🎉 成功</h2><div id="revealTxt"></div><p><button onclick="location.reload()">再玩一次</button></p></div></div>
 <script>
 // ===== 老師改這裡 CONFIG =====
-const CFG={"title": "和電腦對戰", "intro": "每題你和電腦同時作答，先答對的人得 1 分，先到目標分數獲勝。", "target": 3, "botAcc": 0.6, "botMin": 3, "botMax": 9, "questions": [{"q": "pH 值小於 7 的是？", "o": ["酸性", "中性", "鹼性"], "a": 0}, {"q": "石蕊試紙遇酸變？", "o": ["藍色", "紅色", "綠色"], "a": 1}, {"q": "下列哪個是鹼性？", "o": ["檸檬汁", "食醋", "肥皂水"], "a": 2}, {"q": "酸和鹼反應生成鹽和？", "o": ["水", "氧氣", "氫氣"], "a": 0}, {"q": "胃酸的主要成分是？", "o": ["碳酸", "鹽酸", "醋酸"], "a": 1}], "reveal": "你贏了電腦！\\n答得又快又對才是贏家。", "hint": "電腦有時會答錯，不要被它的速度嚇到。"};
+const CFG={"title": "和電腦對戰", "intro": "每題你和電腦同時作答，先答對的人得 1 分，先到目標分數獲勝。", "target": 3, "botAcc": 0.6, "botMin": 3, "botMax": 9, "questions": [{"q": "pH 值小於 7 的是？", "o": ["酸性", "中性", "鹼性"], "a": 0}, {"q": "石蕊試紙遇酸變？", "o": ["藍色", "紅色", "綠色"], "a": 1}, {"q": "下列哪個是鹼性？", "o": ["檸檬汁", "食醋", "肥皂水"], "a": 2}, {"q": "酸和鹼反應生成鹽和？", "o": ["水", "氧氣", "氫氣"], "a": 0}, {"q": "胃酸的主要成分是？", "o": ["碳酸", "鹽酸", "醋酸"], "a": 1}], "reveal": "你贏了電腦！\n答得又快又對才是贏家。", "hint": "電腦有時會答錯，不要被它的速度嚇到。"};
 // ===== 以下是機關程式 =====
 const $=id=>document.getElementById(id);const rnd=n=>Math.floor(Math.random()*n);
 const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]]}return a};

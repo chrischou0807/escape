@@ -17,7 +17,7 @@ button.g{border-color:var(--line);color:var(--dim)}input[type=text],textarea{bac
 <div id="win"><div class="box"><h2>🎉 成功</h2><div id="revealTxt"></div><p><button onclick="location.reload()">再玩一次</button></p></div></div>
 <script>
 // ===== 老師改這裡 CONFIG =====
-const CFG={"title": "對照表解碼", "intro": "符號對應字母。查表把符號翻譯成文字，輸入答案。", "table": {"🔺": "A", "🔵": "C", "⭐": "I", "🟩": "D", "🔶": "S", "⬛": "N"}, "message": ["🔺", "🔵", "⭐", "🟩", "🔶"], "answer": "ACIDS", "reveal": "翻譯成功：ACIDS（酸）。\\n下一關的線索在標本櫃。", "hint": "一個符號一個字母，按順序抄下來。"};
+const CFG={"title": "對照表解碼", "intro": "符號對應字母。查表把符號翻譯成文字，輸入答案。", "table": {"🔺": "A", "🔵": "C", "⭐": "I", "🟩": "D", "🔶": "S", "⬛": "N"}, "message": ["🔺", "🔵", "⭐", "🟩", "🔶"], "answer": "ACIDS", "reveal": "翻譯成功：ACIDS（酸）。\n下一關的線索在標本櫃。", "hint": "一個符號一個字母，按順序抄下來。"};
 // ===== 以下是機關程式 =====
 const $=id=>document.getElementById(id);const rnd=n=>Math.floor(Math.random()*n);
 const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]]}return a};

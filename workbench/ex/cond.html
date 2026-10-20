@@ -17,7 +17,7 @@ button.g{border-color:var(--line);color:var(--dim)}input[type=text],textarea{bac
 <div id="win"><div class="box"><h2>🎉 成功</h2><div id="revealTxt"></div><p><button onclick="location.reload()">再玩一次</button></p></div></div>
 <script>
 // ===== 老師改這裡 CONFIG =====
-const CFG={"title": "條件挑戰", "intro": "找出『所有』符合條件的物品，選好按『送出』。多選或漏選都不會過。", "rule": "條件：找出所有『酸性』的物品", "items": [{"t": "🍋 檸檬汁", "y": true}, {"t": "🧼 肥皂水", "y": false}, {"t": "🍎 蘋果醋", "y": true}, {"t": "🥛 牛奶", "y": false}, {"t": "🥤 汽水", "y": true}, {"t": "🧴 洗髮精", "y": false}, {"t": "🍅 番茄汁", "y": true}, {"t": "🧂 鹽水", "y": false}], "reveal": "全部找對了，沒有多選也沒有漏選。\\n通關關鍵字：中性。", "hint": "酸性物品通常嘗起來是酸的，但汽水要想一想為什麼。"};
+const CFG={"title": "條件挑戰", "intro": "找出『所有』符合條件的物品，選好按『送出』。多選或漏選都不會過。", "rule": "條件：找出所有『酸性』的物品", "items": [{"t": "🍋 檸檬汁", "y": true}, {"t": "🧼 肥皂水", "y": false}, {"t": "🍎 蘋果醋", "y": true}, {"t": "🥛 牛奶", "y": false}, {"t": "🥤 汽水", "y": true}, {"t": "🧴 洗髮精", "y": false}, {"t": "🍅 番茄汁", "y": true}, {"t": "🧂 鹽水", "y": false}], "reveal": "全部找對了，沒有多選也沒有漏選。\n通關關鍵字：中性。", "hint": "酸性物品通常嘗起來是酸的，但汽水要想一想為什麼。"};
 // ===== 以下是機關程式 =====
 const $=id=>document.getElementById(id);const rnd=n=>Math.floor(Math.random()*n);
 const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]]}return a};

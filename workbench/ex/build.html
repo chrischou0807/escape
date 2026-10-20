@@ -17,7 +17,7 @@ button.g{border-color:var(--line);color:var(--dim)}input[type=text],textarea{bac
 <div id="win"><div class="box"><h2>🎉 成功</h2><div id="revealTxt"></div><p><button onclick="location.reload()">再玩一次</button></p></div></div>
 <script>
 // ===== 老師改這裡 CONFIG =====
-const CFG={"title": "建造挑戰", "intro": "用積木蓋出符合條件的結構。點格子放上選中的積木，再點一次拆掉。積木不能懸空。", "cols": 6, "rows": 6, "budget": 14, "minHeight": 4, "mustHave": "🔺", "blocks": [{"e": "🟫", "c": 1, "n": "磚塊"}, {"e": "🔺", "c": 2, "n": "屋頂"}], "reveal": "結構通過驗收！\\n你在預算內蓋出夠高、且有屋頂的建築。", "hint": "底層要先鋪滿，再往上疊。屋頂放最上面。"};
+const CFG={"title": "建造挑戰", "intro": "用積木蓋出符合條件的結構。點格子放上選中的積木，再點一次拆掉。積木不能懸空。", "cols": 6, "rows": 6, "budget": 14, "minHeight": 4, "mustHave": "🔺", "blocks": [{"e": "🟫", "c": 1, "n": "磚塊"}, {"e": "🔺", "c": 2, "n": "屋頂"}], "reveal": "結構通過驗收！\n你在預算內蓋出夠高、且有屋頂的建築。", "hint": "底層要先鋪滿，再往上疊。屋頂放最上面。"};
 // ===== 以下是機關程式 =====
 const $=id=>document.getElementById(id);const rnd=n=>Math.floor(Math.random()*n);
 const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]]}return a};

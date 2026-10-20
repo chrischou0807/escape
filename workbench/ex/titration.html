@@ -17,7 +17,7 @@ button.g{border-color:var(--line);color:var(--dim)}input[type=text],textarea{bac
 <div id="win"><div class="box"><h2>🎉 成功</h2><div id="revealTxt"></div><p><button onclick="location.reload()">再玩一次</button></p></div></div>
 <script>
 // ===== 老師改這裡 CONFIG =====
-const CFG={"title": "滴定練習", "intro": "按住『滴入』讓滴定管流出溶液。看到錐形瓶出現『不會消失的淡粉紅色』就是終點，按『停止並讀數』。", "target": 24.6, "tol": 0.3, "rate": 1.2, "reveal": "讀數落在終點範圍內！\\n滴定終點誤差小於 0.3 mL。", "hint": "接近終點時改用『慢滴』，一次只滴一點。"};
+const CFG={"title": "滴定練習", "intro": "按住『滴入』讓滴定管流出溶液。看到錐形瓶出現『不會消失的淡粉紅色』就是終點，按『停止並讀數』。", "target": 24.6, "tol": 0.3, "rate": 1.2, "reveal": "讀數落在終點範圍內！\n滴定終點誤差小於 0.3 mL。", "hint": "接近終點時改用『慢滴』，一次只滴一點。"};
 // ===== 以下是機關程式 =====
 const $=id=>document.getElementById(id);const rnd=n=>Math.floor(Math.random()*n);
 const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]]}return a};
