@@ -1,0 +1,35 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no"><title>範圍搜尋</title>
+<style>
+:root{--bg:#14110f;--card:#1f1a16;--ink:#f1e8d8;--dim:#a99c86;--brass:#d9b878;--ok:#7fc79a;--bad:#e07b6a;--line:#3a3128}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 system-ui,"Noto Sans TC",sans-serif;-webkit-user-select:none;user-select:none;touch-action:manipulation}
+#app{max-width:760px;margin:0 auto;padding:18px 16px 60px}h1{font-size:21px;margin:6px 0 2px;color:var(--brass)}.sub{color:var(--dim);font-size:14px;margin:0 0 14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:12px 0}
+button,input,select,textarea{font:inherit;color:var(--ink)}button{background:#2c241d;border:1px solid var(--brass);border-radius:10px;padding:8px 16px;cursor:pointer}button:active{transform:scale(.97)}
+button.g{border-color:var(--line);color:var(--dim)}input[type=text],textarea{background:#120f0c;border:1px solid var(--line);border-radius:10px;padding:8px 12px;width:100%;-webkit-user-select:text;user-select:text}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.msg{min-height:24px;color:var(--dim);margin-top:8px}.msg.bad{color:var(--bad)}.msg.ok{color:var(--ok)}
+#win{position:fixed;inset:0;background:rgba(10,8,6,.88);display:none;align-items:center;justify-content:center;padding:20px;z-index:9}
+#win .box{background:var(--card);border:1px solid var(--brass);border-radius:16px;padding:22px;max-width:460px;text-align:center}#win h2{margin:0 0 8px;color:var(--brass)}
+#hintb{margin-top:18px}.tip{color:var(--dim);font-size:13px;margin-top:6px}
+.map{display:grid;grid-template-columns:1fr 1fr;gap:6px}.zn{border:1px solid var(--line);border-radius:12px;padding:8px;min-height:130px}.zn b{font-size:13px;color:var(--dim)}.zn .it{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}.zn .it span{font-size:26px;cursor:pointer;width:40px;text-align:center}.zn .it span.ok{background:#1d2a21;border-radius:8px}
+</style></head><body><div id="app"><h1 id="ttl"></h1><p class="sub" id="intro"></p><div id="stage"></div>
+<div class="row" id="hintb"><button class="g" id="hintBtn">💡 提示</button><button class="g" id="again">↺ 重來</button></div><div class="tip" id="hintTxt"></div></div>
+<div id="win"><div class="box"><h2>🎉 成功</h2><div id="revealTxt"></div><p><button onclick="location.reload()">再玩一次</button></p></div></div>
+<script>
+// ===== 老師改這裡 CONFIG =====
+const CFG={"title": "範圍搜尋", "intro": "畫面上分成幾個區域。只在指定的區域裡找出目標，其他區域的同樣東西不算。", "zoneName": "實驗室", "target": "🧪", "count": 3, "zones": [{"n": "圖書館", "c": "#2a2118"}, {"n": "實驗室", "c": "#1b2a22"}, {"n": "操場", "c": "#1d2330"}, {"n": "福利社", "c": "#2c1d23"}], "fill": ["📚", "🔬", "⚽", "🥤", "🧪", "🧫", "📏", "🔭", "🍙"], "reveal": "實驗室裡的 3 支試管都找到了！\\n櫃子密碼是 2580。", "hint": "先確認哪一區是『實驗室』，再慢慢找。其他區也有同樣的圖示，點到會算錯。"};
+// ===== 以下是機關程式 =====
+const $=id=>document.getElementById(id);const rnd=n=>Math.floor(Math.random()*n);
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]]}return a};
+const norm=s=>String(s||"").replace(/\s+/g,"").toLowerCase();
+function say(t,c){const m=$("msg");if(m){m.textContent=t;m.className="msg "+(c||"")}}
+function win(){$("revealTxt").innerHTML=(CFG.reveal||"").replace(/\n/g,"<br>");$("win").style.display="flex"}
+$("ttl").textContent=CFG.title;$("intro").textContent=CFG.intro;
+$("hintBtn").onclick=()=>{$("hintTxt").textContent=CFG.hint||"（沒有提示）"};$("again").onclick=()=>location.reload();
+$("stage").innerHTML='<div class="card">任務：在『<b>'+CFG.zoneName+'</b>』找出 <b>'+CFG.count+'</b> 個 '+CFG.target+'</div><div class="map" id="mp"></div><div class="msg" id="msg"></div>';
+let got=0,bad=0;
+CFG.zones.forEach(z=>{const d=document.createElement("div");d.className="zn";d.style.background=z.c;d.innerHTML='<b>'+z.n+'</b><div class="it"></div>';const box=d.querySelector(".it");
+ let items=[];for(let i=0;i<12;i++)items.push(CFG.fill.filter(x=>x!==CFG.target)[rnd(CFG.fill.length-1)]);
+ const nT=z.n===CFG.zoneName?CFG.count:(rnd(2)+1);for(let i=0;i<nT;i++)items.splice(rnd(items.length+1),0,CFG.target);
+ shuffle(items).forEach(t=>{const s=document.createElement("span");s.textContent=t;s.onclick=()=>{if(s.className)return;if(t===CFG.target&&z.n===CFG.zoneName){s.className="ok";got++}else if(t===CFG.target){bad++}say("找到 "+got+" / "+CFG.count+"　點錯區域 "+bad+" 次");if(got===CFG.count)setTimeout(win,500)};box.appendChild(s)});$("mp").appendChild(d)});say("找到 0 / "+CFG.count);
+</script></body></html>

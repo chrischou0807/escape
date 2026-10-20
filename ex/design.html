@@ -1,0 +1,39 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no"><title>自己設計機關</title>
+<style>
+:root{--bg:#14110f;--card:#1f1a16;--ink:#f1e8d8;--dim:#a99c86;--brass:#d9b878;--ok:#7fc79a;--bad:#e07b6a;--line:#3a3128}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 system-ui,"Noto Sans TC",sans-serif;-webkit-user-select:none;user-select:none;touch-action:manipulation}
+#app{max-width:760px;margin:0 auto;padding:18px 16px 60px}h1{font-size:21px;margin:6px 0 2px;color:var(--brass)}.sub{color:var(--dim);font-size:14px;margin:0 0 14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:12px 0}
+button,input,select,textarea{font:inherit;color:var(--ink)}button{background:#2c241d;border:1px solid var(--brass);border-radius:10px;padding:8px 16px;cursor:pointer}button:active{transform:scale(.97)}
+button.g{border-color:var(--line);color:var(--dim)}input[type=text],textarea{background:#120f0c;border:1px solid var(--line);border-radius:10px;padding:8px 12px;width:100%;-webkit-user-select:text;user-select:text}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.msg{min-height:24px;color:var(--dim);margin-top:8px}.msg.bad{color:var(--bad)}.msg.ok{color:var(--ok)}
+#win{position:fixed;inset:0;background:rgba(10,8,6,.88);display:none;align-items:center;justify-content:center;padding:20px;z-index:9}
+#win .box{background:var(--card);border:1px solid var(--brass);border-radius:16px;padding:22px;max-width:460px;text-align:center}#win h2{margin:0 0 8px;color:var(--brass)}
+#hintb{margin-top:18px}.tip{color:var(--dim);font-size:13px;margin-top:6px}
+textarea{min-height:72px}label{display:block;margin:10px 0 2px;color:var(--dim);font-size:14px}
+</style></head><body><div id="app"><h1 id="ttl"></h1><p class="sub" id="intro"></p><div id="stage"></div>
+<div class="row" id="hintb"><button class="g" id="hintBtn">💡 提示</button><button class="g" id="again">↺ 重來</button></div><div class="tip" id="hintTxt"></div></div>
+<div id="win"><div class="box"><h2>🎉 成功</h2><div id="revealTxt"></div><p><button onclick="location.reload()">再玩一次</button></p></div></div>
+<script>
+// ===== 老師改這裡 CONFIG =====
+const CFG={"title": "自己設計機關", "intro": "設計一個機關給同學解：寫一個問題、設定答案，產生連結，把連結傳給同學。同學打開就是解題模式。", "reveal": "同學答對了！\\n你設計的機關成功擋住（或放行）了他。", "hint": "好的機關，答案一定要靠知識才推得出來，而不是亂猜。"};
+// ===== 以下是機關程式 =====
+const $=id=>document.getElementById(id);const rnd=n=>Math.floor(Math.random()*n);
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]]}return a};
+const norm=s=>String(s||"").replace(/\s+/g,"").toLowerCase();
+function say(t,c){const m=$("msg");if(m){m.textContent=t;m.className="msg "+(c||"")}}
+function win(){$("revealTxt").innerHTML=(CFG.reveal||"").replace(/\n/g,"<br>");$("win").style.display="flex"}
+$("ttl").textContent=CFG.title;$("intro").textContent=CFG.intro;
+$("hintBtn").onclick=()=>{$("hintTxt").textContent=CFG.hint||"（沒有提示）"};$("again").onclick=()=>location.reload();
+const hs=location.hash.match(/#c=([^&]+)/);
+function enc(o){return btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"")}
+function dec(s){s=s.replace(/-/g,"+").replace(/_/g,"/");while(s.length%4)s+="=";return JSON.parse(decodeURIComponent(escape(atob(s))))}
+if(hs){let d={};try{d=dec(hs[1])}catch(e){}$("ttl").textContent="同學設計的機關";$("intro").textContent="";
+ $("stage").innerHTML='<div class="card"><b id="qq"></b></div><div class="row"><input type="text" id="in" placeholder="你的答案"><button id="ok" style="flex:none">確定</button></div><div class="msg" id="msg"></div>';
+ $("qq").textContent=d.q||"（讀不到題目，連結可能不完整）";if(d.h)CFG.hint=d.h;CFG.reveal=d.r||"答對了！";
+ $("ok").onclick=()=>{if(d.a&&norm($("in").value)===norm(d.a)){say("正確","ok");setTimeout(win,500)}else say("不對","bad")}}
+else{$("stage").innerHTML='<div class="card"><label>1. 你要考同學的知識是什麼？寫成一個問題或情境</label><textarea id="q" placeholder="例：蘇打水加入石蕊試紙會變什麼顏色？"></textarea><label>2. 答案（短短的，同學要輸入）</label><input type="text" id="a"><label>3. 提示（選填）</label><input type="text" id="h"><label>4. 答對後同學會看到什麼</label><textarea id="r" placeholder="例：通關！下一關的密碼是 123"></textarea><p><button id="mk">產生連結</button></p><div class="card" id="out" style="display:none"><div class="tip">把這個連結傳給同學：</div><input type="text" id="lk" readonly><p class="row"><button id="cp">複製</button><a id="pv" target="_blank" style="color:var(--brass)">自己先試試看 ↗</a></p></div><div class="msg" id="msg"></div>';
+ $("mk").onclick=()=>{const o={q:$("q").value.trim(),a:$("a").value.trim(),h:$("h").value.trim(),r:$("r").value.trim()};if(!o.q||!o.a){say("題目和答案一定要填","bad");return}const u=location.href.split("#")[0]+"#c="+enc(o);$("lk").value=u;$("pv").href=u;$("out").style.display="block";say("")};
+ $("cp").onclick=()=>{$("lk").select();try{document.execCommand("copy");say("已複製","ok")}catch(e){say("請手動複製","")}}}
+</script></body></html>

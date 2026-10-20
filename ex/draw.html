@@ -1,0 +1,38 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no"><title>你畫我猜</title>
+<style>
+:root{--bg:#14110f;--card:#1f1a16;--ink:#f1e8d8;--dim:#a99c86;--brass:#d9b878;--ok:#7fc79a;--bad:#e07b6a;--line:#3a3128}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 system-ui,"Noto Sans TC",sans-serif;-webkit-user-select:none;user-select:none;touch-action:manipulation}
+#app{max-width:760px;margin:0 auto;padding:18px 16px 60px}h1{font-size:21px;margin:6px 0 2px;color:var(--brass)}.sub{color:var(--dim);font-size:14px;margin:0 0 14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:12px 0}
+button,input,select,textarea{font:inherit;color:var(--ink)}button{background:#2c241d;border:1px solid var(--brass);border-radius:10px;padding:8px 16px;cursor:pointer}button:active{transform:scale(.97)}
+button.g{border-color:var(--line);color:var(--dim)}input[type=text],textarea{background:#120f0c;border:1px solid var(--line);border-radius:10px;padding:8px 12px;width:100%;-webkit-user-select:text;user-select:text}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.msg{min-height:24px;color:var(--dim);margin-top:8px}.msg.bad{color:var(--bad)}.msg.ok{color:var(--ok)}
+#win{position:fixed;inset:0;background:rgba(10,8,6,.88);display:none;align-items:center;justify-content:center;padding:20px;z-index:9}
+#win .box{background:var(--card);border:1px solid var(--brass);border-radius:16px;padding:22px;max-width:460px;text-align:center}#win h2{margin:0 0 8px;color:var(--brass)}
+#hintb{margin-top:18px}.tip{color:var(--dim);font-size:13px;margin-top:6px}
+canvas{width:100%;background:#f3ecdc;border-radius:12px;touch-action:none}
+</style></head><body><div id="app"><h1 id="ttl"></h1><p class="sub" id="intro"></p><div id="stage"></div>
+<div class="row" id="hintb"><button class="g" id="hintBtn">💡 提示</button><button class="g" id="again">↺ 重來</button></div><div class="tip" id="hintTxt"></div></div>
+<div id="win"><div class="box"><h2>🎉 成功</h2><div id="revealTxt"></div><p><button onclick="location.reload()">再玩一次</button></p></div></div>
+<script>
+// ===== 老師改這裡 CONFIG =====
+const CFG={"title": "你畫我猜", "intro": "一個人畫，另一個人猜。先按『看題目』（只給畫的人看），畫完按『換人猜』。", "words": ["火山", "地球", "水循環", "光合作用", "電池", "三角形"], "reveal": "猜中了！\\n換你們交換角色再玩一輪。", "hint": "畫的人不能寫字，也不能說話。"};
+// ===== 以下是機關程式 =====
+const $=id=>document.getElementById(id);const rnd=n=>Math.floor(Math.random()*n);
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]]}return a};
+const norm=s=>String(s||"").replace(/\s+/g,"").toLowerCase();
+function say(t,c){const m=$("msg");if(m){m.textContent=t;m.className="msg "+(c||"")}}
+function win(){$("revealTxt").innerHTML=(CFG.reveal||"").replace(/\n/g,"<br>");$("win").style.display="flex"}
+$("ttl").textContent=CFG.title;$("intro").textContent=CFG.intro;
+$("hintBtn").onclick=()=>{$("hintTxt").textContent=CFG.hint||"（沒有提示）"};$("again").onclick=()=>location.reload();
+$("stage").innerHTML='<div class="card"><span id="w" class="tip">按下面按鈕看題目（只給畫的人）</span></div><div class="row"><button id="show">👀 看題目（按住）</button><button class="g" id="clr">清除</button><button id="swap">換人猜</button></div><canvas id="cv" width="640" height="420"></canvas><div id="gs" style="display:none;margin-top:10px" class="row"><input type="text" id="in" placeholder="猜猜畫的是什麼"><button id="ok" style="flex:none">猜</button></div><div class="msg" id="msg"></div>';
+const word=CFG.words[rnd(CFG.words.length)];const cv=$("cv"),cx=cv.getContext("2d");cx.lineWidth=5;cx.lineCap="round";cx.strokeStyle="#222";let dr=false,lock=false;
+function pos(e){const r=cv.getBoundingClientRect(),t=e.touches?e.touches[0]:e;return[(t.clientX-r.left)*640/r.width,(t.clientY-r.top)*420/r.height]}
+cv.addEventListener("pointerdown",e=>{if(lock)return;dr=true;const p=pos(e);cx.beginPath();cx.moveTo(p[0],p[1]);cv.setPointerCapture(e.pointerId)});
+cv.addEventListener("pointermove",e=>{if(!dr)return;const p=pos(e);cx.lineTo(p[0],p[1]);cx.stroke()});["pointerup","pointercancel"].forEach(n=>cv.addEventListener(n,()=>dr=false));
+const sh=$("show");["mousedown","touchstart"].forEach(n=>sh.addEventListener(n,e=>{e.preventDefault();$("w").textContent="題目："+word}));["mouseup","mouseleave","touchend"].forEach(n=>sh.addEventListener(n,()=>$("w").textContent="（已隱藏）"));
+$("clr").onclick=()=>{if(!lock)cx.clearRect(0,0,640,420)};
+$("swap").onclick=()=>{lock=true;$("w").textContent="換人猜：看圖，輸入你的答案";$("gs").style.display="flex";$("show").style.display=$("clr").style.display=$("swap").style.display="none"};
+$("ok").onclick=()=>{if(norm($("in").value)===norm(word)){say("猜中了！","ok");setTimeout(win,600)}else say("不是，再猜","bad")};
+</script></body></html>

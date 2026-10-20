@@ -1,0 +1,35 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no"><title>策略選擇</title>
+<style>
+:root{--bg:#14110f;--card:#1f1a16;--ink:#f1e8d8;--dim:#a99c86;--brass:#d9b878;--ok:#7fc79a;--bad:#e07b6a;--line:#3a3128}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 system-ui,"Noto Sans TC",sans-serif;-webkit-user-select:none;user-select:none;touch-action:manipulation}
+#app{max-width:760px;margin:0 auto;padding:18px 16px 60px}h1{font-size:21px;margin:6px 0 2px;color:var(--brass)}.sub{color:var(--dim);font-size:14px;margin:0 0 14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:12px 0}
+button,input,select,textarea{font:inherit;color:var(--ink)}button{background:#2c241d;border:1px solid var(--brass);border-radius:10px;padding:8px 16px;cursor:pointer}button:active{transform:scale(.97)}
+button.g{border-color:var(--line);color:var(--dim)}input[type=text],textarea{background:#120f0c;border:1px solid var(--line);border-radius:10px;padding:8px 12px;width:100%;-webkit-user-select:text;user-select:text}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.msg{min-height:24px;color:var(--dim);margin-top:8px}.msg.bad{color:var(--bad)}.msg.ok{color:var(--ok)}
+#win{position:fixed;inset:0;background:rgba(10,8,6,.88);display:none;align-items:center;justify-content:center;padding:20px;z-index:9}
+#win .box{background:var(--card);border:1px solid var(--brass);border-radius:16px;padding:22px;max-width:460px;text-align:center}#win h2{margin:0 0 8px;color:var(--brass)}
+#hintb{margin-top:18px}.tip{color:var(--dim);font-size:13px;margin-top:6px}
+.bar{height:10px;background:#120f0c;border-radius:8px;overflow:hidden;margin:2px 0 8px}.bar i{display:block;height:100%;background:var(--brass)}.opt{display:block;width:100%;text-align:left;margin:6px 0}
+</style></head><body><div id="app"><h1 id="ttl"></h1><p class="sub" id="intro"></p><div id="stage"></div>
+<div class="row" id="hintb"><button class="g" id="hintBtn">💡 提示</button><button class="g" id="again">↺ 重來</button></div><div class="tip" id="hintTxt"></div></div>
+<div id="win"><div class="box"><h2>🎉 成功</h2><div id="revealTxt"></div><p><button onclick="location.reload()">再玩一次</button></p></div></div>
+<script>
+// ===== 老師改這裡 CONFIG =====
+const CFG={"title": "小島資源管理", "intro": "每一回合選一項行動。沒有標準答案，但你的選擇會讓小島走向不同的結果。", "vars": [{"k": "water", "n": "💧 水", "v": 6}, {"k": "food", "n": "🍎 食物", "v": 6}, {"k": "mood", "n": "🙂 士氣", "v": 6}], "rounds": [{"t": "第 1 天：天氣很熱，大家很口渴。", "o": [{"t": "全員挖井", "fx": {"water": 3, "food": -2, "mood": -1}}, {"t": "分頭採集水果", "fx": {"water": -1, "food": 3, "mood": 1}}, {"t": "在樹蔭休息", "fx": {"water": -1, "food": -1, "mood": 2}}]}, {"t": "第 2 天：暴風雨快來了。", "o": [{"t": "加固棚屋", "fx": {"water": 2, "food": -2, "mood": 1}}, {"t": "趕快捕魚", "fx": {"water": 0, "food": 3, "mood": -2}}, {"t": "集體唱歌", "fx": {"water": 0, "food": -1, "mood": 3}}]}, {"t": "第 3 天：有人想離開小島。", "o": [{"t": "一起造船", "fx": {"water": -2, "food": -2, "mood": 3}}, {"t": "留下分配資源", "fx": {"water": 1, "food": 1, "mood": -1}}, {"t": "讓想走的人自己決定", "fx": {"water": 0, "food": 0, "mood": 0}}]}], "goodIf": {"min": 3}, "goodText": "大家都撐了下來，也沒有任何一項見底。", "badText": "有一項資源見底了，島上陷入困境。", "reveal": "你的選擇讓全員平安。\\n這一關沒有唯一解，但『不讓任何一項歸零』是通過條件。\\n鑰匙：海螺。", "hint": "想想看，有沒有哪一項是一直被你忽略的？"};
+// ===== 以下是機關程式 =====
+const $=id=>document.getElementById(id);const rnd=n=>Math.floor(Math.random()*n);
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]]}return a};
+const norm=s=>String(s||"").replace(/\s+/g,"").toLowerCase();
+function say(t,c){const m=$("msg");if(m){m.textContent=t;m.className="msg "+(c||"")}}
+function win(){$("revealTxt").innerHTML=(CFG.reveal||"").replace(/\n/g,"<br>");$("win").style.display="flex"}
+$("ttl").textContent=CFG.title;$("intro").textContent=CFG.intro;
+$("hintBtn").onclick=()=>{$("hintTxt").textContent=CFG.hint||"（沒有提示）"};$("again").onclick=()=>location.reload();
+$("stage").innerHTML='<div class="card" id="vs"></div><div class="card" id="rd"></div><div class="msg" id="msg"></div>';
+const V={};CFG.vars.forEach(x=>V[x.k]=x.v);let r=0;
+function pv(){$("vs").innerHTML=CFG.vars.map(x=>x.n+" "+V[x.k]+'<div class="bar"><i style="width:'+Math.max(0,Math.min(100,V[x.k]*10))+'%"></i></div>').join("")}
+function pr(){pv();if(r>=CFG.rounds.length){const ok=CFG.vars.every(x=>V[x.k]>=CFG.goodIf.min);$("rd").innerHTML="<b>"+(ok?CFG.goodText:CFG.badText)+"</b>";if(ok)setTimeout(win,700);return}
+ const R=CFG.rounds[r];$("rd").innerHTML="<b>"+R.t+"</b>";R.o.forEach(o=>{const b=document.createElement("button");b.className="opt";b.textContent=o.t;b.onclick=()=>{for(const k in o.fx)V[k]=Math.max(0,V[k]+o.fx[k]);r++;pr()};$("rd").appendChild(b)})}
+pr();
+</script></body></html>
