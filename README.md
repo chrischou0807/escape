@@ -2,7 +2,7 @@
 
 校園密室／闖關活動用的互動機關範例庫。首頁彙整各式機關，每個機關都是**獨立的單檔 HTML 網頁**，繁體中文介面、手機／平板可直接觸控操作，離線也能跑。
 
-線上版（GitHub Pages）：`https://chrischou0807.github.io/escape/`
+線上版（GitHub Pages）：`https://chris-nhsh.github.io/escape/`
 
 ---
 
@@ -94,5 +94,5 @@
 
 - 用 GitHub 網頁：Add file → Upload files，把整個資料夾拖進去；或用 git。
 - 啟用 Pages：Settings → Pages → 選 `main /(root)`。
-- 部署後：`https://chrischou0807.github.io/escape/`
+- 部署後：`https://chris-nhsh.github.io/escape/`
 - 上線後可到各機關後台把預設密碼 `9633` 改成自己的，並在首頁後台設定程式碼分享密碼。

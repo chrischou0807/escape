@@ -17,7 +17,7 @@ button.g{border-color:var(--line);color:var(--dim)}input[type=text],textarea{bac
 <div id="win"><div class="box"><h2>🎉 成功</h2><div id="revealTxt"></div><p><button onclick="location.reload()">再玩一次</button></p></div></div>
 <script>
 // ===== 老師改這裡 CONFIG =====
-const CFG={"title": "限時搶答", "intro": "在限定時間內答完全部題目。答錯會被加罰時間。", "limit": 40, "penalty": 5, "questions": [{"q": "pH 值小於 7 的是？", "o": ["酸性", "中性", "鹼性"], "a": 0}, {"q": "石蕊試紙遇酸變？", "o": ["藍色", "紅色", "綠色"], "a": 1}, {"q": "下列哪個是鹼性？", "o": ["檸檬汁", "食醋", "肥皂水"], "a": 2}, {"q": "酸和鹼反應生成鹽和？", "o": ["水", "氧氣", "氫氣"], "a": 0}, {"q": "胃酸的主要成分是？", "o": ["碳酸", "鹽酸", "醋酸"], "a": 1}], "reveal": "在時限內完成！\n成績會記錄你的最佳時間。", "hint": "先答有把握的，不要在同一題停太久。"};
+const CFG={"title": "限時搶答", "intro": "在限定時間內答完全部題目。答錯會被加罰時間。", "limit": 40, "penalty": 5, "questions": [{"q": "pH 值小於 7 的是？", "o": ["酸性", "中性", "鹼性"], "a": 0}, {"q": "石蕊試紙遇酸變？", "o": ["藍色", "紅色", "綠色"], "a": 1}, {"q": "下列哪個是鹼性？", "o": ["檸檬汁", "食醋", "肥皂水"], "a": 2}, {"q": "酸和鹼反應生成鹽和？", "o": ["水", "氧氣", "氫氣"], "a": 0}, {"q": "胃酸的主要成分是？", "o": ["碳酸", "鹽酸", "醋酸"], "a": 1}], "reveal": "在時限內完成！\\n成績會記錄你的最佳時間。", "hint": "先答有把握的，不要在同一題停太久。"};
 // ===== 以下是機關程式 =====
 const $=id=>document.getElementById(id);const rnd=n=>Math.floor(Math.random()*n);
 const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]]}return a};

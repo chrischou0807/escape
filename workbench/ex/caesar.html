@@ -17,7 +17,7 @@ button.g{border-color:var(--line);color:var(--dim)}input[type=text],textarea{bac
 <div id="win"><div class="box"><h2>🎉 成功</h2><div id="revealTxt"></div><p><button onclick="location.reload()">再玩一次</button></p></div></div>
 <script>
 // ===== 老師改這裡 CONFIG =====
-const CFG={"title": "凱撒密碼", "intro": "密文是把每個字母往後移了幾格。用轉盤找出位移量，解出原文。", "plain": "HELLO", "shift": 3, "hint": "提示：英文中最常見的字母是 E，密文裡最常出現的字母可能就是它。", "reveal": "解出來了！原文是 HELLO。\n金庫密碼：3 位移。"};
+const CFG={"title": "凱撒密碼", "intro": "密文是把每個字母往後移了幾格。用轉盤找出位移量，解出原文。", "plain": "HELLO", "shift": 3, "hint": "提示：英文中最常見的字母是 E，密文裡最常出現的字母可能就是它。", "reveal": "解出來了！原文是 HELLO。\\n金庫密碼：3 位移。"};
 // ===== 以下是機關程式 =====
 const $=id=>document.getElementById(id);const rnd=n=>Math.floor(Math.random()*n);
 const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]]}return a};

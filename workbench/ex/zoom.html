@@ -17,7 +17,7 @@ canvas{width:100%;border:1px solid var(--line);border-radius:12px;background:#0f
 <div id="win"><div class="box"><h2>🎉 成功</h2><div id="revealTxt"></div><p><button onclick="location.reload()">再玩一次</button></p></div></div>
 <script>
 // ===== 老師改這裡 CONFIG =====
-const CFG={"title": "放大鏡", "intro": "拖動放大鏡，在畫面上找出藏得很小的字，把它們拼起來。", "fragments": [{"x": 90, "y": 70, "t": "酸"}, {"x": 330, "y": 150, "t": "鹼"}, {"x": 510, "y": 300, "t": "中"}, {"x": 160, "y": 320, "t": "和"}], "order": "依找到的順序拼起來就是答案", "reveal": "你找到的四個字是：酸鹼中和\n門牌號碼 305。", "hint": "小字顏色很淡，慢慢掃過每個角落。"};
+const CFG={"title": "放大鏡", "intro": "拖動放大鏡，在畫面上找出藏得很小的字，把它們拼起來。", "fragments": [{"x": 90, "y": 70, "t": "酸"}, {"x": 330, "y": 150, "t": "鹼"}, {"x": 510, "y": 300, "t": "中"}, {"x": 160, "y": 320, "t": "和"}], "order": "依找到的順序拼起來就是答案", "reveal": "你找到的四個字是：酸鹼中和\\n門牌號碼 305。", "hint": "小字顏色很淡，慢慢掃過每個角落。"};
 // ===== 以下是機關程式 =====
 const $=id=>document.getElementById(id);const rnd=n=>Math.floor(Math.random()*n);
 const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]]}return a};

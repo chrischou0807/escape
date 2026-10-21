@@ -17,7 +17,7 @@ button.g{border-color:var(--line);color:var(--dim)}input[type=text],textarea{bac
 <div id="win"><div class="box"><h2>🎉 成功</h2><div id="revealTxt"></div><p><button onclick="location.reload()">再玩一次</button></p></div></div>
 <script>
 // ===== 老師改這裡 CONFIG =====
-const CFG={"title": "排序完成度", "intro": "依指定順序排列。交卷後會顯示完成度（幾個放在正確位置），和自己的最佳紀錄比。", "task": "請把下列行星由離太陽最近排到最遠", "items": ["水星", "金星", "地球", "火星", "木星", "土星"], "pass": 100, "reveal": "完成度達標！\n你可以把成績和同學比較誰先達到 100%。", "hint": "水金地火木土天海。"};
+const CFG={"title": "排序完成度", "intro": "依指定順序排列。交卷後會顯示完成度（幾個放在正確位置），和自己的最佳紀錄比。", "task": "請把下列行星由離太陽最近排到最遠", "items": ["水星", "金星", "地球", "火星", "木星", "土星"], "pass": 100, "reveal": "完成度達標！\\n你可以把成績和同學比較誰先達到 100%。", "hint": "水金地火木土天海。"};
 // ===== 以下是機關程式 =====
 const $=id=>document.getElementById(id);const rnd=n=>Math.floor(Math.random()*n);
 const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]]}return a};

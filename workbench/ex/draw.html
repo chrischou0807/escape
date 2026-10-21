@@ -17,7 +17,7 @@ canvas{width:100%;background:#f3ecdc;border-radius:12px;touch-action:none}
 <div id="win"><div class="box"><h2>🎉 成功</h2><div id="revealTxt"></div><p><button onclick="location.reload()">再玩一次</button></p></div></div>
 <script>
 // ===== 老師改這裡 CONFIG =====
-const CFG={"title": "你畫我猜", "intro": "一個人畫，另一個人猜。先按『看題目』（只給畫的人看），畫完按『換人猜』。", "words": ["火山", "地球", "水循環", "光合作用", "電池", "三角形"], "reveal": "猜中了！\n換你們交換角色再玩一輪。", "hint": "畫的人不能寫字，也不能說話。"};
+const CFG={"title": "你畫我猜", "intro": "一個人畫，另一個人猜。先按『看題目』（只給畫的人看），畫完按『換人猜』。", "words": ["火山", "地球", "水循環", "光合作用", "電池", "三角形"], "reveal": "猜中了！\\n換你們交換角色再玩一輪。", "hint": "畫的人不能寫字，也不能說話。"};
 // ===== 以下是機關程式 =====
 const $=id=>document.getElementById(id);const rnd=n=>Math.floor(Math.random()*n);
 const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]]}return a};

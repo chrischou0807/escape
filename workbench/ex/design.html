@@ -17,7 +17,7 @@ textarea{min-height:72px}label{display:block;margin:10px 0 2px;color:var(--dim);
 <div id="win"><div class="box"><h2>🎉 成功</h2><div id="revealTxt"></div><p><button onclick="location.reload()">再玩一次</button></p></div></div>
 <script>
 // ===== 老師改這裡 CONFIG =====
-const CFG={"title": "自己設計機關", "intro": "設計一個機關給同學解：寫一個問題、設定答案，產生連結，把連結傳給同學。同學打開就是解題模式。", "reveal": "同學答對了！\n你設計的機關成功擋住（或放行）了他。", "hint": "好的機關，答案一定要靠知識才推得出來，而不是亂猜。"};
+const CFG={"title": "自己設計機關", "intro": "設計一個機關給同學解：寫一個問題、設定答案，產生連結，把連結傳給同學。同學打開就是解題模式。", "reveal": "同學答對了！\\n你設計的機關成功擋住（或放行）了他。", "hint": "好的機關，答案一定要靠知識才推得出來，而不是亂猜。"};
 // ===== 以下是機關程式 =====
 const $=id=>document.getElementById(id);const rnd=n=>Math.floor(Math.random()*n);
 const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]]}return a};
