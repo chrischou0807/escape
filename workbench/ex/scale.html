@@ -1,0 +1,39 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no"><title>讀刻度</title>
+<style>
+:root{--bg:#14110f;--card:#1f1a16;--ink:#f1e8d8;--dim:#a99c86;--brass:#d9b878;--ok:#7fc79a;--bad:#e07b6a;--line:#3a3128}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 system-ui,"Noto Sans TC",sans-serif;-webkit-user-select:none;user-select:none;touch-action:manipulation}
+#app{max-width:760px;margin:0 auto;padding:18px 16px 60px}h1{font-size:21px;margin:6px 0 2px;color:var(--brass)}.sub{color:var(--dim);font-size:14px;margin:0 0 14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:12px 0}
+button,input,select,textarea{font:inherit;color:var(--ink)}button{background:#2c241d;border:1px solid var(--brass);border-radius:10px;padding:8px 16px;cursor:pointer}button:active{transform:scale(.97)}
+button.g{border-color:var(--line);color:var(--dim)}input[type=text],textarea{background:#120f0c;border:1px solid var(--line);border-radius:10px;padding:8px 12px;width:100%;-webkit-user-select:text;user-select:text}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.msg{min-height:24px;color:var(--dim);margin-top:8px}.msg.bad{color:var(--bad)}.msg.ok{color:var(--ok)}
+#win{position:fixed;inset:0;background:rgba(10,8,6,.88);display:none;align-items:center;justify-content:center;padding:20px;z-index:9}
+#win .box{background:var(--card);border:1px solid var(--brass);border-radius:16px;padding:22px;max-width:460px;text-align:center}#win h2{margin:0 0 8px;color:var(--brass)}
+#hintb{margin-top:18px}.tip{color:var(--dim);font-size:13px;margin-top:6px}
+svg{background:#120f0c;border:1px solid var(--line);border-radius:12px;width:100%;max-width:340px;display:block;margin:0 auto}
+</style></head><body><div id="app"><h1 id="ttl"></h1><p class="sub" id="intro"></p><div id="stage"></div>
+<div class="row" id="hintb"><button class="g" id="hintBtn">💡 提示</button><button class="g" id="again">↺ 重來</button></div><div class="tip" id="hintTxt"></div></div>
+<div id="win"><div class="box"><h2>🎉 成功</h2><div id="revealTxt"></div><p><button onclick="location.reload()">再玩一次</button></p></div></div>
+<script>
+// ===== 老師改這裡 CONFIG =====
+const CFG={"title": "量筒讀刻度", "intro": "讀出液面（凹面最低處）的刻度，輸入數字。連續答對 3 題才過；每次數字都是隨機的。", "need": 3, "tol": 0.2, "max": 50, "reveal": "連續 3 題都讀對！\\n你會正確讀量筒了。", "hint": "視線要與液面等高，讀凹面最低點，要估讀到最小刻度的下一位。"};
+// ===== 以下是機關程式 =====
+const $=id=>document.getElementById(id);const rnd=n=>Math.floor(Math.random()*n);
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]]}return a};
+const norm=s=>String(s||"").replace(/\s+/g,"").toLowerCase();
+function say(t,c){const m=$("msg");if(m){m.textContent=t;m.className="msg "+(c||"")}}
+function win(){$("revealTxt").innerHTML=(CFG.reveal||"").replace(/\n/g,"<br>");$("win").style.display="flex"}
+$("ttl").textContent=CFG.title;$("intro").textContent=CFG.intro;
+$("hintBtn").onclick=()=>{$("hintTxt").textContent=CFG.hint||"（沒有提示）"};$("again").onclick=()=>location.reload();
+$("stage").innerHTML='<svg id="sv" viewBox="0 0 220 380"></svg><div class="row" style="justify-content:center;margin-top:10px"><input type="text" id="in" placeholder="讀數（mL）" style="max-width:160px"><button id="ok">確定</button></div><div class="tip" id="pg" style="text-align:center"></div><div class="msg" id="msg"></div>';
+const NS="http://www.w3.org/2000/svg";let val=0,streak=0;
+function el(n,a,t){const e=document.createElementNS(NS,n);for(const k in a)e.setAttribute(k,a[k]);if(t)e.textContent=t;return e}
+function draw(){const s=$("sv");s.innerHTML="";const top=30,bot=350,h=bot-top,M=CFG.max,y=v=>bot-v/M*h;
+ s.appendChild(el("rect",{x:80,y:top,width:60,height:h,fill:"none",stroke:"#9aa","stroke-width":3}));
+ s.appendChild(el("rect",{x:81.5,y:y(val),width:57,height:bot-y(val),fill:"#4f8fb3",opacity:.85}));
+ s.appendChild(el("path",{d:"M81.5 "+(y(val)-2)+" Q110 "+(y(val)+6)+" 138.5 "+(y(val)-2),stroke:"#bfe3f5","stroke-width":2,fill:"none"}));
+ for(let v=0;v<=M;v++){const big=v%10===0,mid=v%5===0;s.appendChild(el("line",{x1:140,y1:y(v),x2:140+(big?22:mid?15:9),y2:y(v),stroke:"#d9b878","stroke-width":1.2}));if(big)s.appendChild(el("text",{x:168,y:y(v)+4,fill:"#f1e8d8","font-size":12},v))}}
+function nw(){val=Math.round((3+Math.random()*(CFG.max-6))*5)/5;draw();$("in").value="";$("pg").textContent="連續答對 "+streak+" / "+CFG.need}
+$("ok").onclick=()=>{const a=parseFloat($("in").value);if(isNaN(a)){say("請輸入數字","bad");return}if(Math.abs(a-val)<=CFG.tol){streak++;say("答對（實際 "+val.toFixed(1)+"）","ok");if(streak>=CFG.need){setTimeout(win,600);return}}else{streak=0;say("不對（實際 "+val.toFixed(1)+"）。連續答對歸零","bad")}nw()};nw();
+</script></body></html>

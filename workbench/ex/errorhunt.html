@@ -1,0 +1,34 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no"><title>找出錯誤</title>
+<style>
+:root{--bg:#14110f;--card:#1f1a16;--ink:#f1e8d8;--dim:#a99c86;--brass:#d9b878;--ok:#7fc79a;--bad:#e07b6a;--line:#3a3128}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 system-ui,"Noto Sans TC",sans-serif;-webkit-user-select:none;user-select:none;touch-action:manipulation}
+#app{max-width:760px;margin:0 auto;padding:18px 16px 60px}h1{font-size:21px;margin:6px 0 2px;color:var(--brass)}.sub{color:var(--dim);font-size:14px;margin:0 0 14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:12px 0}
+button,input,select,textarea{font:inherit;color:var(--ink)}button{background:#2c241d;border:1px solid var(--brass);border-radius:10px;padding:8px 16px;cursor:pointer}button:active{transform:scale(.97)}
+button.g{border-color:var(--line);color:var(--dim)}input[type=text],textarea{background:#120f0c;border:1px solid var(--line);border-radius:10px;padding:8px 12px;width:100%;-webkit-user-select:text;user-select:text}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.msg{min-height:24px;color:var(--dim);margin-top:8px}.msg.bad{color:var(--bad)}.msg.ok{color:var(--ok)}
+#win{position:fixed;inset:0;background:rgba(10,8,6,.88);display:none;align-items:center;justify-content:center;padding:20px;z-index:9}
+#win .box{background:var(--card);border:1px solid var(--brass);border-radius:16px;padding:22px;max-width:460px;text-align:center}#win h2{margin:0 0 8px;color:var(--brass)}
+#hintb{margin-top:18px}.tip{color:var(--dim);font-size:13px;margin-top:6px}
+.sn{display:block;width:100%;text-align:left;margin:6px 0;border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:#17130f;cursor:pointer}.sn.on{border-color:var(--bad);background:#2a1a17}
+</style></head><body><div id="app"><h1 id="ttl"></h1><p class="sub" id="intro"></p><div id="stage"></div>
+<div class="row" id="hintb"><button class="g" id="hintBtn">💡 提示</button><button class="g" id="again">↺ 重來</button></div><div class="tip" id="hintTxt"></div></div>
+<div id="win"><div class="box"><h2>🎉 成功</h2><div id="revealTxt"></div><p><button onclick="location.reload()">再玩一次</button></p></div></div>
+<script>
+// ===== 老師改這裡 CONFIG =====
+const CFG={"title": "找出錯誤", "intro": "這段文字裡藏了幾個錯誤的敘述。點選你認為錯的句子，按『送出』。系統只告訴你找對幾個、誤標幾個，一共只有 3 次機會。", "sents": [{"t": "酸性溶液的 pH 值小於 7。", "bad": false}, {"t": "石蕊試紙遇到鹼會變紅色。", "bad": true}, {"t": "酸和鹼反應會生成鹽和水。", "bad": false}, {"t": "純水的 pH 值是 9。", "bad": true}, {"t": "胃酸的主要成分是鹽酸。", "bad": false}, {"t": "肥皂水通常是酸性的。", "bad": true}], "tries": 3, "reveal": "三個錯誤都找出來了，也沒有誤標！\\n正確版本：石蕊遇鹼變藍、純水 pH 7、肥皂水偏鹼性。", "hint": "錯誤都和『酸』或『鹼』的性質有關，逐句想一想。"};
+// ===== 以下是機關程式 =====
+const $=id=>document.getElementById(id);const rnd=n=>Math.floor(Math.random()*n);
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]]}return a};
+const norm=s=>String(s||"").replace(/\s+/g,"").toLowerCase();
+function say(t,c){const m=$("msg");if(m){m.textContent=t;m.className="msg "+(c||"")}}
+function win(){$("revealTxt").innerHTML=(CFG.reveal||"").replace(/\n/g,"<br>");$("win").style.display="flex"}
+$("ttl").textContent=CFG.title;$("intro").textContent=CFG.intro;
+$("hintBtn").onclick=()=>{$("hintTxt").textContent=CFG.hint||"（沒有提示）"};$("again").onclick=()=>location.reload();
+$("stage").innerHTML='<div id="sn"></div><p class="row"><button id="sub">送出</button><span class="tip" id="tr"></span></p><div class="msg" id="msg"></div>';
+const on=CFG.sents.map(()=>false);let left=CFG.tries;const nb=CFG.sents.filter(s=>s.bad).length;
+CFG.sents.forEach((s,i)=>{const d=document.createElement("div");d.className="sn";d.textContent=(i+1)+". "+s.t;d.onclick=()=>{on[i]=!on[i];d.className="sn"+(on[i]?" on":"")};$("sn").appendChild(d)});
+function tr(){$("tr").textContent="剩 "+left+" 次機會；共有 "+nb+" 個錯誤"}tr();
+$("sub").onclick=()=>{if(left<=0)return;left--;const hit=CFG.sents.filter((s,i)=>on[i]&&s.bad).length,wrong=CFG.sents.filter((s,i)=>on[i]&&!s.bad).length;if(hit===nb&&!wrong){say("全部找對","ok");setTimeout(win,500)}else if(left<=0)say("機會用完。找對 "+hit+" 個、誤標 "+wrong+" 個。按『重來』","bad");else say("找對 "+hit+" 個、誤標 "+wrong+" 個","bad");tr()};
+</script></body></html>

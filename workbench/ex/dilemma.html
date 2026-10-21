@@ -1,0 +1,36 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no"><title>兩難抉擇</title>
+<style>
+:root{--bg:#14110f;--card:#1f1a16;--ink:#f1e8d8;--dim:#a99c86;--brass:#d9b878;--ok:#7fc79a;--bad:#e07b6a;--line:#3a3128}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 system-ui,"Noto Sans TC",sans-serif;-webkit-user-select:none;user-select:none;touch-action:manipulation}
+#app{max-width:760px;margin:0 auto;padding:18px 16px 60px}h1{font-size:21px;margin:6px 0 2px;color:var(--brass)}.sub{color:var(--dim);font-size:14px;margin:0 0 14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:12px 0}
+button,input,select,textarea{font:inherit;color:var(--ink)}button{background:#2c241d;border:1px solid var(--brass);border-radius:10px;padding:8px 16px;cursor:pointer}button:active{transform:scale(.97)}
+button.g{border-color:var(--line);color:var(--dim)}input[type=text],textarea{background:#120f0c;border:1px solid var(--line);border-radius:10px;padding:8px 12px;width:100%;-webkit-user-select:text;user-select:text}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.msg{min-height:24px;color:var(--dim);margin-top:8px}.msg.bad{color:var(--bad)}.msg.ok{color:var(--ok)}
+#win{position:fixed;inset:0;background:rgba(10,8,6,.88);display:none;align-items:center;justify-content:center;padding:20px;z-index:9}
+#win .box{background:var(--card);border:1px solid var(--brass);border-radius:16px;padding:22px;max-width:460px;text-align:center}#win h2{margin:0 0 8px;color:var(--brass)}
+#hintb{margin-top:18px}.tip{color:var(--dim);font-size:13px;margin-top:6px}
+.opt{display:block;width:100%;text-align:left;margin:6px 0}
+</style></head><body><div id="app"><h1 id="ttl"></h1><p class="sub" id="intro"></p><div id="stage"></div>
+<div class="row" id="hintb"><button class="g" id="hintBtn">💡 提示</button><button class="g" id="again">↺ 重來</button></div><div class="tip" id="hintTxt"></div></div>
+<div id="win"><div class="box"><h2>🎉 成功</h2><div id="revealTxt"></div><p><button onclick="location.reload()">再玩一次</button></p></div></div>
+<script>
+// ===== 老師改這裡 CONFIG =====
+const CFG={"title": "兩難抉擇", "intro": "沒有標準答案。每一題選一個立場，再選一個你的理由。最後會看到你的取向，並有討論題。", "dilemmas": [{"q": "工廠排放的廢水讓下游魚類減少，但關廠會讓 300 人失業。", "o": [{"t": "要求立刻關廠", "tag": "環境"}, {"t": "給工廠三年改善期", "tag": "折衷"}, {"t": "補助工廠改善設備", "tag": "經濟"}], "r": [{"t": "生態一旦破壞很難恢復", "tag": "環境"}, {"t": "兼顧居民生計很重要", "tag": "經濟"}, {"t": "需要更多資訊再決定", "tag": "折衷"}]}, {"q": "疫情期間，疫苗只夠先打一部分人。", "o": [{"t": "先打高風險族群", "tag": "風險"}, {"t": "先打必須維持社會運作的人", "tag": "效率"}, {"t": "抽籤決定", "tag": "公平"}], "r": [{"t": "保護最脆弱的人", "tag": "風險"}, {"t": "讓社會繼續運作", "tag": "效率"}, {"t": "每個人機會要一樣", "tag": "公平"}]}], "discuss": ["你的取向和同組的人一樣嗎？為什麼？", "哪一題的取捨最難？你有沒有改變過主意？"], "reveal": "你完成了所有取捨。\\n這一關沒有對錯，重點是把理由說清楚。\\n鑰匙：討論之後由老師給。", "hint": "沒有正確答案，只有理由說不說得通。"};
+// ===== 以下是機關程式 =====
+const $=id=>document.getElementById(id);const rnd=n=>Math.floor(Math.random()*n);
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]]}return a};
+const norm=s=>String(s||"").replace(/\s+/g,"").toLowerCase();
+function say(t,c){const m=$("msg");if(m){m.textContent=t;m.className="msg "+(c||"")}}
+function win(){$("revealTxt").innerHTML=(CFG.reveal||"").replace(/\n/g,"<br>");$("win").style.display="flex"}
+$("ttl").textContent=CFG.title;$("intro").textContent=CFG.intro;
+$("hintBtn").onclick=()=>{$("hintTxt").textContent=CFG.hint||"（沒有提示）"};$("again").onclick=()=>location.reload();
+$("stage").innerHTML='<div class="card" id="bx"></div><div class="msg" id="msg"></div>';
+let i=0,tags={},pick=null;function add2(t){tags[t]=(tags[t]||0)+1}
+function show(){if(i>=CFG.dilemmas.length){const top=Object.keys(tags).sort((a,b)=>tags[b]-tags[a]);$("bx").innerHTML="<b>你的取向</b><p>"+top.map(k=>k+" × "+tags[k]).join("　")+"</p><b>討論題</b><ul>"+CFG.discuss.map(d=>"<li>"+d+"</li>").join("")+"</ul>";setTimeout(win,900);return}
+ const D=CFG.dilemmas[i];pick=null;$("bx").innerHTML="<b>第 "+(i+1)+" / "+CFG.dilemmas.length+" 題</b><p>"+D.q+"</p><div class='tip'>① 你的立場</div>";
+ D.o.forEach(o=>{const b=document.createElement("button");b.className="opt";b.textContent=o.t;b.onclick=()=>{pick=o;$("bx").querySelectorAll(".opt").forEach(x=>x.style.borderColor="");b.style.borderColor="#d9b878";rs()};$("bx").appendChild(b)})}
+function rs(){const D=CFG.dilemmas[i];$("bx").querySelectorAll(".r2").forEach(x=>x.remove());const h=document.createElement("div");h.className="r2";h.innerHTML="<div class='tip'>② 你的理由</div>";D.r.forEach(r=>{const b=document.createElement("button");b.className="opt";b.textContent=r.t;b.onclick=()=>{add2(pick.tag);add2(r.tag);i++;show()};h.appendChild(b)});$("bx").appendChild(h)}
+show();
+</script></body></html>

@@ -1,0 +1,35 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no"><title>稀釋配製</title>
+<style>
+:root{--bg:#14110f;--card:#1f1a16;--ink:#f1e8d8;--dim:#a99c86;--brass:#d9b878;--ok:#7fc79a;--bad:#e07b6a;--line:#3a3128}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 system-ui,"Noto Sans TC",sans-serif;-webkit-user-select:none;user-select:none;touch-action:manipulation}
+#app{max-width:760px;margin:0 auto;padding:18px 16px 60px}h1{font-size:21px;margin:6px 0 2px;color:var(--brass)}.sub{color:var(--dim);font-size:14px;margin:0 0 14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:12px 0}
+button,input,select,textarea{font:inherit;color:var(--ink)}button{background:#2c241d;border:1px solid var(--brass);border-radius:10px;padding:8px 16px;cursor:pointer}button:active{transform:scale(.97)}
+button.g{border-color:var(--line);color:var(--dim)}input[type=text],textarea{background:#120f0c;border:1px solid var(--line);border-radius:10px;padding:8px 12px;width:100%;-webkit-user-select:text;user-select:text}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.msg{min-height:24px;color:var(--dim);margin-top:8px}.msg.bad{color:var(--bad)}.msg.ok{color:var(--ok)}
+#win{position:fixed;inset:0;background:rgba(10,8,6,.88);display:none;align-items:center;justify-content:center;padding:20px;z-index:9}
+#win .box{background:var(--card);border:1px solid var(--brass);border-radius:16px;padding:22px;max-width:460px;text-align:center}#win h2{margin:0 0 8px;color:var(--brass)}
+#hintb{margin-top:18px}.tip{color:var(--dim);font-size:13px;margin-top:6px}
+input[type=range]{width:100%}.res{font-size:20px;color:var(--brass)}
+</style></head><body><div id="app"><h1 id="ttl"></h1><p class="sub" id="intro"></p><div id="stage"></div>
+<div class="row" id="hintb"><button class="g" id="hintBtn">💡 提示</button><button class="g" id="again">↺ 重來</button></div><div class="tip" id="hintTxt"></div></div>
+<div id="win"><div class="box"><h2>🎉 成功</h2><div id="revealTxt"></div><p><button onclick="location.reload()">再玩一次</button></p></div></div>
+<script>
+// ===== 老師改這裡 CONFIG =====
+const CFG={"title": "稀釋配製", "intro": "用原液和水，配出指定濃度與體積的溶液。每次『配製』只會告訴你結果，一共只有 3 次機會。", "stock": 10, "stockUnit": "M", "target": 2, "volume": 100, "tolConc": 0.05, "tolVol": 3, "tries": 3, "reveal": "濃度與體積都在範圍內！\\n你用 C₁V₁ = C₂V₂ 算出了正確的比例。\\n保險箱密碼：20、80。", "hint": "稀釋前後，溶質的量不變。"};
+// ===== 以下是機關程式 =====
+const $=id=>document.getElementById(id);const rnd=n=>Math.floor(Math.random()*n);
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]]}return a};
+const norm=s=>String(s||"").replace(/\s+/g,"").toLowerCase();
+function say(t,c){const m=$("msg");if(m){m.textContent=t;m.className="msg "+(c||"")}}
+function win(){$("revealTxt").innerHTML=(CFG.reveal||"").replace(/\n/g,"<br>");$("win").style.display="flex"}
+$("ttl").textContent=CFG.title;$("intro").textContent=CFG.intro;
+$("hintBtn").onclick=()=>{$("hintTxt").textContent=CFG.hint||"（沒有提示）"};$("again").onclick=()=>location.reload();
+$("stage").innerHTML='<div class="card">原液濃度 <b>'+CFG.stock+' '+CFG.stockUnit+'</b>。目標：配出 <b>'+CFG.volume+' mL</b>、濃度 <b>'+CFG.target+' '+CFG.stockUnit+'</b> 的溶液。</div><div class="card">原液 <b id="vs">0</b> mL<input type="range" id="rs" min="0" max="'+CFG.volume+'" value="0">水 <b id="vw">0</b> mL<input type="range" id="rw" min="0" max="'+CFG.volume+'" value="0"></div><div class="row"><button id="mk">配製</button><span class="tip" id="tr"></span></div><div class="card res" id="rs2">結果會顯示在這裡</div><div class="msg" id="msg"></div>';
+let left=CFG.tries;function tr(){$("tr").textContent="剩 "+left+" 次機會"}
+$("rs").oninput=()=>$("vs").textContent=$("rs").value;$("rw").oninput=()=>$("vw").textContent=$("rw").value;
+$("mk").onclick=()=>{if(left<=0)return;const a=+$("rs").value,w=+$("rw").value,v=a+w;if(!v){say("至少要倒一點東西","bad");return}left--;const c=CFG.stock*a/v;$("rs2").textContent="配出 "+v+" mL，濃度 "+c.toFixed(2)+" "+CFG.stockUnit;
+ const okc=Math.abs(c-CFG.target)<=CFG.tolConc*CFG.target,okv=Math.abs(v-CFG.volume)<=CFG.tolVol;
+ if(okc&&okv){say("成功","ok");setTimeout(win,600)}else if(left<=0)say("機會用完了。按『重來』再算一次","bad");else say((okc?"濃度對了，":"濃度不對，")+(okv?"體積對了":"體積不對"),"bad");tr()};tr();
+</script></body></html>
