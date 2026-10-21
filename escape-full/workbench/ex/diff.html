@@ -1,0 +1,33 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no"><title>大家來找碴</title>
+<style>
+:root{--bg:#14110f;--card:#1f1a16;--ink:#f1e8d8;--dim:#a99c86;--brass:#d9b878;--ok:#7fc79a;--bad:#e07b6a;--line:#3a3128}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 system-ui,"Noto Sans TC",sans-serif;-webkit-user-select:none;user-select:none;touch-action:manipulation}
+#app{max-width:760px;margin:0 auto;padding:18px 16px 60px}h1{font-size:21px;margin:6px 0 2px;color:var(--brass)}.sub{color:var(--dim);font-size:14px;margin:0 0 14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:12px 0}
+button,input,select,textarea{font:inherit;color:var(--ink)}button{background:#2c241d;border:1px solid var(--brass);border-radius:10px;padding:8px 16px;cursor:pointer}button:active{transform:scale(.97)}
+button.g{border-color:var(--line);color:var(--dim)}input[type=text],textarea{background:#120f0c;border:1px solid var(--line);border-radius:10px;padding:8px 12px;width:100%;-webkit-user-select:text;user-select:text}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.msg{min-height:24px;color:var(--dim);margin-top:8px}.msg.bad{color:var(--bad)}.msg.ok{color:var(--ok)}
+#win{position:fixed;inset:0;background:rgba(10,8,6,.88);display:none;align-items:center;justify-content:center;padding:20px;z-index:9}
+#win .box{background:var(--card);border:1px solid var(--brass);border-radius:16px;padding:22px;max-width:460px;text-align:center}#win h2{margin:0 0 8px;color:var(--brass)}
+#hintb{margin-top:18px}.tip{color:var(--dim);font-size:13px;margin-top:6px}
+.gr{display:grid;gap:4px;margin:6px 0}.gr div{background:#17130f;border:1px solid var(--line);border-radius:8px;text-align:center;font-size:28px;padding:6px 0}.gr.r div{cursor:pointer}.gr div.ok{border-color:var(--ok);background:#1d2a21}.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+</style></head><body><div id="app"><h1 id="ttl"></h1><p class="sub" id="intro"></p><div id="stage"></div>
+<div class="row" id="hintb"><button class="g" id="hintBtn">💡 提示</button><button class="g" id="again">↺ 重來</button></div><div class="tip" id="hintTxt"></div></div>
+<div id="win"><div class="box"><h2>🎉 成功</h2><div id="revealTxt"></div><p><button onclick="location.reload()">再玩一次</button></p></div></div>
+<script>
+// ===== 老師改這裡 CONFIG =====
+const CFG={"title": "大家來找碴", "intro": "左右兩邊有幾個地方不一樣，點右邊找出來。", "cols": 6, "left": ["🔴", "🟦", "🔺", "⭐", "🟢", "🔶", "🟣", "⬛", "🔷", "🟡", "🟥", "🔻", "🟩", "⚪", "🔸", "🟪", "🟧", "🔹", "🔴", "🟦", "🔺", "⭐", "🟢", "🔶"], "diffs": {"3": "🌟", "9": "🟠", "14": "🔸", "20": "🔷"}, "reveal": "四個不同的地方都找到了！\\n觀察力通過。", "hint": "一排一排、一格一格對照，比較形狀與顏色。"};
+// ===== 以下是機關程式 =====
+const $=id=>document.getElementById(id);const rnd=n=>Math.floor(Math.random()*n);
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]]}return a};
+const norm=s=>String(s||"").replace(/\s+/g,"").toLowerCase();
+function say(t,c){const m=$("msg");if(m){m.textContent=t;m.className="msg "+(c||"")}}
+function win(){$("revealTxt").innerHTML=(CFG.reveal||"").replace(/\n/g,"<br>");$("win").style.display="flex"}
+$("ttl").textContent=CFG.title;$("intro").textContent=CFG.intro;
+$("hintBtn").onclick=()=>{$("hintTxt").textContent=CFG.hint||"（沒有提示）"};$("again").onclick=()=>location.reload();
+$("stage").innerHTML='<div class="two"><div><div class="tip">原圖</div><div class="gr" id="gl"></div></div><div><div class="tip">找不同</div><div class="gr r" id="gr"></div></div></div><div class="msg" id="msg"></div>';
+const dk=Object.keys(CFG.diffs).map(Number);let found=[],miss=0;
+[$("gl"),$("gr")].forEach(g=>g.style.gridTemplateColumns="repeat("+CFG.cols+",1fr)");
+CFG.left.forEach((c,i)=>{const a=document.createElement("div");a.textContent=c;$("gl").appendChild(a);const b=document.createElement("div");b.textContent=CFG.diffs[i]!==undefined?CFG.diffs[i]:c;b.onclick=()=>{if(found.includes(i))return;if(dk.includes(i)){found.push(i);b.className="ok"}else{miss++}say("找到 "+found.length+" / "+dk.length+"　點錯 "+miss+" 次");if(found.length===dk.length)setTimeout(win,500)};$("gr").appendChild(b)});say("找到 0 / "+dk.length);
+</script></body></html>

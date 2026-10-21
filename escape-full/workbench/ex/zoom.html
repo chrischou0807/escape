@@ -1,0 +1,44 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no"><title>放大鏡</title>
+<style>
+:root{--bg:#14110f;--card:#1f1a16;--ink:#f1e8d8;--dim:#a99c86;--brass:#d9b878;--ok:#7fc79a;--bad:#e07b6a;--line:#3a3128}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 system-ui,"Noto Sans TC",sans-serif;-webkit-user-select:none;user-select:none;touch-action:manipulation}
+#app{max-width:760px;margin:0 auto;padding:18px 16px 60px}h1{font-size:21px;margin:6px 0 2px;color:var(--brass)}.sub{color:var(--dim);font-size:14px;margin:0 0 14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:12px 0}
+button,input,select,textarea{font:inherit;color:var(--ink)}button{background:#2c241d;border:1px solid var(--brass);border-radius:10px;padding:8px 16px;cursor:pointer}button:active{transform:scale(.97)}
+button.g{border-color:var(--line);color:var(--dim)}input[type=text],textarea{background:#120f0c;border:1px solid var(--line);border-radius:10px;padding:8px 12px;width:100%;-webkit-user-select:text;user-select:text}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.msg{min-height:24px;color:var(--dim);margin-top:8px}.msg.bad{color:var(--bad)}.msg.ok{color:var(--ok)}
+#win{position:fixed;inset:0;background:rgba(10,8,6,.88);display:none;align-items:center;justify-content:center;padding:20px;z-index:9}
+#win .box{background:var(--card);border:1px solid var(--brass);border-radius:16px;padding:22px;max-width:460px;text-align:center}#win h2{margin:0 0 8px;color:var(--brass)}
+#hintb{margin-top:18px}.tip{color:var(--dim);font-size:13px;margin-top:6px}
+canvas{width:100%;border:1px solid var(--line);border-radius:12px;background:#0f0c0a;touch-action:none}.found{font-size:26px;letter-spacing:6px;min-height:40px;color:var(--brass)}
+</style></head><body><div id="app"><h1 id="ttl"></h1><p class="sub" id="intro"></p><div id="stage"></div>
+<div class="row" id="hintb"><button class="g" id="hintBtn">💡 提示</button><button class="g" id="again">↺ 重來</button></div><div class="tip" id="hintTxt"></div></div>
+<div id="win"><div class="box"><h2>🎉 成功</h2><div id="revealTxt"></div><p><button onclick="location.reload()">再玩一次</button></p></div></div>
+<script>
+// ===== 老師改這裡 CONFIG =====
+const CFG={"title": "放大鏡", "intro": "拖動放大鏡，在畫面上找出藏得很小的字，把它們拼起來。", "fragments": [{"x": 90, "y": 70, "t": "酸"}, {"x": 330, "y": 150, "t": "鹼"}, {"x": 510, "y": 300, "t": "中"}, {"x": 160, "y": 320, "t": "和"}], "order": "依找到的順序拼起來就是答案", "reveal": "你找到的四個字是：酸鹼中和\\n門牌號碼 305。", "hint": "小字顏色很淡，慢慢掃過每個角落。"};
+// ===== 以下是機關程式 =====
+const $=id=>document.getElementById(id);const rnd=n=>Math.floor(Math.random()*n);
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]]}return a};
+const norm=s=>String(s||"").replace(/\s+/g,"").toLowerCase();
+function say(t,c){const m=$("msg");if(m){m.textContent=t;m.className="msg "+(c||"")}}
+function win(){$("revealTxt").innerHTML=(CFG.reveal||"").replace(/\n/g,"<br>");$("win").style.display="flex"}
+$("ttl").textContent=CFG.title;$("intro").textContent=CFG.intro;
+$("hintBtn").onclick=()=>{$("hintTxt").textContent=CFG.hint||"（沒有提示）"};$("again").onclick=()=>location.reload();
+$("stage").innerHTML='<canvas id="cv" width="600" height="400"></canvas><div class="found" id="fd"></div><div class="msg" id="msg"></div>';
+const cv=$("cv"),cx=cv.getContext("2d"),src=document.createElement("canvas");src.width=600;src.height=400;const sx=src.getContext("2d");
+sx.fillStyle="#1a1511";sx.fillRect(0,0,600,400);
+for(let i=0;i<260;i++){sx.fillStyle="rgba(217,184,120,"+(Math.random()*.25)+")";sx.fillRect(rnd(600),rnd(400),rnd(3)+1,rnd(3)+1)}
+for(let i=0;i<30;i++){sx.strokeStyle="rgba(217,184,120,.08)";sx.beginPath();sx.moveTo(rnd(600),rnd(400));sx.lineTo(rnd(600),rnd(400));sx.stroke()}
+sx.font="3px sans-serif";sx.fillStyle="rgba(241,232,216,.9)";sx.textAlign="center";sx.textBaseline="middle";
+CFG.fragments.forEach(f=>sx.fillText(f.t,f.x,f.y));
+const dec="ABCDEFGHIJKLMNOPQRSTUVWXYZ";sx.font="3px sans-serif";sx.fillStyle="rgba(241,232,216,.5)";
+for(let i=0;i<40;i++)sx.fillText("・",rnd(600),rnd(400));
+let px=300,py=200;const got=[];
+function paint(){cx.clearRect(0,0,600,400);cx.drawImage(src,0,0);const R=60,Z=7;cx.save();cx.beginPath();cx.arc(px,py,R,0,7);cx.clip();cx.fillStyle="#0f0c0a";cx.fillRect(px-R,py-R,2*R,2*R);cx.imageSmoothingEnabled=false;cx.drawImage(src,px-R/Z,py-R/Z,2*R/Z,2*R/Z,px-R,py-R,2*R,2*R);cx.restore();cx.strokeStyle="#d9b878";cx.lineWidth=3;cx.beginPath();cx.arc(px,py,R,0,7);cx.stroke()}
+function mv(e){const r=cv.getBoundingClientRect(),t=e.touches?e.touches[0]:e;px=(t.clientX-r.left)*600/r.width;py=(t.clientY-r.top)*400/r.height;
+ CFG.fragments.forEach((f,i)=>{if(!got.includes(i)&&Math.hypot(f.x-px,f.y-py)<14){got.push(i);$("fd").textContent=got.map(k=>CFG.fragments[k].t).join(" ");if(got.length===CFG.fragments.length)setTimeout(win,500)}});paint()}
+["mousemove","touchmove","touchstart"].forEach(n=>cv.addEventListener(n,e=>{e.preventDefault();mv(e)},{passive:false}));paint();say("找到 0 / "+CFG.fragments.length+"　"+CFG.order);
+setInterval(()=>say("找到 "+got.length+" / "+CFG.fragments.length+"　"+CFG.order),400);
+</script></body></html>

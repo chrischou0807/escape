@@ -1,0 +1,45 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no"><title>接電路</title>
+<style>
+:root{--bg:#14110f;--card:#1f1a16;--ink:#f1e8d8;--dim:#a99c86;--brass:#d9b878;--ok:#7fc79a;--bad:#e07b6a;--line:#3a3128}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 system-ui,"Noto Sans TC",sans-serif;-webkit-user-select:none;user-select:none;touch-action:manipulation}
+#app{max-width:760px;margin:0 auto;padding:18px 16px 60px}h1{font-size:21px;margin:6px 0 2px;color:var(--brass)}.sub{color:var(--dim);font-size:14px;margin:0 0 14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:12px 0}
+button,input,select,textarea{font:inherit;color:var(--ink)}button{background:#2c241d;border:1px solid var(--brass);border-radius:10px;padding:8px 16px;cursor:pointer}button:active{transform:scale(.97)}
+button.g{border-color:var(--line);color:var(--dim)}input[type=text],textarea{background:#120f0c;border:1px solid var(--line);border-radius:10px;padding:8px 12px;width:100%;-webkit-user-select:text;user-select:text}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.msg{min-height:24px;color:var(--dim);margin-top:8px}.msg.bad{color:var(--bad)}.msg.ok{color:var(--ok)}
+#win{position:fixed;inset:0;background:rgba(10,8,6,.88);display:none;align-items:center;justify-content:center;padding:20px;z-index:9}
+#win .box{background:var(--card);border:1px solid var(--brass);border-radius:16px;padding:22px;max-width:460px;text-align:center}#win h2{margin:0 0 8px;color:var(--brass)}
+#hintb{margin-top:18px}.tip{color:var(--dim);font-size:13px;margin-top:6px}
+svg{width:100%;background:#120f0c;border:1px solid var(--line);border-radius:12px}.t{cursor:pointer}.t circle{fill:#2c241d;stroke:#d9b878;stroke-width:2}.t.sel circle{fill:#d9b878}
+</style></head><body><div id="app"><h1 id="ttl"></h1><p class="sub" id="intro"></p><div id="stage"></div>
+<div class="row" id="hintb"><button class="g" id="hintBtn">💡 提示</button><button class="g" id="again">↺ 重來</button></div><div class="tip" id="hintTxt"></div></div>
+<div id="win"><div class="box"><h2>🎉 成功</h2><div id="revealTxt"></div><p><button onclick="location.reload()">再玩一次</button></p></div></div>
+<script>
+// ===== 老師改這裡 CONFIG =====
+const CFG={"title": "接電路", "intro": "點一個接點，再點另一個接點，把它們用導線連起來。讓燈泡亮起來；開關也要記得關上。", "reveal": "燈亮了！電路是一個完整的迴路。\\n密碼的第一位是 4。", "hint": "電流要從電池正極出發，經過開關、燈泡，再回到負極。小心不要讓電池的兩端直接相連（短路）。"};
+// ===== 以下是機關程式 =====
+const $=id=>document.getElementById(id);const rnd=n=>Math.floor(Math.random()*n);
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]]}return a};
+const norm=s=>String(s||"").replace(/\s+/g,"").toLowerCase();
+function say(t,c){const m=$("msg");if(m){m.textContent=t;m.className="msg "+(c||"")}}
+function win(){$("revealTxt").innerHTML=(CFG.reveal||"").replace(/\n/g,"<br>");$("win").style.display="flex"}
+$("ttl").textContent=CFG.title;$("intro").textContent=CFG.intro;
+$("hintBtn").onclick=()=>{$("hintTxt").textContent=CFG.hint||"（沒有提示）"};$("again").onclick=()=>location.reload();
+const NS="http://www.w3.org/2000/svg";$("stage").innerHTML='<svg id="sv" viewBox="0 0 600 340"></svg><div class="msg" id="msg"></div>';
+const T={Bp:[70,90,"電池＋"],Bn:[70,250,"電池－"],S1:[230,60,"開關"],S2:[330,60,"開關"],L1:[500,130,"燈泡"],L2:[500,230,"燈泡"],R1:[250,270,"電阻"],R2:[370,270,"電阻"]};
+let wires=[],sel=null,sw=false;
+function conn(a,b){const adj={};Object.keys(T).forEach(k=>adj[k]=[]);const e=(x,y)=>{adj[x].push(y);adj[y].push(x)};wires.forEach(w=>e(w[0],w[1]));if(sw)e("S1","S2");e("R1","R2");const seen={[a]:1},q=[a];while(q.length){const c=q.pop();adj[c].forEach(n=>{if(!seen[n]){seen[n]=1;q.push(n)}})}return !!seen[b]}
+function lit(){if(conn("Bp","Bn"))return"short";if(conn("L1","L2"))return"bulbshort";return(conn("Bp","L1")&&conn("L2","Bn"))||(conn("Bp","L2")&&conn("L1","Bn"))?"on":"off"}
+function el(n,a,t){const e=document.createElementNS(NS,n);for(const k in a)e.setAttribute(k,a[k]);if(t)e.textContent=t;return e}
+function draw(){const s=$("sv");s.innerHTML="";
+ s.appendChild(el("rect",{x:50,y:100,width:40,height:140,fill:"#2c241d",stroke:"#d9b878"}));s.appendChild(el("text",{x:70,y:175,fill:"#d9b878","text-anchor":"middle","font-size":14},"🔋"));
+ s.appendChild(el("line",{x1:230,y1:60,x2:sw?330:310,y2:sw?60:40,stroke:"#d9b878","stroke-width":5,"stroke-linecap":"round",style:"cursor:pointer"})).onclick=()=>{sw=!sw;draw();chk()};
+ s.appendChild(el("text",{x:280,y:30,fill:"#a99c86","text-anchor":"middle","font-size":13},"點我開/關"));
+ const L=lit();s.appendChild(el("circle",{cx:500,cy:180,r:34,fill:L==="on"?"#ffe27a":"#2c241d",stroke:"#d9b878","stroke-width":3}));if(L==="on")s.appendChild(el("circle",{cx:500,cy:180,r:52,fill:"rgba(255,226,122,.25)"}));
+ s.appendChild(el("rect",{x:250,y:258,width:120,height:24,fill:"#2c241d",stroke:"#a99c86"}));
+ wires.forEach((w,i)=>{const a=T[w[0]],b=T[w[1]];const l=el("line",{x1:a[0],y1:a[1],x2:b[0],y2:b[1],stroke:"#7fc79a","stroke-width":5,"stroke-linecap":"round",style:"cursor:pointer"});l.onclick=()=>{wires.splice(i,1);draw();chk()};s.appendChild(l)});
+ Object.keys(T).forEach(k=>{const g=el("g",{class:"t"+(sel===k?" sel":"")});g.appendChild(el("circle",{cx:T[k][0],cy:T[k][1],r:13}));g.appendChild(el("text",{x:T[k][0],y:T[k][1]+(T[k][1]>200?30:-20),fill:"#a99c86","text-anchor":"middle","font-size":12},T[k][2]));g.onclick=()=>{if(!sel){sel=k}else if(sel===k){sel=null}else{if(!wires.some(w=>(w[0]===sel&&w[1]===k)||(w[1]===sel&&w[0]===k)))wires.push([sel,k]);sel=null;chk()}draw()};s.appendChild(g)})}
+function chk(){const L=lit();say({short:"⚠ 短路！電池兩端被導線直接連起來了",bulbshort:"⚠ 燈泡兩端被導線短路了",off:"燈還沒亮：迴路是否完整？開關是否關上？",on:"燈亮了！"}[L],L==="on"?"ok":(L==="off"?"":"bad"));if(L==="on")setTimeout(win,700)}
+draw();say("點一個接點，再點另一個。點導線可拆掉。");
+</script></body></html>

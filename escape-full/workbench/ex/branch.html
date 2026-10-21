@@ -1,0 +1,33 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no"><title>劇情分支</title>
+<style>
+:root{--bg:#14110f;--card:#1f1a16;--ink:#f1e8d8;--dim:#a99c86;--brass:#d9b878;--ok:#7fc79a;--bad:#e07b6a;--line:#3a3128}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 system-ui,"Noto Sans TC",sans-serif;-webkit-user-select:none;user-select:none;touch-action:manipulation}
+#app{max-width:760px;margin:0 auto;padding:18px 16px 60px}h1{font-size:21px;margin:6px 0 2px;color:var(--brass)}.sub{color:var(--dim);font-size:14px;margin:0 0 14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:12px 0}
+button,input,select,textarea{font:inherit;color:var(--ink)}button{background:#2c241d;border:1px solid var(--brass);border-radius:10px;padding:8px 16px;cursor:pointer}button:active{transform:scale(.97)}
+button.g{border-color:var(--line);color:var(--dim)}input[type=text],textarea{background:#120f0c;border:1px solid var(--line);border-radius:10px;padding:8px 12px;width:100%;-webkit-user-select:text;user-select:text}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.msg{min-height:24px;color:var(--dim);margin-top:8px}.msg.bad{color:var(--bad)}.msg.ok{color:var(--ok)}
+#win{position:fixed;inset:0;background:rgba(10,8,6,.88);display:none;align-items:center;justify-content:center;padding:20px;z-index:9}
+#win .box{background:var(--card);border:1px solid var(--brass);border-radius:16px;padding:22px;max-width:460px;text-align:center}#win h2{margin:0 0 8px;color:var(--brass)}
+#hintb{margin-top:18px}.tip{color:var(--dim);font-size:13px;margin-top:6px}
+.opt{display:block;width:100%;text-align:left;margin:6px 0}
+</style></head><body><div id="app"><h1 id="ttl"></h1><p class="sub" id="intro"></p><div id="stage"></div>
+<div class="row" id="hintb"><button class="g" id="hintBtn">💡 提示</button><button class="g" id="again">↺ 重來</button></div><div class="tip" id="hintTxt"></div></div>
+<div id="win"><div class="box"><h2>🎉 成功</h2><div id="revealTxt"></div><p><button onclick="location.reload()">再玩一次</button></p></div></div>
+<script>
+// ===== 老師改這裡 CONFIG =====
+const CFG={"title": "深夜的實驗室", "intro": "做出選擇，故事就會往不同方向走。", "start": "a", "nodes": {"a": {"t": "深夜，你發現實驗室的燈還亮著。桌上有一瓶沒有標籤的液體，正在冒煙。", "c": [{"t": "靠近看看", "to": "b"}, {"t": "先關掉電源通知老師", "to": "c"}]}, "b": {"t": "刺鼻的氣味讓你頭暈。", "c": [{"t": "用手搧聞聞看", "to": "d"}, {"t": "立刻退後、打開窗戶", "to": "c"}]}, "c": {"t": "你保持距離，通知了老師。老師戴上手套與護目鏡處理，你學到了正確的做法。", "end": true, "good": true}, "d": {"t": "你吸入了蒸氣，需要被送去醫務室。這不是好的處理方式。", "end": true, "good": false}}, "reveal": "你走到了安全的結局。\\n實驗室守則第一條：不明液體，保持距離並通知老師。", "hint": "遇到不明的危險，先退後再通知大人。"};
+// ===== 以下是機關程式 =====
+const $=id=>document.getElementById(id);const rnd=n=>Math.floor(Math.random()*n);
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]]}return a};
+const norm=s=>String(s||"").replace(/\s+/g,"").toLowerCase();
+function say(t,c){const m=$("msg");if(m){m.textContent=t;m.className="msg "+(c||"")}}
+function win(){$("revealTxt").innerHTML=(CFG.reveal||"").replace(/\n/g,"<br>");$("win").style.display="flex"}
+$("ttl").textContent=CFG.title;$("intro").textContent=CFG.intro;
+$("hintBtn").onclick=()=>{$("hintTxt").textContent=CFG.hint||"（沒有提示）"};$("again").onclick=()=>location.reload();
+$("stage").innerHTML='<div class="card" id="nd"></div><div class="tip" id="path"></div><div class="msg" id="msg"></div>';
+let cur=CFG.start,steps=0;function go(){const n=CFG.nodes[cur];$("nd").innerHTML="<p>"+n.t+"</p>";$("path").textContent="已做 "+steps+" 次選擇";
+ if(n.end){if(n.good){say("好結局","ok");setTimeout(win,700)}else{say("壞結局（可按『重來』嘗試別的選擇）","bad")}return}
+ n.c.forEach(c=>{const b=document.createElement("button");b.className="opt";b.textContent=c.t;b.onclick=()=>{cur=c.to;steps++;go()};$("nd").appendChild(b)})}go();
+</script></body></html>

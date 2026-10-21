@@ -1,0 +1,35 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no"><title>計時賽</title>
+<style>
+:root{--bg:#14110f;--card:#1f1a16;--ink:#f1e8d8;--dim:#a99c86;--brass:#d9b878;--ok:#7fc79a;--bad:#e07b6a;--line:#3a3128}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 system-ui,"Noto Sans TC",sans-serif;-webkit-user-select:none;user-select:none;touch-action:manipulation}
+#app{max-width:760px;margin:0 auto;padding:18px 16px 60px}h1{font-size:21px;margin:6px 0 2px;color:var(--brass)}.sub{color:var(--dim);font-size:14px;margin:0 0 14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:12px 0}
+button,input,select,textarea{font:inherit;color:var(--ink)}button{background:#2c241d;border:1px solid var(--brass);border-radius:10px;padding:8px 16px;cursor:pointer}button:active{transform:scale(.97)}
+button.g{border-color:var(--line);color:var(--dim)}input[type=text],textarea{background:#120f0c;border:1px solid var(--line);border-radius:10px;padding:8px 12px;width:100%;-webkit-user-select:text;user-select:text}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.msg{min-height:24px;color:var(--dim);margin-top:8px}.msg.bad{color:var(--bad)}.msg.ok{color:var(--ok)}
+#win{position:fixed;inset:0;background:rgba(10,8,6,.88);display:none;align-items:center;justify-content:center;padding:20px;z-index:9}
+#win .box{background:var(--card);border:1px solid var(--brass);border-radius:16px;padding:22px;max-width:460px;text-align:center}#win h2{margin:0 0 8px;color:var(--brass)}
+#hintb{margin-top:18px}.tip{color:var(--dim);font-size:13px;margin-top:6px}
+.opt{display:block;width:100%;text-align:left;margin:6px 0}.clk{font-size:30px;color:var(--brass);text-align:center;font-variant-numeric:tabular-nums}
+</style></head><body><div id="app"><h1 id="ttl"></h1><p class="sub" id="intro"></p><div id="stage"></div>
+<div class="row" id="hintb"><button class="g" id="hintBtn">💡 提示</button><button class="g" id="again">↺ 重來</button></div><div class="tip" id="hintTxt"></div></div>
+<div id="win"><div class="box"><h2>🎉 成功</h2><div id="revealTxt"></div><p><button onclick="location.reload()">再玩一次</button></p></div></div>
+<script>
+// ===== 老師改這裡 CONFIG =====
+const CFG={"title": "限時搶答", "intro": "在限定時間內答完全部題目。答錯會被加罰時間。", "limit": 40, "penalty": 5, "questions": [{"q": "pH 值小於 7 的是？", "o": ["酸性", "中性", "鹼性"], "a": 0}, {"q": "石蕊試紙遇酸變？", "o": ["藍色", "紅色", "綠色"], "a": 1}, {"q": "下列哪個是鹼性？", "o": ["檸檬汁", "食醋", "肥皂水"], "a": 2}, {"q": "酸和鹼反應生成鹽和？", "o": ["水", "氧氣", "氫氣"], "a": 0}, {"q": "胃酸的主要成分是？", "o": ["碳酸", "鹽酸", "醋酸"], "a": 1}], "reveal": "在時限內完成！\\n成績會記錄你的最佳時間。", "hint": "先答有把握的，不要在同一題停太久。"};
+// ===== 以下是機關程式 =====
+const $=id=>document.getElementById(id);const rnd=n=>Math.floor(Math.random()*n);
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]]}return a};
+const norm=s=>String(s||"").replace(/\s+/g,"").toLowerCase();
+function say(t,c){const m=$("msg");if(m){m.textContent=t;m.className="msg "+(c||"")}}
+function win(){$("revealTxt").innerHTML=(CFG.reveal||"").replace(/\n/g,"<br>");$("win").style.display="flex"}
+$("ttl").textContent=CFG.title;$("intro").textContent=CFG.intro;
+$("hintBtn").onclick=()=>{$("hintTxt").textContent=CFG.hint||"（沒有提示）"};$("again").onclick=()=>location.reload();
+$("stage").innerHTML='<div class="clk" id="ck"></div><div class="card" id="q"></div><div class="msg" id="msg"></div>';
+let k=0,pen=0,t0=null,over=false;
+function tm(){return t0?(Date.now()-t0)/1000+pen:0}
+setInterval(()=>{if(over)return;const t=tm();$("ck").textContent="⏱ "+t.toFixed(1)+" / "+CFG.limit+" 秒";if(t>=CFG.limit){over=true;say("時間到！按『重來』再挑戰","bad")}},100);
+function show(){const Q=CFG.questions[k];$("q").innerHTML="第 "+(k+1)+" / "+CFG.questions.length+" 題<br><b>"+Q.q+"</b>";Q.o.forEach((o,i)=>{const b=document.createElement("button");b.className="opt";b.textContent=o;b.onclick=()=>{if(over)return;if(!t0)t0=Date.now();if(i===Q.a){k++;if(k>=CFG.questions.length){over=true;const t=tm();let best=t;try{const p=+localStorage.getItem("best_"+CFG.title);if(p&&p<best)best=p;localStorage.setItem("best_"+CFG.title,best)}catch(e){}say("完成！用時 "+t.toFixed(1)+" 秒（最佳 "+best.toFixed(1)+"）","ok");if(t<CFG.limit)setTimeout(win,700)}else{say("");show()}}else{pen+=CFG.penalty;say("答錯，加罰 "+CFG.penalty+" 秒","bad")}};$("q").appendChild(b)})}
+show();$("ck").textContent="⏱ 第一次作答時開始計時";
+</script></body></html>

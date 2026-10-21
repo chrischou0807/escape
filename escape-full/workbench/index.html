@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>機關設計工作台</title>
+<style>
+:root{--bg:#1c2128;--bg2:#161a20;--card:#232a33;--ink:#e7e3da;--dim:#9aa1a9;--line:rgba(255,255,255,.1);--brass:#d9b878;--brass2:#b8935a;--ok:#5fbf7e;--warn:#e0a04e;--bad:#e06a5a;
+--f:"PingFang TC","Microsoft JhengHei","Noto Sans TC",system-ui,sans-serif}
+@media (prefers-color-scheme:light){:root:not([data-theme=dark]){--bg:#f4f1ea;--bg2:#ebe6da;--card:#fffdf8;--ink:#2a2620;--dim:#6b665c;--line:rgba(0,0,0,.12);--brass:#8a6420;--brass2:#a67c2e}}
+*{box-sizing:border-box}
+body{margin:0;background:linear-gradient(180deg,var(--bg),var(--bg2));color:var(--ink);font-family:var(--f);line-height:1.75;min-height:100vh}
+.wrap{max-width:820px;margin:0 auto;padding:28px 16px 90px}
+h1{font-size:26px;margin:6px 0}h2{font-size:20px;margin:0 0 4px}h3{font-size:16px;margin:18px 0 6px;color:var(--brass)}
+.lede,.note{color:var(--dim);font-size:14px;margin:0 0 14px}
+.steps{display:flex;gap:6px;flex-wrap:wrap;margin:18px 0}
+.steps button{flex:1 1 auto;min-width:92px;border:1px solid var(--line);background:transparent;color:var(--dim);border-radius:10px;padding:8px 6px;font:inherit;font-size:13px;cursor:pointer}
+.steps button.on{color:var(--ink);border-color:var(--brass2);background:rgba(217,184,120,.12)}
+.steps button.done::after{content:" ✓";color:var(--ok)}
+.panel{display:none}.panel.on{display:block}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin:12px 0}
+.opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.opt{border:1px solid var(--line);border-radius:12px;padding:12px;cursor:pointer;background:transparent;color:var(--ink);font:inherit;text-align:left}
+.opt:hover{border-color:var(--brass2)}.opt.sel{border-color:var(--brass);background:rgba(217,184,120,.14)}
+.opt b{display:block;color:var(--brass)}.opt small{color:var(--dim);display:block;margin-top:4px}
+.tag{font-size:11px;border:1px solid var(--line);border-radius:99px;padding:0 8px;color:var(--dim);margin-left:6px}
+label.f{display:block;font-weight:700;margin:16px 0 2px}
+label.f .req{color:var(--bad);font-weight:400;font-size:12px;margin-left:6px}
+label.f .opt-t{color:var(--dim);font-weight:400;font-size:12px;margin-left:6px}
+.hint{font-size:13px;color:var(--dim);margin:0 0 6px}
+textarea,input[type=text],select{width:100%;background:var(--bg2);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font:inherit;font-size:15px}
+textarea{min-height:64px;resize:vertical}
+textarea:focus,input:focus,select:focus{outline:2px solid var(--brass2);outline-offset:1px}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.btn{border:0;border-radius:10px;padding:11px 18px;font:inherit;font-weight:700;cursor:pointer;background:var(--brass2);color:#1c1206}
+.btn.g{background:transparent;border:1px solid var(--line);color:var(--ink);font-weight:400}
+.sixq li{margin:6px 0}
+.chk{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--line)}
+.chk input{margin-top:6px;width:18px;height:18px;flex:none;accent-color:var(--brass2)}
+.chk small{display:block;color:var(--dim)}
+.msg{padding:10px 12px;border-radius:10px;margin:10px 0;font-size:14px;border:1px solid var(--line)}
+.msg.warn{border-color:var(--warn);background:rgba(224,160,78,.12)}.msg.ok{border-color:var(--ok);background:rgba(95,191,126,.12)}.msg.bad{border-color:var(--bad);background:rgba(224,106,90,.12)}
+pre.out{white-space:pre-wrap;background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:12px;font-size:13px;max-height:420px;overflow:auto;margin:0}
+iframe{width:100%;height:480px;border:1px solid var(--line);border-radius:10px;background:#fff}
+.res li{margin:4px 0}.res .p{color:var(--ok)}.res .w{color:var(--warn)}.res .x{color:var(--bad)}
+.nav{display:flex;justify-content:space-between;margin-top:22px;gap:10px}
+.tabs{display:flex;gap:8px;margin:18px 0 0}
+.tabs button{border:1px solid var(--line);background:transparent;color:var(--dim);border-radius:99px;padding:8px 18px;font:inherit;font-size:14px;cursor:pointer}
+.tabs button.on{color:var(--ink);border-color:var(--brass2);background:rgba(217,184,120,.14)}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0}
+.chips button{border:1px solid var(--line);background:transparent;color:var(--dim);border-radius:99px;padding:4px 12px;font:inherit;font-size:13px;cursor:pointer}
+.chips button.on{color:var(--ink);border-color:var(--brass2)}
+.ex h3{margin:0 0 4px;color:var(--ink);font-size:17px}
+.ex dl{margin:10px 0 0;font-size:14px}.ex dt{color:var(--brass);font-weight:700;margin-top:8px}.ex dd{margin:2px 0 0;color:var(--ink)}
+.ex .acts{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.ex a.btn{text-decoration:none;display:inline-block}
+.basechip{display:inline-block;border:1px solid var(--brass2);border-radius:99px;padding:3px 12px;font-size:13px;margin:6px 0}
+footer{margin-top:40px;color:var(--dim);font-size:12.5px;border-top:1px solid var(--line);padding-top:14px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>機關設計工作台</h1>
+<p class="lede">把課程裡的一個知識點，拆解成好玩的闖關機關。你在這裡填拆解卡，網站幫你組成提示詞；提示詞複製到你自己的 AI，做好再貼回來檢查。網站不會把你的內容傳到任何地方。</p>
+<div class="tabs"><button id="tabWork" class="on">工作台</button><button id="tabEx">範例庫（30 款）</button></div>
+<section id="exView" style="display:none">
+<h2 style="margin-top:20px">機關範例庫</h2>
+<p class="note">先玩，再看它是怎麼把一個知識變成機關的。每一款都是獨立的單檔 HTML，可以直接用在真實世界的活動。<b>多數現有機關的判定是「知道答案就過」</b>，本身不測能力；下面每一款都標出它適合承載什麼、哪裡要小心、怎麼升級。</p>
+<div class="chips" id="exChips"></div>
+<div class="card" id="exDef" style="margin:0 0 14px"></div>
+<div id="exList"></div>
+</section>
+<div id="wizard">
+<div class="steps" id="stepbar"></div>
+
+<!-- 0 選線 -->
+<section class="panel" data-p="0">
+<h2>① 選一條線</h2>
+<p class="note">先選好，後面的提示詞會跟著不同。只選一條就好，之後想換可以回來改。</p>
+<div class="opts" id="lineOpts"></div>
+<div class="msg warn" id="lineNote" style="display:none"></div>
+</section>
+
+<!-- 1 知識與定位 -->
+<section class="panel" data-p="1">
+<h2>② 基本資料</h2>
+<div id="baseChip" style="display:none"></div>
+<p class="note">只有三件事必填：知識點、教學定位、玩家要做到什麼。其他都可以留空，AI 會幫你想。</p>
+<label class="f">知識點<span class="req">必填</span></label>
+<p class="hint">這個機關要涉及哪個知識？寫得越具體越好。</p>
+<input type="text" id="f_topic" placeholder="例如：用酸鹼指示劑判斷溶液的酸鹼性">
+<h3>教學定位<span class="req" style="color:var(--bad);font-size:12px;margin-left:6px">必填</span></h3>
+<div class="opts" id="posOpts"></div>
+<div class="card" id="posDetail" style="display:none"></div>
+<label class="f">先備知識<span class="opt-t">選填</span></label>
+<p class="hint">玩家進來時已經會什麼？不會的由誰補？（教新知：遊戲內要先示範、再引導、再自己做）</p>
+<textarea id="f_prior" placeholder="例如：上過指示劑單元，知道石蕊遇酸變紅。不會的在機關裡有一張示範。"></textarea>
+<label class="f">能力<span class="req">必填</span></label>
+<p class="hint">玩家要「做到什麼」才算會？用動詞寫，不要寫「理解」。</p>
+<textarea id="f_skill" placeholder="例如：能根據顏色變化，把未知溶液分成酸性與鹼性。"></textarea>
+</section>
+
+<!-- 2 玩法 -->
+<section class="panel" data-p="2">
+<h2>③ 設計細節<span class="tag">全部選填</span></h2>
+<p class="note" style="margin-bottom:6px">不確定就整頁跳過，按「下一步」。AI 會依你的知識點提出 2～3 個方案，讓你挑。想自己決定的，才填。</p>
+<p class="note">用「六問」找候選，答得出來的就是候選。選一個主玩法，可再加一個輔玩法。</p>
+<div class="card">
+<ol class="sixq" id="sixq"></ol>
+</div>
+<h3>主玩法<span class="opt-t" style="color:var(--dim);font-size:12px;margin-left:6px">選填</span></h3>
+<div class="opts" id="playOpts"></div>
+<div class="card" id="playDetail" style="display:none"></div>
+<label class="f">輔玩法<span class="opt-t">選填</span></label>
+<select id="f_play2"></select>
+<h3>能力門檻<span class="opt-t" style="color:var(--dim);font-size:12px;margin-left:6px">選填</span></h3>
+<div class="opts" id="gateOpts"></div>
+<div class="msg warn" id="gateWarn" style="display:none"></div>
+</section>
+
+<!-- 3 拆解卡 -->
+<section class="panel" data-p="2">
+<h2 style="margin-top:28px">想自己決定的細節</h2>
+<p class="note">這些都是選填。填得越多，AI 越照你的想法做；留空就由 AI 建議。</p>
+<label class="f">判定<span class="opt-t">選填</span></label>
+<p class="hint">什麼狀態算成功？而且剛好要展現上面寫的能力。不懂的人不能靠猜、抄、繞過就成功。</p>
+<textarea id="f_judge" placeholder="例如：玩家要把三杯未知溶液各滴上指示劑，依顏色把它們放到「酸」或「鹼」的架上，三杯全部放對才算成功。"></textarea>
+<label class="f">回饋<span class="opt-t">選填</span></label>
+<p class="hint">做對、做錯，畫面各怎麼回應？要讓人靠回饋發現規則，不是只有「對／錯」。</p>
+<textarea id="f_fb" placeholder="例如：滴下後溶液立刻變色，放錯架子時燈號閃紅並說「顏色和這一排不一樣」，可以重放。"></textarea>
+<label class="f">輸出訊息<span class="opt-t">選填</span></label>
+<p class="hint">成功後玩家拿到什麼？字母、方向、數字、圖像、下一個線索。</p>
+<textarea id="f_out" placeholder="例如：三杯放對後，架子後面顯示數字 4、7、2。"></textarea>
+<label class="f" id="updownL">上下游<span class="opt-t">選填</span></label>
+<p class="hint">玩家從哪裡得到進入這個機關的理由？成功後的訊息接到哪裡？第一條線寫「接現實活動的哪一步」。</p>
+<textarea id="f_updown" placeholder="例如：老師在教室牆上貼了一張實驗桌的照片，答案數字要輸入保險箱。"></textarea>
+<label class="f">風格與氛圍<span class="opt-t">選填</span></label>
+<textarea id="f_style" placeholder="例如：像實驗室的暗色面板，字體清楚，色彩對比大。"></textarea>
+<details class="card"><summary><b>更多選填欄位</b>（證據、提示、回顧）</summary>
+<label class="f">提示<span class="opt-t">選填</span></label>
+<p class="hint">卡關時怎麼給？分幾層？</p>
+<textarea id="f_hint"></textarea>
+<label class="f">證據<span class="opt-t">選填</span></label>
+<p class="hint">看玩家的哪些行為，可以判斷他會？</p>
+<textarea id="f_evid"></textarea>
+<label class="f">回顧問題<span class="opt-t">選填</span></label>
+<p class="hint">玩完後，問玩家哪些「為什麼」？</p>
+<textarea id="f_rev"></textarea>
+</details>
+</section>
+
+<!-- 4 自我檢查 -->
+
+
+<!-- 5 提示詞 -->
+<section class="panel" data-p="3">
+<h2>④ 產生提示詞</h2>
+<p class="note">複製下面的提示詞，貼到你自己用的 AI。拿到程式後，到下一步貼回來檢查。</p>
+<div class="msg warn" id="genWarn" style="display:none"></div>
+<details class="card"><summary><b>想檢查自己的設計？</b><span class="tag">選用</span></summary>
+<p class="hint" style="margin-top:8px">只有填了判定的人需要。逐題確認；沒把握的，回上一步改判定。</p>
+<div id="selfChk"></div>
+<div class="msg" id="selfRes" style="display:none"></div>
+</details>
+<div class="card" id="techCard">
+<b>技術要點</b><span class="tag">建議全勾</span>
+<p class="hint">AI 常漏、漏了又不容易發現的事。每條都標了沒寫會怎樣。</p>
+<div id="techChk"></div>
+</div>
+<div class="row"><button class="btn" id="genBtn">產生提示詞</button><button class="btn g" id="copyBtn">複製</button><span id="copied" class="note" style="align-self:center;margin:0"></span></div>
+<pre class="out" id="promptOut" style="margin-top:12px;display:none"></pre>
+</section>
+
+<!-- 6 貼回檢查 -->
+<section class="panel" data-p="4">
+<h2>⑤ 貼回檢查與預覽</h2>
+<div id="pane1">
+<p class="note">把 AI 給你的完整程式貼在下面。檢查只是提醒，不能取代你自己玩一遍。預覽在隔離的框框裡執行，不會連到外面。</p>
+<textarea id="pasteCode" style="min-height:160px;font-family:ui-monospace,monospace;font-size:13px" placeholder="貼上完整的 HTML 程式碼"></textarea>
+<div class="row"><button class="btn" id="chkBtn">檢查並預覽</button><button class="btn g" id="clrBtn">清空</button></div>
+<div id="chkRes"></div>
+<iframe id="prev" sandbox="allow-scripts" title="預覽" style="display:none"></iframe>
+<div class="card" style="margin-top:16px">
+<b>你自己要玩的幾件事</b>
+<ul id="manual"></ul>
+</div>
+</div>
+<div id="pane2" style="display:none">
+<p class="note">把 AI 給你的關卡 JSON 貼在下面（有沒有程式碼框都可以）。網站會用引擎載入、檢查格式，並自動試著通關。</p>
+<textarea id="pasteJson" style="min-height:160px;font-family:ui-monospace,monospace;font-size:13px" placeholder="貼上關卡 JSON"></textarea>
+<div class="row"><button class="btn" id="chk2Btn">檢查並預覽</button><button class="btn g" id="clr2Btn">清空</button><button class="btn g" id="fixBtn" style="display:none">複製問題給 AI 修正</button><span id="fixed" class="note" style="align-self:center;margin:0"></span></div>
+<div id="chk2Res"></div>
+<iframe id="eng" sandbox="allow-scripts allow-same-origin" title="關卡預覽" style="display:none;height:560px"></iframe>
+<div class="card" style="margin-top:16px"><b>你自己要玩的幾件事</b>
+<ul><li>實際玩一遍：承載知識的機關是不是通往逃出的必經之路？</li><li>不懂這個知識的人，能不能繞過它或靠亂試過關？</li><li>線索的取得順序合理嗎？卡關時提示有幫助嗎？</li><li>請一位沒看過的人玩，不要先講規則。</li></ul></div>
+</div>
+</section>
+
+<div class="nav"><button class="btn g" id="prevBtn">← 上一步</button><button class="btn" id="nextBtn">下一步 →</button></div>
+
+<div class="card">
+<b>保存你的拆解卡</b>
+<p class="hint">內容只存在這個瀏覽器。換電腦或清除資料前，請匯出。</p>
+<div class="row" style="margin-top:6px"><button class="btn g" id="exBtn">匯出 JSON</button><button class="btn g" id="imBtn">匯入 JSON</button><button class="btn g" id="rsBtn">清空重填</button><input type="file" id="imFile" accept=".json,application/json" style="display:none"></div>
+</div>
+</div>
+<footer>這是教學工具的第一版。提示詞需要實際丟進 AI 測試，結果因 AI 而異；檢查只做表面比對。內容由你自己負責，請不要放入學生的個人資料。</footer>
+</div>
+
+<script>
+(function(){"use strict";
+var LINES=[
+ {id:"1",name:"第一條：單一機關",d:"手機或平板上的一個互動機關，用在真實世界的活動，取代實體道具。輸出一個 HTML 檔。",ready:true},
+ {id:"2",name:"第二條：3D 密室",d:"一個房間、一個故事，由多個機關組成的線上遊戲。AI 產出一份關卡 JSON，由我們的引擎執行。",ready:true},
+ {id:"3",name:"第三條：2D 地圖 RPG",d:"連通的地圖、NPC 與對話，完整的線上遊戲。",ready:false}];
+var POS=[
+ {id:"new",name:"教新知",d:"玩家還不會。知識要在遊戲內提供：先示範，再引導，再自己做。",tips:["門檻從零開始，逐步加高","探索自由度低到中，用限制與回饋縮小範圍","錯誤可逆、可重設，回饋要有說明","提示多，分層給","遊戲後建議回顧"]},
+ {id:"apply",name:"練習應用",d:"玩家已經學過，在遊戲中運用。遊戲內不重複給知識。",tips:["可直接進入需要知識的操作","探索自由度中到高","錯誤可逆","提示少","遊戲後建議回顧"]},
+ {id:"check",name:"檢核理解",d:"用來判斷玩家會不會，選用。需要明確能判斷的行為。",tips:["探索自由度低，避免靠猜","錯誤可逆並記錄","提示有限制","研究提醒：自評好玩不等於真的學會，要看行為"]}];
+var PLAY=[
+ {id:"op",name:"操作",d:"與物體互動，獲取隱藏訊息。",j:"獲得訊息",ex:"按按鈕、顯影、放大、拼圖、滴定、接電路",q:"這個知識的原理，能讓什麼隱藏的訊息現形？"},
+ {id:"ex",name:"探索",d:"在一定範圍內尋找目標。",j:"找到目標",ex:"差異挑戰、範圍挑戰、條件挑戰（找出所有酸性物品）",q:"有什麼可以散落在環境裡讓人找？可以用什麼條件限定？"},
+ {id:"pz",name:"解謎",d:"找「鑰匙」解開「鎖」。鎖可以是數字、字母、文字、方向、顏色、順序。",j:"鎖被解開",ex:"燈謎、摩斯、凱撒、對照表",q:"有沒有編碼、對照表、規則，可以當成鎖？"},
+ {id:"ch",name:"選擇",d:"沒有標準答案，在多個選項中取捨。",j:"趨向想要的結果",ex:"策略選擇、劇情分支",q:"有沒有沒有標準答案的取捨？"},
+ {id:"cp",name:"競爭",d:"與機器或人在限制下較量。",j:"贏過對手",ex:"計時、完成度、對戰",q:"有什麼可以比較、計時、對抗的？"},
+ {id:"cr",name:"創造",d:"運用創造力，找出能通過考驗的方法。",j:"通過考驗",ex:"建造、你畫我猜、自己設計機關",q:"學生能怎麼自己做一個出來？"}];
+var GATE=[
+ {id:"zero",name:"零門檻",d:"按鈕、撿起、對照現成的表。不需要知識。"},
+ {id:"mid",name:"一般",d:"拼圖、找不同、簡單替換。需要一般的觀察與操作。"},
+ {id:"know",name:"需要知識",d:"要會這個知識點才做得到，例如滴定、判斷酸鹼、CPR 按壓節奏。"}];
+var TECH=[
+ ["音效要等使用者第一次點擊之後才出聲。","行動瀏覽器會擋自動播放，一載入就播會變靜音或報錯"],
+ ["觸控操作用 pointer 事件；可拖曳的元素加上 touch-action:none。","平板上拖不動，或一拖就把整個畫面捲走"],
+ ["用 localStorage 存設定時用 try/catch 包起來，失敗就退回記憶體變數。","在某些預覽環境會整支壞掉"],
+ ["答錯或失敗一定要有看得到的回饋，並說明哪裡不對（震動、變色或提示文字）。","玩家不知道自己錯了，以為當機"],
+ ["玩家會看到的文字插進畫面前先做跳脫（escape），不要直接塞 innerHTML。","內容含特殊符號時版面爆掉或被注入"],
+ ["「重新開始」之後狀態要真的歸零（計時、分數、已選取的東西全部清掉）。","玩第二輪會殘留上一輪的狀態"],
+ ["隨機或打散後，要保證題目不會一開始就已完成，也保證一定解得開。","偶爾一進去就過關，或根本無解"],
+ ["過關判定要照【判定】寫死，不要放寬。不懂的人不能靠亂猜、連點或抄答案過關。","AI 會自己猜一個鬆散條件，容易誤判"],
+ ["尊重系統的「減少動態效果」設定（prefers-reduced-motion）。","對會暈動的使用者不友善"],
+ ["所有設定（答案、文字）集中在程式開頭的一個 CONFIG 物件，改這裡就能換內容。","老師想換題目時要在程式裡到處找"],
+ ["不要載入任何外部網路資源（字型、圖片、腳本），全部寫在同一個檔案。","離線或校園網路擋住時整個壞掉"]];
+var SELF=[
+ ["不懂這個知識的人，能不能靠亂猜、抄答案或繞過就過關？","答「不能」才通過","neg"],
+ ["把知識拿掉，這個機關還成立嗎？","答「不成立」才通過；成立代表知識只是裝飾","neg"],
+ ["成功是靠「做到」，而不是靠「看了公式再算」嗎？","答「靠做到」才通過","pos"],
+ ["玩家卡住時，有辦法在不破壞遊戲的情況下得到幫助嗎？","答「有」才通過","pos"],
+ ["玩家進來時不會這個知識的話，有任何管道得到它嗎？（練習應用可答「不適用」）","答「有」或「不適用」才通過","pos"]];
+var MANUAL=["用手機實際點一遍，每個按鈕都能按到、不會誤觸。","故意答錯幾次，看回饋有沒有說明哪裡不對。","亂點、連點、亂拖，看能不能不懂就過關。","重新開始一次，看狀態有沒有清乾淨。","請一位沒看過的人玩，不要先講規則，看他卡在哪。"];
+var U="https://chris-nhsh.github.io/escape/";
+var EX=[
+{id:"lock",no:"01",name:"密碼鎖",play:"解謎",gate:"零門檻",ok:1,what:"轉動 3～4 個轉盤對出密碼，按開鎖。錯 3 次鎖定 60 秒。",suit:"當「出口」：密碼由別的知識機關產出。轉盤字集可自訂（數字、英文、東西南北、★●▲），所以能做方向鎖、字母鎖、符號鎖。",care:"它只檢查「知道密碼」，本身不測任何能力。密碼若直接寫在海報上，知識就只是裝飾。",up:"讓密碼的每一位，都要靠不同的知識機關才拿得到。",struct:"3 或 4 個轉盤；每個轉盤可選數字／英文／數字加英文／自訂字集；各轉盤的答案；開鎖後揭示圖片與說明文字；錯誤次數上限與鎖定；音效；提示；後台密碼；分享連結。"},
+{id:"morse",kw:"摩斯",no:"02",name:"摩斯密碼燈",play:"解謎",gate:"一般",ok:1,what:"燈或聲音閃出摩斯碼，玩家解碼後輸入答案。",suit:"編碼與解碼、長短信號的比例（點 1：劃 3）、查對照表的規則。關掉對照表，就變成「要先會摩斯」。",care:"對照表開著時，只是查表抄寫。訊息只支援 A–Z 與 0–9。",up:"把對照表當成另一個機關的獎勵，讓玩家先去取得。",struct:"一段訊息（英數字）；播放方式（閃光、聲音或兩者）；速度；是否循環；對照表按鈕開關；成功後文字或圖片；提示；分享連結。"},
+{id:"puzzle",kw:"拼圖",no:"03",name:"線索拼圖",play:"操作",gate:"一般",ok:2,what:"把打散的字句或圖片碎片拖回正確位置。",suit:"字句重組適合「順序本身就是知識」的內容：實驗步驟、歷史事件先後、詩句、流程。圖片拼圖可做地圖或構造圖。",care:"圖片拼圖靠邊緣吻合就能完成，不需要懂內容，知識不是必經。字句重組也可能靠相鄰的字猜。",up:"用「順序必須靠知識才排得出來」的內容，不要用看圖就能拼的圖。",struct:"模式（字句重組或圖片拼圖）；句子與切法（逐字或逐詞）；圖片與格數（2×2 到 4×4）；成功後文字或圖片；音效；提示；分享連結。"},
+{id:"cards",no:"04",name:"翻牌記憶",play:"探索",gate:"零門檻",ok:2,what:"翻開兩張牌，把相同的配成對。",suit:"辨認與記憶。可用文字、符號或 emoji 當卡面（最多 12 對）。",care:"兩張牌是「同一個東西」，所以不能配「詞對定義」。知識不是必要，主要是記憶。",up:"若要配對不同的概念，現有功能不夠，需要改成兩張牌不同面。",struct:"一串卡面項目（每項一對牌，2～12 對）；成功後文字或圖片；音效；提示；分享連結。"},
+{id:"wires",no:"05",name:"連線謎題",play:"解謎",gate:"需要知識（取決於內容）",ok:3,what:"把左邊的項目拉線連到右邊正確的端點。",suit:"最直接能放知識的一款：元素對符號、國家對首都、詞對詞義、現象對原因、器材對用途。",care:"可以無限重試、系統會說「有線接錯」，4 對只有 24 種排列，靠試錯就能過。",up:"增加到 6～7 對；錯了不說哪一條錯；配對項目要先經過運算或判斷才連得出來。",struct:"2～7 對左右配對（右側在畫面上打散）；成功後文字或圖片；音效；提示；分享連結。"},
+{id:"uv",kw:"顯影",no:"06",name:"紫外線顯影",play:"操作",gate:"零門檻",ok:1,what:"用手指當紫外線燈，在畫面上照出隱藏的字或圖。",suit:"產生訊息的機關，適合當黏合劑與獎勵，也可把底圖換成教材圖。",care:"到處掃一掃就會顯影，不需要任何知識。",up:"目前光圈在整個畫面都會顯影；要做到「只在正確位置顯影」，需要自己改造。",struct:"隱藏內容（文字或圖片）；是否要求輸入答案；發光顏色；光圈大小；背景圖；成功後文字或圖片；提示；分享連結。"},
+{id:"bomb",no:"07",name:"拆炸彈",play:"競爭（計時）＋解謎",gate:"取決於線索",ok:0,what:"倒數計時中，依線索剪對線路。",suit:"依規則或線索做判斷，例如「紅線要在藍線之後剪」這類條件推理。",care:"計時壓力是雙面刃：對還不會的人容易焦慮與亂剪，教新知時不建議。",up:"用在「練習應用」，不要用在教新知。",struct:"倒數計時；一組線路與剪線順序規則；成功後文字或圖片。"},
+{id:"lights",no:"08",name:"記憶燈號",play:"操作（記憶）",gate:"零門檻到一般",ok:0,what:"記住寶石發光的順序，再按回去（Simon）。",suit:"序列記憶。可把「順序」和知識掛鉤，例如依食物鏈或流程順序發光。",care:"主要測記憶，和知識關聯弱，順序可以靠死記完成。",up:"讓亮燈順序要靠推理才知道，而不是看完就按。",struct:"一組寶石與發光順序；輪數；成功後文字或圖片。"},
+{id:"cabinet",no:"09",name:"暗門櫃",play:"解謎（分類對應）",gate:"一般到需要知識",ok:0,what:"把物品拖到對應號碼的格子，暗門就開啟。",suit:"分類、配對、排序：酸性與鹼性物品、生物的分類、器材放回位置。比連線更像實體操作。",care:"同連線，可重試，格子少時能試錯。",up:"物品多、格子多；錯了不說哪個錯。",struct:"一組物品與對應的號碼格；成功後暗門開啟並揭示內容。"},
+{id:"phone",no:"10",name:"電話撥號",play:"操作＋解謎（聽）",gate:"零門檻到一般",ok:0,what:"撥對號碼後，自動播放語音。",suit:"聽力：從語音取得號碼或資訊，外語聽力。",care:"語音用裝置的語音合成，品質因裝置而異；要穩建議改放預錄音檔。",up:"讓號碼要從語音內容推出來，而不是照抄。",struct:"要撥的號碼；撥通後播放的語音（文字轉語音或音檔網址）。"},
+{id:"radio",no:"11",name:"密室收音機",play:"操作",gate:"零門檻到一般",ok:0,what:"轉旋鈕調到正確頻率，聽見廣播。",suit:"依線索把連續量調到指定值，例如判讀刻度、pH、波長、溫度。",care:"若頻率寫在畫面上，只是對準數字。",up:"頻率要從另一個知識題算出或判讀出來。",struct:"目標頻率；廣播內容（文字轉語音，沒聲音時顯示字幕）。"},
+{id:"spell",no:"12",name:"咒語",play:"操作（口說技能）",gate:"需要語言能力",ok:0,what:"對神像說出通關口號，用語音辨識判定。",suit:"口語表達與發音：外語、朗讀、背誦。是少數「說得出來才算」的機關，最接近「判定等於能力」。",care:"依賴瀏覽器語音辨識（Chrome 或 Edge 最穩，Firefox 不支援，需要 https 與麥克風）。後援「改用打字」會繞過口說能力。",up:"口說能力是重點時，關掉打字後援，改由關主現場確認。",struct:"通關口號；語音辨識；不支援時的打字後援；成功後文字或圖片。"},
+{"id": "switches", "no": "13", "name": "開關面板", "play": "操作", "gate": "零門檻到一般", "ok": 1, "what": "按定義，把對的開關打開，全部正確就顯示隱藏訊息。", "suit": "按鈕、開關代表『判斷題』：每個開關背後是一個知識判斷（哪些是酸性、哪些是導體）。", "care": "開關數少時可以全部亂按到對；沒有『哪個錯』的限制。", "up": "開關多（8 個以上）、錯誤不告知哪一個錯、加上次數限制。", "struct": "開關清單（名稱＋該開或該關）；規則說明；成功訊息；提示。", "loc": 1, "kw": "按按鈕"},
+{"id": "zoom", "no": "14", "name": "放大鏡", "play": "操作", "gate": "零門檻到一般", "ok": 1, "what": "拖動放大鏡，找出畫面上藏得很小的字並拼起來。", "suit": "觀察與細節：顯微鏡、地圖、標本。可把底圖換成教材圖。", "care": "滑一滑就會找到，不需要知識。", "up": "讓要找的字是『要靠知識才知道該找哪裡』的位置。", "struct": "碎片清單（位置＋字）；拼起來的規則；成功訊息。", "loc": 1, "kw": "放大"},
+{"id": "titration", "no": "15", "name": "滴定", "play": "操作", "gate": "需要知識", "ok": 1, "what": "按住滴入溶液，看到持續的淡粉紅色就停，按讀數。", "suit": "這款最接近『判定等於能力』：只有真的會判斷終點、控制滴速的人才過。可用於滴定、定量加料、添加劑量。", "care": "終點用顏色判斷，色彩視覺差異的學生需要替代方式。數值是模擬，不是真實化學計算。", "up": "加大誤差難度（縮小容許範圍）、要求先預估體積。", "struct": "終點體積；容許誤差；滴速；成功訊息。", "loc": 1, "kw": "滴定"},
+{"id": "circuit", "no": "16", "name": "接電路", "play": "操作", "gate": "需要知識", "ok": 1, "what": "點接點拉線，連成完整迴路讓燈泡亮，注意開關和短路。", "suit": "電路迴路、正負極、短路概念。判定是『燈真的亮』，而不是選對答案。", "care": "只有串聯迴路與一個燈泡；不包含並聯與電流計算。", "up": "加入並聯、第二顆燈泡、電流表。", "struct": "零件接點位置；迴路判定規則；成功訊息。", "loc": 1, "kw": "接電路"},
+{"id": "diff", "no": "17", "name": "大家來找碴", "play": "探索", "gate": "零門檻到一般", "ok": 1, "what": "左右兩邊有幾格不同，點右邊找出來。", "suit": "細微差異的辨別：分子結構、標本、圖例。", "care": "單純比對，不需要知識。可以把差異換成『要懂才看得出的差異』。", "up": "把畫面換成教材圖，差異是概念錯誤。", "struct": "左側網格；差異位置與替換內容；成功訊息。", "loc": 1, "kw": "差異挑戰"},
+{"id": "range", "no": "18", "name": "範圍搜尋", "play": "探索", "gate": "零門檻到一般", "ok": 1, "what": "在指定區域裡找出目標，其他區域的同樣東西不算。", "suit": "『限定範圍』的搜尋：地圖、校園分區、棲地。", "care": "區域名稱寫在畫面上，沒有知識也能做。", "up": "讓區域名稱不直接寫出，而要靠知識判斷屬於哪一區。", "struct": "區域清單；指定區域名稱；目標物與數量；成功訊息。", "loc": 1, "kw": "範圍挑戰"},
+{"id": "cond", "no": "19", "name": "條件挑戰", "play": "探索", "gate": "需要知識", "ok": 1, "what": "找出所有符合條件的物品，多選或漏選都不過。", "suit": "分類判斷：酸鹼、導體絕緣體、生物分類。比連線更像『找出所有符合的』。", "care": "只回報多選幾個、漏幾個，不說是哪幾個；仍可靠多試幾次逼近。", "up": "限制送出次數；增加物品數量。", "struct": "物品清單（名稱＋是否符合）；條件說明；成功訊息。", "loc": 1, "kw": "條件挑戰"},
+{"id": "riddle", "no": "20", "name": "燈謎", "play": "解謎", "gate": "一般", "ok": 1, "what": "猜對每個燈謎得到一個字，湊成通關詞。", "suit": "字謎、成語、語文類知識。每一題的答案是『鑰匙』。", "care": "燈謎答案可以上網查。", "up": "題目換成教材概念的描述，答案為術語。", "struct": "題目與答案（可多個等效答案）；每題給的字；成功訊息。", "loc": 1, "kw": "燈謎"},
+{"id": "caesar", "no": "21", "name": "凱撒密碼", "play": "解謎", "gate": "一般", "ok": 1, "what": "密文每個字母往後移 N 格，用轉盤找出位移量解出原文。", "suit": "編碼與解碼、模運算、頻率分析。", "care": "轉盤 26 種位移，逐一試也能過。", "up": "不給轉盤，只給提示；密文加長。", "struct": "原文；位移量；提示；成功訊息。", "loc": 1, "kw": "凱撒"},
+{"id": "table", "no": "22", "name": "對照表解碼", "play": "解謎", "gate": "零門檻", "ok": 1, "what": "符號對應字母，查表翻譯後輸入。", "suit": "元素符號、注音、語言對照等『查表抄寫』的內容。", "care": "查表即可，不需要理解。", "up": "讓對照表本身是另一個機關的獎勵。", "struct": "對照表；密文；答案；成功訊息。", "loc": 1, "kw": "對照表"},
+{"id": "strategy", "no": "23", "name": "策略選擇", "play": "選擇", "gate": "一般", "ok": 1, "what": "每回合選一個行動，三項資源的變化決定結局。", "suit": "沒有標準答案的取捨：資源分配、環境議題、公民決策。", "care": "判定是『不讓任何資源歸零』，其實有最佳解；若要真的沒有標準答案，需要多重結局而不是過關/失敗。", "up": "結局改成多種，不分過不過，由老師討論。", "struct": "變數與初始值；每回合選項與影響；結局條件；成功訊息。", "loc": 1, "kw": "策略選擇"},
+{"id": "branch", "no": "24", "name": "劇情分支", "play": "選擇", "gate": "零門檻", "ok": 1, "what": "依選擇走不同故事線，到達好結局才過。", "suit": "情境判斷：安全守則、倫理兩難、歷史抉擇。", "care": "好結局只有一條路，其實有標準答案；要真的沒有標準答案，結局要沒有對錯。", "up": "每個結局都有討論題，由老師帶討論。", "struct": "節點（文字＋選項＋去向）；結局（好或壞）；成功訊息。", "loc": 1, "kw": "劇情分支"},
+{"id": "timer", "no": "25", "name": "計時賽", "play": "競爭", "gate": "一般", "ok": 1, "what": "限時內答完全部題目，答錯加罰時間，記錄最佳時間。", "suit": "已經學過的知識熟練度：快速回想。", "care": "計時壓力適合練習，不適合教新知；會記錄你自己的最佳時間。", "up": "加入同學排行（需要資料庫，目前沒有）。", "struct": "題目與選項；時限；罰時；成功訊息。", "loc": 1, "kw": "計時"},
+{"id": "score", "no": "26", "name": "排序完成度", "play": "競爭", "gate": "一般", "ok": 1, "what": "依順序排列，交卷後看完成度，可與自己的最佳紀錄比較。", "suit": "順序型知識：行星、時序、流程、食物鏈。", "care": "排序可以靠試；完成度 100% 前可無限重交。", "up": "限制交卷次數；排序項目增加。", "struct": "題目文字；正確順序；達標完成度；成功訊息。", "loc": 1, "kw": "完成度"},
+{"id": "versus", "no": "27", "name": "電腦對戰", "play": "競爭", "gate": "一般", "ok": 1, "what": "每題你和電腦同時作答，先答對得分，先到目標分數贏。", "suit": "熟練度的即時較量。電腦答對率與反應時間可調整。", "care": "『電腦』是程式亂數模擬的，不是真的對手。", "up": "加入雙人同機對戰（兩位學生各用半邊畫面）。", "struct": "題庫；目標分數；電腦答對率與反應時間；成功訊息。", "loc": 1, "kw": "對戰"},
+{"id": "build", "no": "28", "name": "建造挑戰", "play": "創造", "gate": "一般", "ok": 1, "what": "用積木蓋出符合條件的結構：高度、預算、必須包含的零件。", "suit": "限制條件下的設計：橋、屋、塔。判定的是『條件』，不是美觀或創意。", "care": "沒有結構力學模擬（只檢查懸空），條件滿足就過。", "up": "加入承重模擬或重量規則。", "struct": "格子大小；積木與成本；預算；最小高度；必須包含的積木；成功訊息。", "loc": 1, "kw": "建造"},
+{"id": "draw", "no": "29", "name": "你畫我猜", "play": "創造", "gate": "零門檻到一般", "ok": 1, "what": "一個人看題目畫，另一個人猜。", "suit": "用畫面說明概念：這需要真的理解才畫得出來。", "care": "猜中與否由輸入文字比對，意思相近也不通過。", "up": "改由關主或同學手動判定。", "struct": "詞庫；成功訊息。", "loc": 1, "kw": "你畫我猜"},
+{"id": "design", "no": "30", "name": "自己設計機關", "play": "創造", "gate": "需要知識", "ok": 1, "what": "學生寫題目與答案，產生連結給同學解。", "suit": "最能測到『會不會把知識變成機關』：學生設計的題目反映他的理解程度。", "care": "判定仍只是答案相符；題目好壞要由老師或同學評。", "up": "加上評量表：知識正確、答案唯一、提示合理。", "struct": "題目；答案；提示；成功訊息；產生連結。", "loc": 1, "kw": "自己設計機關"}];
+var KEY="mech_workbench_v0";
+var S={base:"",line:"",pos:"",play:"",play2:"",gate:"",f:{},self:[],tech:null,step:0,seen:{}};
+var mem=null;
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){mem=JSON.stringify(S)}}
+function load(){var raw=null;try{raw=localStorage.getItem(KEY)}catch(e){raw=mem}
+ if(raw){try{var o=JSON.parse(raw);for(var k in S)if(o[k]!==undefined)S[k]=o[k]}catch(e){}}}
+function $(i){return document.getElementById(i)}
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
+var FIELDS=["topic","prior","skill","judge","fb","out","updown","style","hint","evid","rev"];
+
+var STEPS=["選線","基本資料","設計細節","提示詞","貼回檢查"];
+function renderBar(){var b=$("stepbar");b.innerHTML="";STEPS.forEach(function(n,i){var e=document.createElement("button");e.textContent=(i+1)+" "+n;
+ if(i===S.step)e.className="on";else if(stepDone(i))e.className="done";e.onclick=function(){go(i)};b.appendChild(e)})}
+function stepDone(i){var f=S.f;
+ if(i===0)return !!S.line;
+ if(i===1)return !!(f.topic&&S.pos&&f.skill);
+ if(i===2)return !!(S.play||S.gate||f.judge||f.fb||f.out);
+ return false}
+function go(i){S.step=Math.max(0,Math.min(4,i));show();save();if(typeof renderBase==="function")renderBase()}
+function show(){$("pane1").style.display=S.line==="2"?"none":"block";$("pane2").style.display=S.line==="2"?"block":"none";var ps=document.querySelectorAll(".panel");Array.prototype.forEach.call(ps,function(p){p.classList.toggle("on",+p.dataset.p===S.step)});
+ renderBar();$("prevBtn").style.visibility=S.step?"visible":"hidden";$("nextBtn").style.visibility=S.step<4?"visible":"hidden";
+ if(S.step===3)checkGen();window.scrollTo(0,0)}
+
+function opts(id,list,cur,onpick,fmt){var el=$(id);el.innerHTML="";list.forEach(function(x){var b=document.createElement("button");b.className="opt"+(cur===x.id?" sel":"");
+ b.innerHTML=fmt(x);b.onclick=function(){onpick(x.id)};el.appendChild(b)})}
+function renderLines(){renderBase();opts("lineOpts",LINES,S.line,function(id){S.line=id;save();renderLines();renderBar()},function(x){return "<b>"+esc(x.name)+(x.ready?"":'<span class="tag">技術要點建置中</span>')+"</b><small>"+esc(x.d)+"</small>"});
+ var n=$("lineNote"),L=LINES.filter(function(x){return x.id===S.line})[0];
+ if(L&&!L.ready){n.style.display="block";n.textContent="這條線的提示詞還在建置中。你現在可以先完成拆解卡，拆解方法是三條線共用的。"}else n.style.display="none";
+}
+function renderPos(){opts("posOpts",POS,S.pos,function(id){S.pos=id;save();renderPos();renderBar()},function(x){return "<b>"+esc(x.name)+"</b><small>"+esc(x.d)+"</small>"});
+ var d=$("posDetail"),P=POS.filter(function(x){return x.id===S.pos})[0];
+ if(!P){d.style.display="none";return}d.style.display="block";d.innerHTML="<b>選了「"+esc(P.name)+"」，設計時要注意：</b><ul>"+P.tips.map(function(t){return "<li>"+esc(t)+"</li>"}).join("")+"</ul>"}
+function renderPlay(){
+ $("sixq").innerHTML=PLAY.map(function(p){return "<li><b>"+esc(p.name)+"</b>："+esc(p.q)+"</li>"}).join("");
+ opts("playOpts",PLAY,S.play,function(id){S.play=id;if(S.play2===id)S.play2="";save();renderPlay();renderBar()},function(x){return "<b>"+esc(x.name)+"<span class='tag'>判定：「"+esc(x.j)+"」</span></b><small>"+esc(x.d)+"</small>"});
+ var d=$("playDetail"),P=PLAY.filter(function(x){return x.id===S.play})[0];
+ if(P){d.style.display="block";d.innerHTML="<b>"+esc(P.name)+"</b>的判定是「"+esc(P.j)+"」。常見形式："+esc(P.ex)+"。<br>下一步要把這個判定改寫成「剛好需要你寫的那個能力才做得到」。"}else d.style.display="none";
+ var sel=$("f_play2");sel.innerHTML='<option value="">（不加）</option>'+PLAY.filter(function(p){return p.id!==S.play}).map(function(p){return '<option value="'+p.id+'"'+(S.play2===p.id?" selected":"")+">"+esc(p.name)+"</option>"}).join("");
+ opts("gateOpts",GATE,S.gate,function(id){S.gate=id;save();renderPlay();renderBar()},function(x){return "<b>"+esc(x.name)+"</b><small>"+esc(x.d)+"</small>"});
+ var w=$("gateWarn"),msg="";
+ if(S.pos==="new"&&S.gate==="know")msg="你選了「教新知」，卻把門檻設成「需要知識」。玩家還不會的話，要先在遊戲內從零門檻示範起，再逐步加高。";
+ if(S.pos==="apply"&&S.gate==="zero")msg="「練習應用」搭配零門檻，可能沒用到知識。回頭檢查：把知識拿掉，這個機關還成立嗎？";
+ w.style.display=msg?"block":"none";w.textContent=msg}
+function renderSelf(){var c=$("selfChk");c.innerHTML="";SELF.forEach(function(q,i){var d=document.createElement("div");d.className="chk";
+ var cb=document.createElement("input");cb.type="checkbox";cb.checked=!!S.self[i];cb.id="sc"+i;cb.onchange=function(){S.self[i]=cb.checked;save();selfRes();renderBar()};
+ var l=document.createElement("label");l.htmlFor="sc"+i;l.innerHTML=esc(q[0])+"<small>"+esc(q[1])+"</small>";d.appendChild(cb);d.appendChild(l);c.appendChild(d)});selfRes()}
+function selfRes(){var r=$("selfRes"),n=SELF.filter(function(_,i){return S.self[i]}).length;r.style.display="block";
+ if(n===SELF.length){r.className="msg ok";r.textContent="五題都通過了。"}
+ else{r.className="msg warn";r.textContent="通過 "+n+" / "+SELF.length+" 題。沒過的，回到「拆解卡」改判定。勾選代表你確認該題通過。"}}
+function renderTech(){var c=$("techChk");if(c.dataset.done)return;c.dataset.done=1;
+ if(!S.tech)S.tech=TECH.map(function(){return true});
+ TECH.forEach(function(t,i){var d=document.createElement("div");d.className="chk";var cb=document.createElement("input");cb.type="checkbox";cb.checked=S.tech[i]!==false;cb.id="tc"+i;cb.onchange=function(){S.tech[i]=cb.checked;save()};
+ var l=document.createElement("label");l.htmlFor="tc"+i;l.innerHTML=esc(t[0])+"<small>沒寫會：「"+esc(t[1])+"」</small>";d.appendChild(cb);d.appendChild(l);c.appendChild(d)})}
+function missing(){var m=[],f=S.f;if(!f.topic)m.push("知識點");if(!S.pos)m.push("教學定位");if(!f.skill)m.push("玩家要做到什麼（能力）");return m}
+function checkGen(){renderTech();$("techCard").style.display=S.line==="1"?"block":"none";var m=missing(),w=$("genWarn");
+ if(!S.line){w.style.display="block";w.textContent="還沒選線。請回到第一步。";return}
+ var L=LINES.filter(function(x){return x.id===S.line})[0];
+ if(!L.ready){w.style.display="block";w.textContent="這條線的提示詞還在建置中，目前只能先完成拆解卡。";return}
+ if(m.length){w.style.display="block";w.textContent="還有必填的沒填："+m.join("、")+"。填了提示詞才會準。"}else w.style.display="none"}
+
+function buildPrompt(){var f=S.f,P=POS.filter(function(x){return x.id===S.pos})[0],PL=PLAY.filter(function(x){return x.id===S.play})[0],PL2=PLAY.filter(function(x){return x.id===S.play2})[0],G=GATE.filter(function(x){return x.id===S.gate})[0];
+ var v=function(x,d){return x||d};var open_=!S.play||!f.judge;
+ var p="我是老師，想為課程做一個互動機關，用在真實世界的闖關活動，取代實體道具。請用「單一 HTML 檔」（HTML、CSS、JavaScript 全部寫在同一個檔案，不載入任何外部資源）、繁體中文介面、手機與平板可直接觸控操作。\n\n";
+ p+="這個機關的設計重點是：玩家必須真的做到某個能力才會成功，不懂的人不能靠猜、連點、抄答案過關。請特別注意【判定】。\n\n";
+var BX=EX.filter(function(e){return e.id===S.base})[0];
+ if(BX)p+="【參考的既有機關】\n請以「"+BX.name+"」的玩法與結構為基礎（"+BX.what+"）。它原本有的設定項目："+BX.struct+"\n注意：原本的判定只檢查玩家有沒有做到，不保證測到能力；請依下面的拆解卡，把判定改成「玩家必須真的做到那個能力才會成功」。可以保留它的後台設定與分享連結的概念，但答案要集中在 CONFIG。\n\n";
+ p+="【知識點】\n"+v(f.topic,"（老師沒填，請你依知識點與能力提出建議）")+"\n\n";
+ p+="【教學定位】\n"+(P?P.name+"：":"")+(P?P.d:"（老師沒填，請你依知識點與能力提出建議）")+"\n";
+ if(P&&P.id==="new")p+="因為玩家還不會，機關內要先示範，再引導，再讓玩家自己做；錯誤可重來，回饋要說明哪裡不對。\n";
+ if(P&&P.id==="apply")p+="玩家已經學過，機關內不要重複講解知識，直接讓玩家運用。\n";
+ p+="\n【先備知識】\n"+v(f.prior,"（老師沒填，請你依知識點與能力提出建議）")+"\n\n";
+ p+="【玩家要做到的能力】\n"+v(f.skill,"（老師沒填，請你依知識點與能力提出建議）")+"\n\n";
+ p+="【玩法】\n主玩法：「"+(PL?PL.name+"」（"+PL.d+"成功的判定是「"+PL.j+"」）":"（老師沒填，請你依知識點與能力提出建議）")+"\n"+(PL2?"輔玩法：「"+PL2.name+"」\n":"")+"能力門檻："+(G?G.name+"，"+G.d:"（老師沒填，請你依知識點與能力提出建議）")+"\n\n";
+ p+="【判定：怎樣算成功】\n"+v(f.judge,"（老師沒填，請你依知識點與能力提出建議）")+"\n\n";
+ p+="【回饋：做對、做錯畫面怎麼回應】\n"+v(f.fb,"（老師沒填，請你依知識點與能力提出建議）")+"\n\n";
+ p+="【輸出訊息：成功後玩家拿到的東西】\n"+v(f.out,"（老師沒填，請你依知識點與能力提出建議）")+"\n\n";
+ p+="【接到現實活動的哪一步】\n"+v(f.updown,"（老師沒填，請你依知識點與能力提出建議）")+"\n\n";
+ if(f.style)p+="【風格與氛圍】\n"+f.style+"\n\n";
+ if(f.hint)p+="【提示設計】\n"+f.hint+"\n\n";
+ var picked=[];TECH.forEach(function(t,i){if(S.tech[i]!==false)picked.push(t[0])});
+ if(picked.length){p+="請務必遵守以下技術要點：\n";picked.forEach(function(r,i){p+=(i+1)+". "+r+"\n"});p+="\n"}
+ p+=open_?"老師還沒決定玩法與判定。請先不要寫程式，先提出 2～3 個不同的設計方案，每個方案用幾句話寫清楚：玩法是什麼、玩家要怎麼做、怎樣算成功（為什麼只有會這個知識的人能過）、成功後給什麼訊息。讓我挑一個，我選了再給完整的單一 HTML 檔。":"開始寫程式之前，請先用三到五句話說明：（1）玩家會看到什麼、做什麼；（2）為什麼只有會這個知識的人能成功；（3）你打算怎麼避免亂猜過關。我確認後，再給我完整的單一 HTML 檔。";
+ return p}
+var ENGMAN="【可用的道具 props（物件）】每個物件寫成 {id, prop, place, params, focus, mechs}。place 牆面用 {wall:N|E|S|W,u,v}（u 左右、v 離地高度），地面用 {floor:[x,z]}。\n- safeBox：落地小保險箱，正面門上是互動面 front，可套用 wheels／buttons 等機關。解開後門打開，裡面有東西。｜位置:floor｜互動面:front｜params：hot(hot,預設safe)；doorHot(hot,預設safeDoor)；openFlag(flag,預設safeOpen)；item(item,預設key)；gotFlag(flag,預設safeGot)\n- toolbox：紅色工具箱。箱蓋會在旗標成立後掀開，露出裡面的道具。｜位置:floor｜互動面:無｜params：hot(hot,預設toolbox)；openFlag(flag,預設boxOpen)；item(item,預設crowbar)；gotFlag(flag,預設boxGot)\n- bookshelf：書架。其中一本書可以拉出，後面藏著東西。拉書與藏的東西由規則決定。｜位置:floor｜互動面:無｜params：hot(hot,預設shelf)；pullFlag(flag,預設bookPulled)；item(item,預設scissors)；gotFlag(flag,預設shelfGot)\n- wallPoster：一張貼在牆上的海報，上面印著標題與幾行字。文字可以引用答案（@answers.x）。｜位置:wall｜互動面:無｜params：hot(hot,預設poster)；title(string,預設注意事項)；text(string,預設請隨手關燈\n離開前檢查門鎖)；color(color,預設0xf1e8c8)\n- trashBin：一個桶子，點開會翻到裡面的道具。｜位置:floor｜互動面:無｜params：hot(hot,預設bin)；item(item,預設paperclip)；gotFlag(flag,預設binGot)\n- mirror：掛牆的鏡子。旗標成立（例如燈亮了）後，鏡面映出一行反寫的字。文字可以引用答案。｜位置:wall｜互動面:無｜params：hot(hot,預設mirror)；showFlag(flag,預設lampOn)；text(string,預設417)\n- plantPot：一盆植物。旗標成立後開出花。｜位置:floor｜互動面:無｜params：hot(hot,預設plant)；bloomFlag(flag,預設bloom)\n- floorLamp：落地立燈。旗標成立後燈罩亮起並發出暖光。｜位置:floor｜互動面:無｜params：hot(hot,預設flamp)；onFlag(flag,預設lampOn)\n- drawerChest：兩個抽屜，各自有開啟旗標，開啟後露出裡面的道具。抽屜怎麼打開（撬開、拉三下…）由規則決定。｜位置:floor｜互動面:無｜params：hot(hot,預設chest)；hot1(hot,預設drawer1)；open1(flag,預設open1)；item1(item,預設fuse)；got1(flag,預設got1)；hot2(hot,預設drawer2)；open2(flag,預設open2)；item2(item,預設matches)；got2(flag,預設got2)\n- hangingPicture：掛在牆上的畫。取下後牆上留下淺色方塊與掛勾；取下的畫是可旋轉檢視的道具，背面可以有線索。｜位置:wall｜互動面:無｜params：hot(hot,預設picture)；takenFlag(flag,預設pic，畫被取下後成立的旗標（由規則的 find 效果設定）)；item(item,預設picture)\n- lightSwitch：牆上的開關，純氣氛用，點擊只會出現規則裡寫的訊息。｜位置:wall｜互動面:無｜params：hot(hot,預設sw)\n- elecDoor：帶電子密碼面板的門。面板下有電池槽，裝入電池後面板亮起；解開後門打開，後面透出光。｜位置:wall｜互動面:無｜params：doorHot(hot,預設door)；keypadHot(hot,預設keypad)；battFlag(flag,預設batt，電池裝好後的旗標)；openFlag(flag,預設open)\n- neonSign：發光的霓虹字與箭頭，指向某個位置（例如密碼面板），也會照亮附近。｜位置:wall｜互動面:無｜params：hot(hot,預設sign)\n- bedHidden：床上有一件可拿起的道具，枕頭可掀開，下面藏著另一件。｜位置:floor｜互動面:無｜params：hot(hot,預設bed)；pillowHot(hot,預設pillow)；topHot(hot,預設duck)；topItem(item,預設duck)；topFlag(flag,預設duck，床上道具被拿走的旗標)；pillowFlag(flag,預設pil，枕頭被掀開的旗標)；hiddenItem(item,預設battery)；hiddenFlag(flag,預設batget，藏的道具被拿走的旗標)\n- rugHidden：點地毯會掀開一角，露出下面藏的道具。｜位置:floor｜互動面:無｜params：hot(hot,預設rug)；movedFlag(flag,預設rugup)；hiddenItem(item,預設bulb)；hiddenFlag(flag,預設bulbget)\n- redChair：一張普通的椅子，裝飾用。｜位置:floor｜互動面:無｜params：hot(hot,預設chair)；color(color,預設0xb4483a)\n- uvLamp：空的燈座，裝上紫外線燈泡後亮起，並在地板某處投出隱形字跡（decal）。｜位置:floor｜互動面:無｜params：hot(hot,預設lamp)；onFlag(flag,預設lampon)；decal(texture,預設uv)；decalAt(vec,預設[0.8, -0.8]，字跡相對燈架的 [x,z])\n- blackboard：掛牆黑板。底下藏著一個數字與一排彩色圓點（按鈕順序）；表面可套用「rub」機關擦掉粉筆字。｜位置:wall｜互動面:face｜params：hot(hot,預設board)；label(string,預設第 1 碼)；digit(string,預設0，藏在黑板上的數字)；colors(list,預設[]，要顯示的彩色圓點順序（顏色名），空則不畫)\n- bulletinBoard：佈告欄上貼著一張便條，上面有一個時間。｜位置:wall｜互動面:無｜params：hot(hot,預設bulletin)；title(string,預設放學鐘聲)；time(string,預設4:50)；ampm(string,預設下午)\n- schoolDoor：木門，右側有一塊鎖面板（互動面 lock），可套用 wheels 滾輪機關。解開後門打開，外面透出光。｜位置:wall｜互動面:lock｜params：doorHot(hot,預設door)；lockHot(hot,預設lock)；openFlag(flag,預設open)；showLock(bool,預設true，是否在門旁畫出滾輪鎖面板)\n- teacherDesk：老師的講桌，側邊抽屜正面是互動面 front，可套用 buttons 按鈕序列機關，解開後抽屜滑出，裡面有東西。放置時請 ry=90，讓抽屜面向房間內。｜位置:floor｜互動面:front｜params：hot(hot,預設tdesk)；drawerHot(hot,預設drawer)；openFlag(flag,預設drawerOpen)；item(item,預設battery)；gotFlag(flag,預設batGet)\n- studentDesk：一組課桌椅，桌肚可以放東西（用規則決定裡面有什麼）。｜位置:floor｜互動面:無｜params：hot(hot,預設deskA)\n- wallClock：掛牆時鐘，表面是互動面 face，可套用 dial 撥指針機關。撥對後下方彈出暗格，裡面放著道具。｜位置:wall｜互動面:face｜params：hot(hot,預設clock)；okFlag(flag,預設clockok)；item(item,預設key)；gotFlag(flag,預設keyGet)\n- slidingWindow：上下推拉的窗，用旗標記錄開關，純氣氛或當作線索來源。｜位置:wall｜互動面:無｜params：hot(hot,預設window)；openFlag(flag,預設winOpen)\n- lockerRow：三個置物櫃，其中 07 號需要鑰匙，打開後掉出一件道具，其他格打不開。｜位置:wall｜互動面:無｜params：hot(hot,預設locker)；otherHot(hot,預設lockerB)；openFlag(flag,預設lockopen)；item(item,預設remote)；gotFlag(flag,預設remGet)\n- pullScreen：捲軸式銀幕，點一下拉下。投影機開啟後，銀幕上顯示（可模糊或清楚的）內容，內容在互動面 proj。｜位置:wall｜互動面:proj｜params：hot(hot,預設screen)；downFlag(flag,預設screenDown)；onFlag(flag,預設projOn)；sharpFlag(flag,預設focused)；title(string,預設)；big(string,預設)\n- projectorCart：推車上的投影機。開啟後發出光束射向銀幕。｜位置:floor｜互動面:無｜params：hot(hot,預設projector)；onFlag(flag,預設projOn)；aim(vec,預設[-0.5, 1.6, 2.2]，光束方向)；lightAt(vec,預設[1.2, 1.8, 2.3]，投影照亮處（世界座標）)\n- panelBoard：掛牆的一塊面板，表面是互動面 face，可套用任何表面機關（reveal 手電筒／放大鏡、wires 接線、laser 雷射…）。kind 決定材質。｜位置:wall｜互動面:face｜params：hot(hot,預設panel)；w(number,預設1.5)；h(number,預設1.1)；kind(string,預設metal，metal 金屬板／wall 牆面／wood 木板)；label(string,預設，面板上的標籤文字)\n- intercom：牆上的對講機。有訊息時指示燈閃紅燈；點一下播放一段開場／結尾風格的對話頁（規則中用 story:鍵名 播放）。｜位置:wall｜互動面:無｜params：hot(hot,預設intercom)；ringFlag(flag,預設，此旗標成立時指示燈亮起（空白＝一直亮）)\n- wallTV：掛牆的電視。通電後螢幕亮起；點擊可觸發規則（例如播放錄影：story:鍵名）。｜位置:wall｜互動面:無｜params：hot(hot,預設tv)；onFlag(flag,預設，此旗標成立時螢幕亮起（空白＝一直亮）)；label(string,預設REC)\n\n【可用的機關 mechs】掛在物件的 mechs 陣列，格式 {id, mech, surface, if, solved, params, ok}。surface 要是該物件有的互動面。\n- rub（擦拭）：用手指在表面來回擦拭，擦掉覆蓋層，露出底下的內容。通常需要先拿著某個道具（例如黑板擦）。｜params：bg(color,預設#1f3d33，覆蓋層底色)；inset(number,預設14，覆蓋層內縮像素（保留邊框）)；text(string,預設，覆蓋層上寫的字)；need(number,預設0.6，擦掉多少比例算完成(0-1))｜範例：{\"mech\":\"rub\",\"surface\":\"face\",\"if\":\"using:eraser\",\"solved\":\"flag:rubbed\",\"ok\":[\"set:rubbed\"]}\n- dial（撥指針）：拖曳時鐘的指針撥到指定時間。靠近中心拖曳是時針，靠外圈是分針。｜params：target(string,預設4:50，正確時間 H:MM)；start(string,預設10:10，起始時間 H:MM)｜範例：{\"mech\":\"dial\",\"surface\":\"face\",\"solved\":\"flag:clockok\",\"params\":{\"target\":\"@answers.time\"},\"ok\":[\"set:clockok\"]}\n- wheels（滾輪密碼鎖）：每個滾輪上下拖曳（或點上半／下半）轉動數字，排出正確密碼即解鎖。｜params：code(string,預設000，正確數字（字串）)｜範例：{\"mech\":\"wheels\",\"surface\":\"lock\",\"solved\":\"flag:open\",\"params\":{\"code\":\"@answers.code\"},\"ok\":[\"win\"]}\n- buttons（按鈕序列）：表面上有一排彩色按鈕，依正確順序按完才算解開。按錯會重來。｜params：order(list,預設[\"red\", \"blue\", \"green\", \"yellow\"]，按鈕由左到右的排列（顏色名）)；sequence(list,預設[\"red\", \"blue\", \"green\", \"yellow\"]，正確的按下順序)｜範例：{\"mech\":\"buttons\",\"surface\":\"front\",\"solved\":\"flag:drawerOpen\",\"params\":{\"order\":[\"green\",\"red\",\"yellow\",\"blue\"],\"sequence\":\"@answers.seq\"},\"ok\":[\"set:drawerOpen\"]}\n- reveal（手電筒／放大鏡）：手指按住並移動，光圈（或放大鏡）跟著手指，只有圈內看得到隱藏的字。把字整段掃過一遍即完成。通常搭配 if:\"using:道具\"。｜params：text(string,預設417，隱藏的文字)；mode(string,預設light，light＝手電筒（圈外變暗）；lens＝放大鏡（圈外字太小看不清）)；at(vec,預設[0, 0]，文字中心 [u,v]（互動面座標）)；size(number,預設0.28，文字高度（占互動面高度比例）)；radius(number,預設0.2，光圈半徑（占互動面寬度比例）)；color(string,預設#b9a2ff，發光顏色)｜範例：{\"mech\":\"reveal\",\"surface\":\"face\",\"if\":\"using:uvlight\",\"solved\":\"flag:uvDone\",\"params\":{\"text\":\"@answers.code.0\",\"mode\":\"light\"},\"ok\":[\"set:uvDone\"]}\n- wires（接線）：從左邊的線頭拖到右邊同色的端子。全部接對即完成。｜params：left(list,預設[\"red\", \"blue\", \"green\", \"yellow\"]，左側線頭由上到下的顏色)；right(list,預設[\"blue\", \"yellow\", \"red\", \"green\"]，右側端子由上到下的顏色（要和左側是同一組顏色）)｜範例：{\"mech\":\"wires\",\"surface\":\"face\",\"if\":\"flag:panelOpen\",\"solved\":\"flag:power\",\"params\":{\"left\":[\"red\",\"blue\",\"green\"],\"right\":[\"green\",\"red\",\"blue\"]},\"ok\":[\"set:power\"]}\n- laser（雷射反射）：格狀面板上有雷射發射器、可點擊轉向的鏡子、擋牆和目標。點鏡子切換 ／ 與 ＼，讓光束打到目標。｜params：cols(number,預設5)；rows(number,預設4)；emitter(number,預設0，發射器所在列（光束由左邊射入，往右）)；target(vec,預設[4, 3]，目標格 [欄,列])；mirrors(list,預設[[2, 0, \"/\"], [2, 3, \"\\\\\"]]，鏡子 [欄,列,初始方向]，方向為 / 或 \\)；walls(list,預設[]，擋牆格 [欄,列])｜範例：{\"mech\":\"laser\",\"surface\":\"face\",\"if\":\"flag:power\",\"solved\":\"flag:laserOK\",\"params\":{\"cols\":5,\"rows\":4,\"emitter\":0,\"target\":[4,3],\"mirrors\":[[2,0,\"\\\\\"],[2,3,\"\\\\\"]]},\"ok\":[\"set:laserOK\"]}\n- slide（滑塊拼圖）：方格裡有一格空位，點與空位相鄰的方塊把它滑過去，把數字排成 1、2、3… 的順序。完成後整張圖會亮起，顯示一行字（例如密碼）。｜params：n(number,預設3，邊長（3＝3×3 共 8 塊）)；text(string,預設，完成後顯示的文字)；seed(number,預設3，洗牌亂數種子（固定→每次一樣）)｜範例：{\"mech\":\"slide\",\"surface\":\"face\",\"if\":\"flag:knobOn\",\"solved\":\"flag:slideOK\",\"params\":{\"n\":3,\"text\":\"@answers.code\"},\"ok\":[\"set:slideOK\"]}\n- sort（排序）：一排方塊，點一個再點另一個交換位置，排成指定順序。｜params：labels(list,預設[\"3\", \"1\", \"4\", \"2\"]，目前由左到右的標籤)；target(list,預設[\"1\", \"2\", \"3\", \"4\"]，正確由左到右的標籤)｜範例：{\"mech\":\"sort\",\"surface\":\"face\",\"if\":\"flag:power\",\"solved\":\"flag:sortOK\",\"params\":{\"labels\":[\"3\",\"1\",\"4\",\"2\"],\"target\":[\"1\",\"2\",\"3\",\"4\"]},\"ok\":[\"set:sortOK\"]}\n- pipes（轉管線）：格子裡有直管和彎管，點一格把它轉 90°，讓水從左邊的入口流到右邊的出口。｜params：grid(list,預設[[\"L1\", \"I0\", \"L0\"], [\"I0\", \"L2\", \"L3\"]]，每列每格：I＝直管、L＝彎管，數字＝起始轉向 0-3，.＝空格)；source(number,預設0，入口所在列（左側）)；sink(number,預設0，出口所在列（右側）)｜範例：{\"mech\":\"pipes\",\"surface\":\"face\",\"if\":\"flag:power\",\"solved\":\"flag:waterOK\",\"params\":{\"grid\":[[\"L1\",\"I0\",\"L0\"],[\"I0\",\"L2\",\"L3\"]],\"source\":0,\"sink\":1},\"ok\":[\"set:waterOK\"]}\n- lights（熄燈／亮燈）：一排排燈，點一盞會讓它和上下左右的燈一起反轉。把所有燈弄成目標狀態（預設全亮）。｜params：start(list,預設[\"010\", \"111\", \"010\"]，每列起始狀態，1＝亮，0＝暗)；target(list,預設[]，目標狀態（空＝全亮）)｜範例：{\"mech\":\"lights\",\"surface\":\"face\",\"if\":\"flag:power\",\"solved\":\"flag:lampsOK\",\"params\":{\"start\":[\"010\",\"111\",\"010\"]},\"ok\":[\"set:lampsOK\"]}\n- sliders（滑桿調節）：幾根直立滑桿，上下拖曳調到指定刻度（例如音量、水位）。每根的目標刻度是答案的一部分，玩家要先從線索得知。｜params：target(list,預設[3, 1, 4]，每根滑桿的目標刻度（建議用 @answers.…）)；start(list,預設[0, 0, 0]，起始刻度)；max(number,預設5，最大刻度)｜範例：{\"mech\":\"sliders\",\"surface\":\"face\",\"if\":\"flag:power\",\"solved\":\"flag:levelOK\",\"params\":{\"target\":\"@answers.levels\",\"start\":[0,0,0],\"max\":5},\"ok\":[\"set:levelOK\"]}\n- simon（記憶序列）：幾個彩色按鈕會依序閃一遍，玩家照樣子按一次。按錯會重新播放。｜params：pads(list,預設[\"red\", \"blue\", \"green\", \"yellow\"]，按鈕顏色（由左到右）)；sequence(list,預設[\"red\", \"green\", \"blue\", \"yellow\", \"red\"]，要記住的順序)｜範例：{\"mech\":\"simon\",\"surface\":\"face\",\"if\":\"flag:power\",\"solved\":\"flag:memOK\",\"params\":{\"pads\":[\"red\",\"blue\",\"green\",\"yellow\"],\"sequence\":[\"red\",\"green\",\"blue\"]},\"ok\":[\"set:memOK\"]}\n- titrate（滴定）：用滴定管把已知濃度的鹼液滴進酸液，直到指示劑剛好出現淡淡的粉紅色（終點）再記錄體積。先大量、再小量、最後一滴一滴，過量了就重新裝填。體積可以拿來算出酸的濃度。｜params：acidMl(number,預設20，錐形瓶裡酸液的體積（mL）)；acidM(number,預設0.12，酸液真正的濃度 M（玩家要算出來，不會顯示）)；baseM(number,預設0.1，滴定管鹼液濃度 M（會顯示）)；needFlag(flag,預設，加入指示劑後成立的旗標；空白＝一開始就有指示劑)｜範例：{\"mech\":\"titrate\",\"surface\":\"face\",\"solved\":\"flag:titrated\",\"params\":{\"acidMl\":20,\"acidM\":0.12,\"baseM\":0.1},\"ok\":[\"set:titrated\"]}\n- circuit（串並聯電路）：三顆燈泡、一個電池。用兩個開關決定 A、B 要串聯還是並聯，以及 C 要不要接、接成串聯還是並聯。每顆燈泡有額定電壓，太亮會燒壞，太暗不算亮。要讓三顆都正常發亮。畫面上會顯示總電流與各燈泡的電壓。｜params：V(number,預設6，電池電壓（V）)；bulbs(list,預設[{\"n\": \"A\", \"R\": 8, \"Vr\": 3}, {\"n\": \"B\", \"R\": 8, \"Vr\": 3}…，三顆燈泡：名稱、電阻（Ω）、額定電壓（V）)；lo(number,預設0.75，亮度下限（相對額定）)；hi(number,預設1.3，亮度上限，超過 1.6 會燒壞)｜範例：{\"mech\":\"circuit\",\"surface\":\"face\",\"solved\":\"flag:circuitOK\",\"params\":{\"V\":9},\"ok\":[\"set:circuitOK\"]}\n- ecoweb（生態金字塔）：把生物拖到食物鏈的正確層級：生產者、初級消費者、次級消費者、三級消費者。放對的層會顯示往上傳遞的能量（每上一層只剩約 10%）。點生物可讀它吃什麼。｜params：species(list,預設[{\"n\": \"牧草\", \"t\": 0, \"d\": \"行光合作用，用陽光製造養分。\"}, {\"n\": \"蚱蜢\", …，每種生物：名稱 n、層級 t（0 開始）、描述 d)；energy(number,預設10000，第 0 層的能量（kJ）)；tiers(list,預設[\"生產者\", \"初級消費者\", \"次級消費者\", \"三級消費者\"]，各層名稱)｜範例：{\"mech\":\"ecoweb\",\"surface\":\"face\",\"solved\":\"flag:ecoOK\",\"params\":{},\"ok\":[\"set:ecoOK\"]}\n- windmap（天氣圖風向）：一張北半球的等壓線圖，有高壓或低壓中心。每個氣象站有一支風標，點一下順時針轉 45°。把每支風標轉到風實際吹去的方向（風從高壓吹向低壓，並受地轉偏向力偏右，近地面再向低壓偏約 45°）。｜params：centers(list,預設[{\"x\": 0, \"y\": 0, \"t\": \"L\", \"p\": 996}]，壓力中心：座標 x,y（-1～1）、L 低壓／H 高壓、中心氣壓)；stations(list,預設[{\"x\": 0.5, \"y\": 0}, {\"x\": 0, \"y\": 0.5}, {\"x\": -0.5, \"y\":…，氣象站座標)；start(list,預設[]，各風標初始方向 0～7（0＝向東，逆時針每格 45°）；空白＝全部向東)｜範例：{\"mech\":\"windmap\",\"surface\":\"face\",\"solved\":\"flag:windOK\",\"params\":{},\"ok\":[\"set:windOK\"]}\n- graphfit（直線擬合）：圖上有一組實驗數據點。用兩根滑桿調整直線 y＝a·x＋b 的斜率 a 與截距 b，讓直線盡量貼近所有點（誤差平方和夠小）。｜params：points(list,預設[[1, 7], [2, 10], [3, 13], [4, 16], [5, 19]]，數據點 [x,y])；a(number,預設3，正確斜率)；b(number,預設4，正確截距)；aMax(number,預設6)；bMax(number,預設10)；xMax(number,預設6)；yMax(number,預設24)；tol(number,預設1.2，允許的誤差平方和)｜範例：{\"mech\":\"graphfit\",\"surface\":\"face\",\"solved\":\"flag:fitOK\",\"params\":{\"a\":3,\"b\":4},\"ok\":[\"set:fitOK\"]}\n- order（排序清單）：一列由上到下的卡片，每張寫一句話（事件、步驟、地層）。點一張再點另一張交換位置，排成正確順序。和「排序」不同，每張卡可以放較長的文字。｜params：labels(list,預設[\"第三步\", \"第一步\", \"第二步\"]，目前由上到下的卡片文字)；target(list,預設[\"第一步\", \"第二步\", \"第三步\"]，正確由上到下的文字)；title(string,預設，清單標題)｜範例：{\"mech\":\"order\",\"surface\":\"face\",\"solved\":\"flag:orderOK\",\"params\":{\"labels\":[\"乙\",\"甲\",\"丙\"],\"target\":[\"甲\",\"乙\",\"丙\"]},\"ok\":[\"set:orderOK\"]}\n- cloze（殘卷填字）：一卷被蟲蛀的詩文，缺字處是方框。點方框會輪流換成候選字，補完後按「蓋印」檢查；會告訴你有幾句通順，但不會指出哪一字錯。適合需要對仗、押韻、語意判斷的國文謎題。｜params：title(string,預設殘卷，卷名)；lines(list,預設[{\"text\": \"白日依山{0}\", \"slots\": [{\"opts\": [\"盡\", \"起\", \"生\"], …，每句：text 用 {0}{1} 標出缺字處；slots 依序給候選字 opts 與正確 ans（索引）)｜範例：{\"mech\":\"cloze\",\"surface\":\"face\",\"solved\":\"flag:clozeOK\",\"params\":{},\"ok\":[\"set:clozeOK\"]}\n- plotmap（地圖定位）：一張有等高線的地形圖，標著三角點 T。拖曳圖釘，畫面會即時顯示圖釘相對於 T 的方位角與實際距離（依比例尺換算）。把圖釘放到指定方位與距離，就能找到目標位置；等高線上的標高要自己讀。｜params：scale(number,預設250，比例尺：圖上 1 cm 代表實際幾公尺)；bearing(number,預設72，目標方位角（度，正北 0 順時針）)；dist(number,預設1500，目標距離（公尺）)；tolB(number,預設4)；tolD(number,預設60)；hills(list,預設[{\"x\": 3, \"y\": 2, \"h\": 330, \"s\": 2.2}, {\"x\": -2, \"y\": -1,…，山丘：圖上座標 cm、高度 h 公尺、寬度 s)；base(number,預設1000)；interval(number,預設50，等高線間距（公尺）)；t(list,預設[-3.2, -1.4]，三角點 T 的圖上座標 cm)；pinStart(list,預設[-1, 1.5]，圖釘起始座標 cm)；w(number,預設10，地圖寬（cm）)；h(number,預設7，地圖高（cm）)｜範例：{\"mech\":\"plotmap\",\"surface\":\"face\",\"solved\":\"flag:plotted\",\"params\":{},\"ok\":[\"set:plotted\"]}\n- gates（邏輯閘電路）：三個輸入 A、B、C，經過兩個邏輯閘：先 A、B 進第一個閘，結果再和 C 進第二個閘，輸出接到燈。點輸入切換 0／1，點閘切換種類（AND、OR、XOR、NAND、NOR）。把兩個閘選對，讓所有輸入組合下的輸出都符合規則表（規則表在別處）。｜params：want(string,預設01010111，8 個輸出，依序對應 ABC＝000,001,010,011,100,101,110,111)；types(list,預設[\"AND\", \"OR\", \"XOR\", \"NAND\", \"NOR\"]，可選的閘種類)｜範例：{\"mech\":\"gates\",\"surface\":\"face\",\"solved\":\"flag:gatesOK\",\"params\":{\"want\":\"01010111\"},\"ok\":[\"set:gatesOK\"]}\n- caesar（凱撒密碼盤）：一串英文大寫的密文，每個字母都往後移了固定的位數。轉動密碼盤（◀ ▶）調整位移，畫面會即時顯示解出來的字。找到通順的英文句子後按「確認原文」。｜params：cipher(string,預設WKH NHB LV XQGHU WKH PDW，密文（大寫英文與空格）)；shift(number,預設3，正確位移（1～25）)｜範例：{\"mech\":\"caesar\",\"surface\":\"face\",\"solved\":\"flag:cipherOK\",\"params\":{\"cipher\":\"KHOOR\",\"shift\":3},\"ok\":[\"set:cipherOK\"]}\n- keys（鋼琴鍵盤）：八個白鍵（C4 到 C5）。照著別處的樂譜彈出整段旋律；彈錯一個音，整段重來。譜不會顯示在鍵盤上，要去找。｜params：melody(list,預設[\"E4\", \"E4\", \"F4\", \"G4\", \"G4\", \"F4\", \"E4\", \"D4\"]，正確旋律，音名 C4 D4 E4 F4 G4 A4 B4 C5)｜範例：{\"mech\":\"keys\",\"surface\":\"face\",\"solved\":\"flag:melodyOK\",\"params\":{\"melody\":[\"E4\",\"E4\",\"F4\",\"G4\"]},\"ok\":[\"set:melodyOK\"]}\n- colormix（混色調色）：三根滑桿調出和目標色塊一樣的顏色。light＝色光（紅綠藍相加，全開是白），paint＝顏料（青洋紅黃相減，全開是黑）。分不清楚時，多試幾次就看得出規律。｜params：mode(string,預設light，light 色光／paint 顏料)；target(list,預設[5, 5, 0]，目標：三根滑桿各自的刻度（0～5），玩家看到的是混出來的顏色)；labels(list,預設[]，三根滑桿的標籤（空白＝依模式預設）)｜範例：{\"mech\":\"colormix\",\"surface\":\"face\",\"solved\":\"flag:colorOK\",\"params\":{\"mode\":\"light\",\"target\":[5,5,0]},\"ok\":[\"set:colorOK\"]}\n- rhythmtap（按壓節奏）：一個大圓盤，要連續按指定次數，而且節奏要穩：相鄰兩次的間隔必須在範圍內（預設每分鐘 100～120 下）。太快、太慢或停頓就重新計數。畫面會顯示目前節奏。｜params：count(number,預設30，需要連續按幾下)；bpmMin(number,預設100)；bpmMax(number,預設120)；beat(bool,預設false，是否在畫面邊緣閃示拍點當提示)｜範例：{\"mech\":\"rhythmtap\",\"surface\":\"face\",\"solved\":\"flag:cprOK\",\"params\":{\"count\":30},\"ok\":[\"set:cprOK\"]}\n- gears（齒輪組）：輸入齒輪 A 帶動 B，B 和 C 裝在同一根軸上一起轉，C 再帶動輸出齒輪 D。按下方 B、C、D 三個按鈕輪流換齒數。畫面顯示輸出轉速，調到目標轉速才能啟動機構。｜params：a(number,預設12，輸入齒輪齒數)；rpm(number,預設60，輸入轉速（rpm）)；target(number,預設5，目標輸出轉速（rpm）)；options(list,預設[8, 12, 16, 24, 36, 48]，B、C、D 可選的齒數)；start(list,預設[12, 12, 12]，B、C、D 起始齒數)｜範例：{\"mech\":\"gears\",\"surface\":\"face\",\"solved\":\"flag:gearsOK\",\"params\":{\"target\":5},\"ok\":[\"set:gearsOK\"]}\n\n【道具 items】只能使用這些 id（在 find、give、take、swap、組合、using、has 裡）：\n- duck：橡皮鴨。拖曳旋轉、雙指縮放，點一下會叫，底部也要看看。\n- picture：畫框。拖曳旋轉、雙指縮放，或按「翻面」看背後。\n- battery：一顆還有電的電池。點一下讓它轉一轉。\n- bulb：點一下燈泡，看看它會不會亮。\n- eraser：木頭黑板擦，毛氈上沾滿粉筆灰。點一下拍拍看。\n- key：金色的小鑰匙，吊牌上寫著 07。\n- remote：背面的電池槽是空的。選取電池，再點背包裡的它，就能組合。\n- remote2：紅燈亮著，可以遙控投影機了。\n- uvlight：握把上有個小開關，打開後會發出紫光。拿著它去照可疑的牆面。\n- lens：圓形的放大鏡。拿著它去看很小的字。\n- candyJar：玻璃糖果罐，裡面好像有東西在動。在這個視窗裡左右快速晃動手指（或按「搖一搖」，手機可直接搖）。\n- screwdriver：十字螺絲起子，可以用來拆東西。\n- radioBox：用螺絲鎖住的老收音機。拿著螺絲起子，按「拆開」。\n- knob：從收音機上拆下來的金屬旋鈕。\n- waterCup：裝滿水的紙杯。可以倒進需要澆水的東西。\n- coin：一枚舊硬幣。可以投進投幣孔，或用邊緣轉開小螺絲。\n- paperclip：拉直的迴紋針，可以用來撥開簡單的鎖。\n- fuse：玻璃管保險絲，兩端有金屬蓋。\n- scissors：紅柄剪刀，可以剪開繩子或信封。\n- magnet：紅藍兩色的磁鐵，可以吸起小的金屬東西。\n- matches：一盒火柴，還剩幾根。\n- hammer：鐵頭木柄的榔頭，可以敲開脆弱的東西。\n- crowbar：彎頭的鐵撬，可以撬開卡住的抽屜或木箱。\n- rope：一捆麻繩。\n- envelope：一封封好的信，背面有火漆。拿剪刀可以拆開。\n- usbStick：小小的隨身碟，可以插進電腦或螢幕。\n- idCard：掛繩識別證，可以刷開門禁。\n- magnetLine：繩子綁著磁鐵，可以從縫隙裡釣金屬的東西。\n- flatCoin：被榔頭敲得扁扁的硬幣，剛好可以塞進細縫。\n\n【效果 effects】寫在 rules 或 ok 陣列裡，格式「名稱:參數」，例如 say:你好、set:旗標、find:key|keyGet。\n- say：顯示一句話｜參數：文字\n- set：設定旗標｜參數：旗標\n- unset：清除旗標｜參數：旗標\n- take：從背包移除道具（用掉）｜參數：道具id\n- give：直接把道具放進背包｜參數：道具id\n- note：顯示一張紙條／公告｜參數：文字\n- find：發現一個道具，開啟檢視視窗，可選擇收進背包｜參數：道具id|取得後旗標\n- code：開啟數字密碼面板，答對才執行 ok 效果｜參數：答案|可用按鍵\n- ui：開啟浮層機關（例如對焦滑桿），完成才執行 ok 效果｜參數：浮層名|參數\n- goto：切換到另一個場景｜參數：場景id\n- story：播放一段劇情頁｜參數：opening 或 ending\n- win：本關完成｜參數：無\n- sound：播放一個音效（ding、buzz、click、door、chime、alarm、drip、rumble、spark、phone、win）｜參數：音效名\n- speak：用語音朗讀關卡 speech 區裡的一段話（聽力情境）。第一、二次只聽，之後可看字幕；沒有語音功能時直接顯示文字｜參數：speech 區的鍵名\n- video：播放關卡 media 區裡的一段影片（沒有字幕也行），看完或按關閉後才執行 ok 效果｜參數：media 名稱\n- inc：計數器加 1，可設上限（搭配 count 條件）｜參數：名稱 或 名稱|上限\n- reset：把計數器歸零｜參數：名稱\n- swap：把背包裡的一個道具換成另一個（例如拆開信封、用掉電量）｜參數：舊道具id|新道具id\n- mission：更新目前場景的任務說明並顯示｜參數：文字\n- buzz：手機震動（毫秒）｜參數：毫秒\n\n【條件 conds】寫在 if 裡，可用 & 連接、! 取反，例如 flag:a&!flag:b：\n- flag：旗標已成立\n- has：背包裡有某道具\n- using：目前手上拿著某道具\n- scene：目前在某個場景\n- count：計數器比較。例：count:pulls>=3（可用 >=、<=、>、<、=）\n- visited：玩家來過某個場景\n\n【房間風格 look】可用：day（白天教室）、dusk（黃昏）、night（夜晚）、lab（實驗室）\n\n你要產出的是「一個 JSON 檔」，描述一間 3D 密室關卡。只輸出一個 JSON 程式碼區塊，不要註解，不要多餘欄位，文字用繁體中文。\n\n【頂層欄位】\n{\n \"id\":\"任意英數字\", \"look\":\"day|dusk|night|lab 其中之一\", \"title\":\"關卡名稱\", \"subtitle\":\"副標\", \"version\":1,\n \"answers\":{\"code\":\"4725\"},\n \"winText\":\"過關後顯示的文字\",\n \"start\":\"起始場景id\",\n \"scenes\":{ \"場景id\":{ \"name\":\"場景名\",\"mission\":\"任務說明\",\"room\":{\"floor\":\"floor\"},\"objects\":[ ...物件... ] } },\n \"rules\":{ \"熱點id\":[ {\"if\":\"條件(可省)\",\"do\":[\"效果\",\"效果\"]} ] },\n \"clues\":[ {\"key\":\"code\",\"index\":[0,1],\"when\":\"flag:某旗標\",\"where\":\"線索在哪裡\"} ],\n \"hints\":[ {\"if\":\"!flag:某旗標\",\"t\":\"提示文字\"}, {\"t\":\"最後一條提示\"} ]\n}\n\nanswers 是答案集中放的地方，鍵名自取，值是字串。\n\n【物件】每個物件：{\"id\":\"唯一id\",\"prop\":\"道具名\",\"place\":{...},\"params\":{...},\"focus\":{...},\"mechs\":[...]}\n- place：牆面 {\"wall\":\"N\",\"u\":左右位置,\"v\":離地高度}；地面 {\"floor\":[x,z]}。u、x、z 約在 -2.5 到 2.5 之間，同一面牆上的物件 u 至少相隔 1.2，不要重疊。\n- params 裡的 hot 型參數（名稱含 Hot 或叫 hot）是「熱點id」，同一關內必須唯一；同一種道具用兩次時，每個 hot 都要改成不同的名字。建議 hot 與物件 id 同名。\n- 每個熱點id（包含互動面的 hot）都要在 rules 有對應條目，否則點了沒反應。\n- 要在物件的互動面上放機關：focus 寫 {\"mode\":\"front\",\"surface\":\"互動面名\",\"k\":5}，mechs 寫 [{\"id\":\"機關id\",\"mech\":\"機關名\",\"surface\":\"互動面名\",\"solved\":\"flag:完成旗標\",\"params\":{...},\"ok\":[\"set:完成旗標\"]}]。互動面名只能用該道具列出的互動面。\n- 最後逃出的那扇門：物件加 \"winFocus\":true，門上機關的 ok 寫 [\"win\"]。\n- 機關的 if 是「要滿足才能操作」的條件；solved 是「算已完成」的條件。\n\n【規則 rules】\n- 鍵是熱點id；值是陣列，從上往下，執行第一條 if 成立的（沒寫 if 就一定成立），所以「已完成」的情形放前面，預設反應放最後。\n- do 是效果清單。重要：find、code、ui、note、goto、story 會暫停後面的效果，必須放在 do 的最後面；set 要放在它們前面。\n- 長按熱點用「熱點id:hold」當鍵。\n- 文字裡可用 {answers.鍵.位數}（位數從 0 開始）顯示答案的某一位，例如「{answers.code.0}」。機關參數裡引用整個答案用 \"@answers.code\"。\n\n【clues 線索表】驗證器靠它判斷「玩家有沒有機會知道答案」：answers 裡每個鍵的每一位，都必須被某條 clue 涵蓋。index 可以是數字、陣列或 \"*\"（全部）；when 是玩家取得該線索時會成立的條件（通常是 flag:旗標，由 rules 的 set 設定）。\n\n【旗標】英數字，由效果 set:旗標 設定，條件 flag:旗標 讀取。每個旗標都要真的被設定，也要被某處使用。\n\n【設計要求】\n1. 以拆解卡的「判定」為準：玩家必須真的做到卡上的能力，才能取得關鍵訊息。承載知識的機關要成為通往逃出的必經之路，不能繞過。\n2. 答案不要直接寫在畫面上讓人抄；關鍵訊息應是做對機關後才出現。\n3. 至少三個物件，玩法不要全部一樣；零門檻的探索物件可以當黏合劑。\n4. 只能使用手冊列出的道具、機關、效果、條件、道具 id；不能自創。\n5. 一關建議 1～2 個場景、3～8 個物件、2～4 個旗標串成的線索鏈。\n\n【完整範例】（可解、通過檢查的最小關卡，請照這個格式）\n{\n \"id\": \"demo\",\n \"look\": \"day\",\n \"title\": \"範例關卡\",\n \"version\": 1,\n \"answers\": {\n  \"code\": \"4725\"\n },\n \"winText\": \"門開了，你逃出來了！\",\n \"start\": \"room\",\n \"scenes\": {\n  \"room\": {\n   \"name\": \"教室\",\n   \"mission\": \"找出門鎖的四位數密碼，逃出教室。\",\n   \"room\": {\n    \"floor\": \"floor\"\n   },\n   \"objects\": [\n    {\n     \"id\": \"poster\",\n     \"prop\": \"wallPoster\",\n     \"place\": {\n      \"wall\": \"N\",\n      \"u\": -1.5,\n      \"v\": 1.9\n     },\n     \"params\": {\n      \"hot\": \"poster\",\n      \"title\": \"今日提醒\",\n      \"text\": \"請保持教室整潔\"\n     }\n    },\n    {\n     \"id\": \"bin\",\n     \"prop\": \"trashBin\",\n     \"place\": {\n      \"floor\": [\n       -2,\n       1.5\n      ]\n     },\n     \"params\": {\n      \"hot\": \"bin\",\n      \"item\": \"paperclip\",\n      \"gotFlag\": \"clipGot\"\n     }\n    },\n    {\n     \"id\": \"exit\",\n     \"prop\": \"schoolDoor\",\n     \"place\": {\n      \"wall\": \"N\",\n      \"u\": 1.6,\n      \"v\": 0\n     },\n     \"winFocus\": true,\n     \"params\": {\n      \"doorHot\": \"exit\"\n     },\n     \"focus\": {\n      \"mode\": \"front\",\n      \"surface\": \"lock\",\n      \"k\": 6\n     },\n     \"mechs\": [\n      {\n       \"id\": \"wheels\",\n       \"mech\": \"wheels\",\n       \"surface\": \"lock\",\n       \"solved\": \"flag:open\",\n       \"params\": {\n        \"code\": \"@answers.code\"\n       },\n       \"ok\": [\n        \"win\"\n       ]\n      }\n     ]\n    }\n   ]\n  }\n },\n \"rules\": {\n  \"poster\": [\n   {\n    \"do\": [\n     \"set:sawPoster\",\n     \"say:海報右下角用小字寫著「{answers.code.0}{answers.code.1}」。\"\n    ]\n   }\n  ],\n  \"bin\": [\n   {\n    \"if\": \"flag:clipGot\",\n    \"do\": [\n     \"say:桶子裡已經空了。\"\n    ]\n   },\n   {\n    \"do\": [\n     \"set:binDone\",\n     \"find:paperclip|clipGot\"\n    ]\n   }\n  ],\n  \"exit\": [\n   {\n    \"do\": [\n     \"say:門被鎖住了，旁邊有四位數的滾輪鎖。\"\n    ]\n   }\n  ],\n  \"lock\": [\n   {\n    \"do\": [\n     \"say:四位數的滾輪鎖。\"\n    ]\n   }\n  ]\n },\n \"clues\": [\n  {\n   \"key\": \"code\",\n   \"index\": [\n    0,\n    1\n   ],\n   \"when\": \"flag:sawPoster\",\n   \"where\": \"海報\"\n  },\n  {\n   \"key\": \"code\",\n   \"index\": [\n    2,\n    3\n   ],\n   \"when\": \"flag:binDone\",\n   \"where\": \"垃圾桶\"\n  }\n ],\n \"hints\": [\n  {\n   \"if\": \"!flag:sawPoster\",\n   \"t\": \"牆上的海報看起來有小字。\"\n  },\n  {\n   \"if\": \"!flag:binDone\",\n   \"t\": \"翻翻地上的桶子。\"\n  },\n  {\n   \"t\": \"把兩段數字合起來，轉動滾輪鎖。\"\n  }\n ]\n}\n";
+function buildPrompt2(){var f=S.f,P=POS.filter(function(x){return x.id===S.pos})[0],PL=PLAY.filter(function(x){return x.id===S.play})[0],PL2=PLAY.filter(function(x){return x.id===S.play2})[0],G=GATE.filter(function(x){return x.id===S.gate})[0];
+ var v=function(x){return x||"（老師沒填，請你依知識點與能力提出建議）"};var open_=!S.play||!f.judge;
+ var p="我是老師，想為課程設計一間 3D 密室關卡。這間密室跑在一個既有的引擎上，你要輸出的是引擎讀得懂的「關卡 JSON」。下面先給【拆解卡】，再給【引擎手冊】。請嚴格依手冊，只使用手冊列出的零件。\n\n";
+ p+="這個關卡的設計重點是：玩家必須真的做到某個能力才會成功，不懂的人不能靠猜、抄答案或繞過就過關。承載知識的機關要成為逃出的必經之路。\n\n";
+ p+="===== 拆解卡 =====\n【知識點】"+v(f.topic)+"\n【教學定位】"+(P?P.name+"：":"")+(P?P.d:"（老師沒填，請你依知識點與能力提出建議）")+"\n";
+ if(P&&P.id==="new")p+="玩家還不會：關卡內要先示範，再引導，再自己做；錯誤可重來，回饋要說明哪裡不對；提示分層給。\n";
+ if(P&&P.id==="apply")p+="玩家已學過：關卡內不要重複講解知識，直接讓玩家運用。\n";
+ p+="【先備知識】"+v(f.prior)+"\n【玩家要做到的能力】"+v(f.skill)+"\n【主玩法】"+(PL?PL.name+"（判定："+PL.j+"）":"（老師沒填，請你依知識點與能力提出建議）")+(PL2?"；輔玩法："+PL2.name:"")+"\n【能力門檻】"+(G?G.name+"，"+G.d:"（老師沒填，請你依知識點與能力提出建議）")+"\n";
+ p+="【判定：怎樣算成功】"+v(f.judge)+"\n【回饋】"+v(f.fb)+"\n【輸出訊息】"+v(f.out)+"\n【上下游與故事背景】"+v(f.updown)+"\n";
+ if(f.style)p+="【風格與氛圍】"+f.style+"\n";
+ if(f.hint)p+="【提示設計】"+f.hint+"\n";
+ p+="\n===== 引擎手冊 =====\n"+ENGMAN+"\n\n";
+ p+=open_?"老師還沒決定玩法與判定。請先不要輸出 JSON，先提出 2～3 個不同的設計方案，每個方案用幾句話寫清楚：用手冊裡的哪個機關承載知識、玩家要怎麼做、怎樣算成功（為什麼只有會的人能通過）、線索鏈怎麼串。讓我挑一個，我選了再輸出完整的 JSON。若手冊裡沒有適合承載這個知識的機關，請直接告訴我，不要硬湊。":"開始輸出之前，請先用五句話以內說明：（1）哪個機關承載知識、為什麼只有會的人能通過；（2）線索鏈怎麼串；（3）你選了哪些道具與機關。我確認後，再輸出完整的 JSON。若手冊裡沒有適合承載這個知識的機關，請直接告訴我，不要硬湊。";
+ return p}
+var last="";
+$("genBtn").onclick=function(){last=S.line==="2"?buildPrompt2():buildPrompt();var o=$("promptOut");o.style.display="block";o.textContent=last;$("copied").textContent=""};
+$("copyBtn").onclick=function(){if(!last)$("genBtn").onclick();var ok=function(){$("copied").textContent="已複製"},bad=function(){$("copied").textContent="請手動選取複製"};
+ if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(last).then(ok,bad);
+ else{try{var t=document.createElement("textarea");t.value=last;document.body.appendChild(t);t.select();document.execCommand("copy");document.body.removeChild(t);ok()}catch(e){bad()}}};
+
+function check(code){var r=[],add=function(t,m){r.push([t,m])};
+ if(!/<html[\s>]/i.test(code)&&!/<!doctype/i.test(code))add("x","這看起來不是完整的 HTML 檔（缺少 html 或 doctype）。");else add("p","是完整的 HTML 結構。");
+ if(/<(script|link|img|iframe)[^>]+(src|href)\s*=\s*["']?https?:\/\//i.test(code)||/@import\s+url\(\s*["']?https?:/i.test(code))add("w","載入了外部網路資源，離線或校園網路擋住時可能壞掉。");else add("p","沒有發現外部網路資源。");
+ if(!/name=["']?viewport/i.test(code))add("w","沒有 viewport 設定，手機上可能縮得很小。");else add("p","有 viewport 設定。");
+ if(!/pointer(down|move|up)|touchstart|click/i.test(code))add("w","沒有找到任何點擊或觸控事件。");
+ else if(/mousedown|mousemove/i.test(code)&&!/pointer(down|move)|touch/i.test(code))add("w","只用滑鼠事件，平板可能無法操作。");else add("p","有觸控或點擊事件。");
+ if(/draggable|pointermove|touchmove/i.test(code)&&!/touch-action/i.test(code))add("w","有拖曳但沒看到 touch-action，平板上可能一拖就捲動畫面。");
+ if(/localStorage/.test(code)&&!/try\s*\{/.test(code))add("w","使用 localStorage 但沒看到 try/catch。");
+ if(/innerHTML\s*[+]?=/.test(code)&&!/esc(ape)?\w*\s*\(|textContent/.test(code))add("w","使用 innerHTML 但沒看到跳脫處理。");
+ if(/<audio[^>]*autoplay|\.play\(\)/.test(code)&&!/click|pointerdown|touchstart/.test(code))add("w","可能在使用者互動前播放聲音。");
+ if(!/CONFIG|config/.test(code))add("w","沒看到集中的設定區（CONFIG），之後換內容可能要到處改。");else add("p","有集中的設定區。");
+ if(/Math\.random/.test(code)&&!/solv|shuffle|reroll|retry|while/i.test(code))add("w","有使用隨機，請自己確認一定解得開、不會一開始就完成。");
+ if(!/reset|restart|重新開始|重來|重玩/i.test(code))add("w","沒看到重新開始的功能。");else add("p","有重新開始的功能。");
+ var kb=Math.max(1,Math.round(code.length/1024));add(kb>400?"w":"p","檔案大小約 "+kb+" KB。");return r}
+$("chkBtn").onclick=function(){var code=$("pasteCode").value;var box=$("chkRes");
+ if(!code.trim()){box.innerHTML='<div class="msg bad">還沒貼上程式碼。</div>';return}
+ var rs=check(code),sym={p:"✓",w:"△",x:"✗"},cls={p:"p",w:"w",x:"x"};
+ box.innerHTML='<div class="card"><b>檢查結果</b><span class="tag">只做表面比對</span><ul class="res">'+rs.map(function(a){return '<li class="'+cls[a[0]]+'">'+sym[a[0]]+" "+esc(a[1])+"</li>"}).join("")+"</ul></div>";
+ var fr=$("prev");fr.style.display="block";fr.srcdoc=code};
+$("clrBtn").onclick=function(){$("pasteCode").value="";$("chkRes").innerHTML="";var fr=$("prev");fr.style.display="none";fr.srcdoc=""};
+$("manual").innerHTML=MANUAL.map(function(t){return "<li>"+esc(t)+"</li>"}).join("");
+
+function extractJson(t){t=t.trim();var m=t.match(/```(?:json)?\s*([\s\S]*?)```/);if(m)t=m[1];var a=t.indexOf("{");if(a<0)return null;return t.slice(a)}
+function lenient(raw){/* 去掉 // 註解（不在字串內）與結尾逗號；回傳 {text,cut} */
+ var o="",inS=false,esc2=false,i,c,depth=0,end=-1;
+ for(i=0;i<raw.length;i++){c=raw[i];
+  if(inS){o+=c;if(esc2)esc2=false;else if(c==="\\")esc2=true;else if(c==='"')inS=false;continue}
+  if(c==='"'){inS=true;o+=c;continue}
+  if(c==="/"&&raw[i+1]==="/"){while(i<raw.length&&raw[i]!=="\n")i++;o+="\n";continue}
+  if(c==="{"||c==="[")depth++;if(c==="}"||c==="]"){depth--;if(depth===0){o+=c;end=i;break}}
+  o+=c}
+ o=o.replace(/,(\s*[}\]])/g,"$1");return{text:o,cut:depth>0}}
+var pending=null,fixText="";
+window.addEventListener("message",function(e){var d=e.data;if(!d||typeof d!=="object"||!d.roomEvent)return;
+ if(d.roomEvent==="ready"&&pending){$("eng").contentWindow.postMessage({roomCheck:pending},"*");}
+ if(d.roomEvent==="checked"){showResult(d.result)}
+ if(d.roomEvent==="error"){showResult({errors:["引擎載入失敗："+d.message],warnings:[],info:[],solve:{solvable:false}})}});
+function showResult(r){var box=$("chk2Res"),h="",L=[];
+ var sol=r.solve||{};
+ if(!r.errors.length&&sol.solvable){h+='<div class="msg ok"><b>通過檢查，而且自動解題找到通關路徑（'+(sol.steps?sol.steps.length:0)+' 步）。</b>下面可以預覽，請自己也玩一遍。</div>'}
+ else h+='<div class="msg bad"><b>發現問題，請把問題交給 AI 修正。</b></div>';
+ if(r.errors.length){h+='<div class="card"><b>錯誤</b><ul class="res">'+r.errors.map(function(x){L.push("錯誤："+x);return '<li class="x">✗ '+esc(x)+'</li>'}).join("")+'</ul></div>'}
+ if(r.warnings.length){h+='<div class="card"><b>提醒</b><ul class="res">'+r.warnings.map(function(x){L.push("提醒："+x);return '<li class="w">△ '+esc(x)+'</li>'}).join("")+'</ul></div>'}
+ if(r.info&&r.info.length){h+='<div class="card"><b>備註</b><ul class="res">'+r.info.map(function(x){return '<li>'+esc(x)+'</li>'}).join("")+'</ul></div>'}
+ if(sol.solvable&&sol.steps){h+='<details class="card"><summary><b>自動解題的步驟</b><span class="tag">給你確認是不是照你設計的路線</span></summary><ol>'+sol.steps.map(function(x){return '<li>'+esc(x)+'</li>'}).join("")+'</ol></details>'}
+ box.innerHTML=h;fixText=L.length?"你產生的關卡 JSON 經引擎檢查有以下問題，請修正後，重新輸出完整的 JSON（只輸出一個 JSON 程式碼區塊）：\n"+L.map(function(x,i){return (i+1)+". "+x}).join("\n"):"";
+ $("fixBtn").style.display=fixText?"inline-block":"none";$("eng").style.display="block"}
+$("chk2Btn").onclick=function(){var raw=extractJson($("pasteJson").value),box=$("chk2Res");$("fixed").textContent="";
+ if(!raw){box.innerHTML='<div class="msg bad">找不到 JSON。請貼上 AI 輸出的完整內容。</div>';return}
+ if(/我是老師，想為課程設計|===== 引擎手冊 =====/.test($("pasteJson").value)){box.innerHTML='<div class="msg bad"><b>這裡貼的是提示詞，不是 AI 的回答。</b>請把提示詞貼給你的 AI，再把 AI 輸出的 JSON 貼回這裡。</div>';$("fixBtn").style.display="none";return}
+ var L=lenient(raw),spec;
+ if(L.cut){fixText="你的輸出在中途被截斷了，JSON 沒有寫完。請從頭重新輸出完整的 JSON（只輸出一個 JSON 程式碼區塊）。若太長，請減少物件數量。";box.innerHTML='<div class="msg bad"><b>AI 的輸出被截斷了，JSON 沒有寫完。</b>請它重新輸出（可以要求縮小一點，例如少一個物件）。</div>';$("fixBtn").style.display="inline-block";return}
+ try{spec=JSON.parse(L.text)}catch(err){fixText="你輸出的內容不是合法的 JSON（"+err.message+"）。請修正後重新輸出完整的 JSON（只輸出一個 JSON 程式碼區塊，不要註解、不要結尾逗號、字串要用雙引號）。";box.innerHTML='<div class="msg bad"><b>不是合法的 JSON：</b>'+esc(err.message)+'<br>可以按「複製問題給 AI 修正」，請 AI 重寫。</div>';$("fixBtn").style.display="inline-block";return}
+ if(!spec.scenes||typeof spec.scenes!=="object"){box.innerHTML='<div class="msg bad">缺少 scenes 欄位。</div>';return}
+ pending=spec;var fr=$("eng");fr.style.display="block";
+ if(fr.dataset.ready){fr.contentWindow.postMessage({roomCheck:spec},"*")}else{fr.dataset.ready=1;fr.src="engine.html"}
+ box.innerHTML='<div class="msg">檢查中…</div>'};
+$("clr2Btn").onclick=function(){$("pasteJson").value="";$("chk2Res").innerHTML="";$("fixBtn").style.display="none";pending=null};
+$("fixBtn").onclick=function(){var ok=function(){$("fixed").textContent="已複製"};if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(fixText).then(ok,function(){$("fixed").textContent="請手動複製"})};
+function bind(){FIELDS.forEach(function(k){var el=$("f_"+k);el.value=S.f[k]||"";el.oninput=function(){S.f[k]=el.value.trim();save();renderBar()}});
+ $("f_play2").onchange=function(){S.play2=this.value;save()}}
+$("prevBtn").onclick=function(){go(S.step-1)};$("nextBtn").onclick=function(){go(S.step+1)};
+$("exBtn").onclick=function(){var d=JSON.stringify({v:0,saved:new Date().toISOString(),card:S},null,1),b=new Blob([d],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="拆解卡.json";document.body.appendChild(a);a.click();document.body.removeChild(a)};
+$("imBtn").onclick=function(){$("imFile").click()};
+$("imFile").onchange=function(){var f=this.files[0];if(!f)return;var rd=new FileReader();rd.onload=function(){try{var o=JSON.parse(rd.result).card;if(!o)throw 0;for(var k in S)if(o[k]!==undefined)S[k]=o[k];save();init()}catch(e){alert("這不是有效的拆解卡檔案。")}};rd.readAsText(f)};
+$("rsBtn").onclick=function(){if(confirm("確定清空所有欄位？建議先匯出。")){S={line:"",pos:"",play:"",play2:"",gate:"",f:{},self:[],tech:null,step:0,seen:{}};$("techChk").innerHTML="";delete $("techChk").dataset.done;save();init()}};
+var exFilter="全部";
+function exChips(t){var par=(t.match(/（[^）]*）/)||[""])[0];var ks=t.replace(/（[^）]*）/,"").split("、");
+ return ks.map(function(k){var e=EX.filter(function(x){return x.kw===k})[0];return e?'<a href="#ex_'+e.id+'" data-jump="'+e.id+'" style="color:var(--brass)">'+esc(k)+' →</a>':'<span>'+esc(k)+'（尚無）</span>'}).join('　')+(par?' <span class="tip">'+esc(par)+'</span>':'')}
+document.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("[data-jump]");if(a){e.preventDefault();var el=$("ex_"+a.dataset.jump);if(el){el.scrollIntoView({behavior:"smooth",block:"center"});el.style.outline="2px solid var(--brass2)";setTimeout(function(){el.style.outline=""},1800)}}});
+function renderEx(){var plays=["全部","操作","探索","解謎","競爭","選擇","創造"];
+ $("exChips").innerHTML="";plays.forEach(function(p){var b=document.createElement("button");b.textContent=p+" "+(p==="全部"?EX.length:EX.filter(function(x){return x.play.indexOf(p)>=0}).length);if(p===exFilter)b.className="on";b.onclick=function(){exFilter=p;renderEx()};$("exChips").appendChild(b)});
+ var h="";EX.forEach(function(x){if(exFilter!=="全部"&&x.play.indexOf(exFilter)<0)return;
+  var q=x.ok===1?"":"";
+  h+='<div class="card ex" id="ex_'+x.id+'"><h3>'+x.no+' '+esc(x.name)+'<span class="tag">'+esc(x.play)+'</span><span class="tag">門檻：'+esc(x.gate)+'</span>'+(x.loc?'<span class="tag">新增</span>':(x.ok?'':'<span class="tag">依說明整理</span>'))+'</h3>'
+   +'<p class="note" style="margin:4px 0 0">'+esc(x.what)+'</p><dl><dt>適合承載什麼</dt><dd>'+esc(x.suit)+'</dd><dt>要小心</dt><dd>'+esc(x.care)+'</dd><dt>怎麼升級成「判定等於能力」</dt><dd>'+esc(x.up)+'</dd></dl>'
+   +'<div class="acts"><button class="btn" data-play="'+x.id+'">▶ 在這裡試玩</button><button class="btn g" data-new="'+x.id+'">新分頁開啟 ↗</button><button class="btn" data-base="'+x.id+'">用它當基礎</button></div></div>'});
+ var pd=PLAY.filter(function(q){return q.name===exFilter})[0];
+ $("exDef").innerHTML=pd?'<b>'+esc(pd.name)+'</b>：'+esc(pd.d)+'<div class="note" style="margin:6px 0 0">判定：'+esc(pd.j)+'</div><div class="note" style="margin:6px 0 0">例：'+exChips(pd.ex)+'</div>':'<b>全部</b>：六種玩法由「玩家要做什麼」區分。點上面任一種，看它的定義與判定。一款機關可以同時是兩種玩法（例如拆炸彈＝競爭＋解謎）。';
+ $("exList").innerHTML=h;
+ Array.prototype.forEach.call($("exList").querySelectorAll("[data-new]"),function(b){b.onclick=function(){var x=EX.filter(function(e){return e.id===b.dataset["new"]})[0];
+  if(!x.loc){window.open(U+x.id+"/","_blank");return}
+  var w=window.open("","_blank");fetch("ex/"+x.id+".html").then(function(r){return r.text()}).then(function(t){var u=URL.createObjectURL(new Blob([t],{type:"text/html"}));if(w)w.location.href=u;else window.open(u,"_blank")}).catch(function(){if(w)w.close();alert("無法開啟，請改用「在這裡試玩」")})}});
+ Array.prototype.forEach.call($("exList").querySelectorAll("[data-play]"),function(b){b.onclick=function(){var x=EX.filter(function(e){return e.id===b.dataset.play})[0],card=$("ex_"+x.id),old=card.querySelector("iframe");if(old){old.parentNode.remove();b.textContent="▶ 在這裡試玩";return}
+  var w=document.createElement("div");w.style.cssText="margin-top:12px";var f=document.createElement("iframe");f.src=x.loc?"ex/"+x.id+".html":U+x.id+"/";f.style.cssText="width:100%;height:580px;border:1px solid var(--line);border-radius:12px;background:#14110f";f.setAttribute("sandbox","allow-scripts allow-same-origin allow-popups");w.appendChild(f);card.appendChild(w);b.textContent="✕ 收起試玩"}});
+ Array.prototype.forEach.call($("exList").querySelectorAll("[data-base]"),function(b){b.onclick=function(){S.base=b.dataset.base;if(!S.line)S.line="1";save();showView("work");go(1)}})}
+function renderBase(){var c=$("baseChip"),x=EX.filter(function(e){return e.id===S.base})[0];
+ if(!x||S.line==="2"||S.line==="3"){c.style.display="none";return}c.style.display="block";
+ c.innerHTML='<span class="basechip">以「'+esc(x.name)+'」為基礎 <a href="#" id="baseX">✕ 取消</a></span>';$("baseX").onclick=function(e){e.preventDefault();S.base="";save();renderBase()}}
+function showView(v){$("exView").style.display=v==="ex"?"block":"none";$("wizard").style.display=v==="ex"?"none":"block";$("tabEx").className=v==="ex"?"on":"";$("tabWork").className=v==="ex"?"":"on";if(v==="ex")renderEx();window.scrollTo(0,0)}
+$("tabWork").onclick=function(){showView("work")};$("tabEx").onclick=function(){showView("ex")};
+function init(){renderBase();S.step=Math.min(+S.step||0,4);bind();renderLines();renderPos();renderPlay();renderSelf();show()}
+load();init();
+})();
+</script>
+</body>
+</html>
