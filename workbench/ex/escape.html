@@ -1,0 +1,74 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no"><title>倒數逃生</title>
+<style>
+:root{--bg:#14110f;--card:#1f1a16;--ink:#f1e8d8;--dim:#a99c86;--brass:#d9b878;--ok:#7fc79a;--bad:#e07b6a;--line:#3a3128}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 system-ui,"Noto Sans TC",sans-serif;-webkit-user-select:none;user-select:none;touch-action:manipulation}
+#app{max-width:760px;margin:0 auto;padding:18px 16px 60px}h1{font-size:21px;margin:6px 0 2px;color:var(--brass)}.sub{color:var(--dim);font-size:14px;margin:0 0 14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:12px 0}
+button,input,select,textarea{font:inherit;color:var(--ink)}button{background:#2c241d;border:1px solid var(--brass);border-radius:10px;padding:8px 16px;cursor:pointer}button:active{transform:scale(.97)}
+button.g{border-color:var(--line);color:var(--dim)}input[type=text],textarea{background:#120f0c;border:1px solid var(--line);border-radius:10px;padding:8px 12px;width:100%;-webkit-user-select:text;user-select:text}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.msg{min-height:24px;color:var(--dim);margin-top:8px}.msg.bad{color:var(--bad)}.msg.ok{color:var(--ok)}
+#win{position:fixed;inset:0;background:rgba(10,8,6,.88);display:none;align-items:center;justify-content:center;padding:20px;z-index:9}
+#win .box{background:var(--card);border:1px solid var(--brass);border-radius:16px;padding:22px;max-width:460px;text-align:center}#win h2{margin:0 0 8px;color:var(--brass)}
+#hintb{margin-top:18px}.tip{color:var(--dim);font-size:13px;margin-top:6px}
+
+body{background:radial-gradient(ellipse at 50% -10%,#3b2d1f 0,#1a140f 55%,#0f0b08 100%) fixed;background-color:#0f0b08}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(255,255,255,.012) 0 2px,transparent 2px 4px);z-index:0}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;box-shadow:inset 0 0 120px rgba(0,0,0,.7);z-index:0}
+#app{position:relative;z-index:1}
+.hero{display:flex;gap:14px;align-items:center;margin:4px 0 10px}.hero .ico{font-size:46px;filter:drop-shadow(0 4px 8px rgba(0,0,0,.6));animation:bob 3s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-5px)}}
+.story{background:#e9dcc0;color:#3a2c1e;font:15px/1.7 "Noto Serif TC",Georgia,serif;padding:12px 16px;border-radius:4px;box-shadow:0 8px 20px rgba(0,0,0,.5);transform:rotate(-.4deg);margin:0 0 16px;border-left:5px solid #b8935a}
+.story:empty{display:none}
+.card{background:linear-gradient(#271f18,#1a1511);border:1px solid #4a3b2b;box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 8px 22px rgba(0,0,0,.45)}
+button{background:linear-gradient(#52412d,#2f261d);border:1px solid #b8935a;box-shadow:0 3px 0 #120e0a;transition:transform .08s,box-shadow .08s}
+button:active{transform:translateY(3px) scale(.99);box-shadow:0 0 0 #120e0a}
+button.g{background:linear-gradient(#2c241d,#201a15);border-color:#4a3b2b}
+#stage{animation:rise .5s ease both}@keyframes rise{from{opacity:0;transform:translateY(12px)}}
+.shake{animation:shake .4s}@keyframes shake{20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(4px)}}
+#mute{position:fixed;top:10px;right:10px;z-index:5;padding:4px 10px;font-size:16px;background:rgba(0,0,0,.4);border:1px solid #4a3b2b;box-shadow:none}
+#win .box{animation:pop .5s cubic-bezier(.2,1.4,.4,1);position:relative;z-index:2}@keyframes pop{from{transform:scale(.6);opacity:0}}
+.stars{font-size:38px;letter-spacing:6px;margin:6px 0;color:#d9b878;text-shadow:0 0 14px rgba(217,184,120,.6)}.stars .off{opacity:.25;text-shadow:none}
+#conf{position:fixed;inset:0;z-index:1;pointer-events:none}
+
+.tb{height:14px;background:#2c241d;border-radius:8px;overflow:hidden;margin-bottom:10px}.tb i{display:block;height:100%;background:var(--ok);transition:width .4s linear}.tb i.low{background:var(--bad)}.ol{display:grid;gap:8px}.oi{display:flex;align-items:center;gap:10px;background:#17130f;border:1px solid var(--line);border-radius:12px;padding:8px 12px}.oi .t{flex:1}.oi button{padding:4px 14px}.op button{display:block;width:100%;text-align:left;margin:8px 0;padding:12px 14px}
+</style></head><body><div id="app"><button id="mute" title="音效">🔊</button><div class="hero"><div class="ico" id="ico"></div><div><h1 id="ttl"></h1><p class="sub" id="intro"></p></div></div><div class="story" id="story"></div><div id="stage"></div>
+<div class="row" id="hintb"><button class="g" id="hintBtn">💡 提示</button><button class="g" id="again">↺ 重來</button></div><div class="tip" id="hintTxt"></div></div>
+<div id="win"><div class="box"><h2>🎉 成功</h2><div id="revealTxt"></div><p><button onclick="location.reload()">再玩一次</button></p></div></div>
+<script>
+// ===== 老師改這裡 CONFIG =====
+const CFG={"title": "倒數逃生", "intro": "三關連續過，全部要在時間內完成。答錯會被扣 5 秒。時間到，就要重來。", "time": 90, "stages": [{"type": "code", "q": "第一關：水的沸點（一大氣壓下）是幾 °C？", "a": "100"}, {"type": "choice", "q": "第二關：哪一個是金屬？", "o": ["硫", "鐵", "碘"], "a": 1}, {"type": "order", "q": "第三關：把行星依離太陽由近到遠排列。", "items": ["水星", "地球", "火星", "木星"]}], "reveal": "成功逃出！\\n三關都在時間內完成。", "hint": "先把會的做完。答錯會扣時間。"};
+// ===== 以下是機關程式 =====
+const $=id=>document.getElementById(id);const rnd=n=>Math.floor(Math.random()*n);
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]]}return a};
+const norm=s=>String(s||"").replace(/\s+/g,"").toLowerCase();
+const META={"icon": "⏳", "story": "警報響了，大門正在關閉。三道關卡，一個倒數計時。"};
+const FX=(()=>{let ctx=null,mute=false;try{mute=localStorage.getItem("fx_mute")==="1"}catch(e){}
+ function ac(){if(!ctx){try{ctx=new(window.AudioContext||window.webkitAudioContext)()}catch(e){}}if(ctx&&ctx.state==="suspended")ctx.resume();return ctx}
+ function tone(f,t0,d,type,v){const c=ac();if(!c||mute)return;const o=c.createOscillator(),g=c.createGain();o.type=type||"sine";o.frequency.value=f;g.gain.setValueAtTime(v||.08,c.currentTime+t0);g.gain.exponentialRampToValueAtTime(.0001,c.currentTime+t0+d);o.connect(g);g.connect(c.destination);o.start(c.currentTime+t0);o.stop(c.currentTime+t0+d+.02)}
+ const vib=p=>{try{navigator.vibrate&&navigator.vibrate(p)}catch(e){}};
+ return{tick(){tone(660,0,.05,"square",.035);vib(8)},ok(){[523,659,784].forEach((f,i)=>tone(f,i*.08,.18,"triangle",.1));vib([30,40,30])},bad(){tone(150,0,.25,"sawtooth",.09);vib(120);const s=document.getElementById("stage");s.classList.remove("shake");void s.offsetWidth;s.classList.add("shake")},win(){[523,659,784,1047,1319].forEach((f,i)=>tone(f,i*.1,.32,"triangle",.12));vib([50,50,50,50,200])},toggle(){mute=!mute;try{localStorage.setItem("fx_mute",mute?"1":"0")}catch(e){}return mute},muted:()=>mute}})();
+let BAD=0;const T0=Date.now();
+function say(t,c){const m=$("msg");if(m){m.textContent=t;m.className="msg "+(c||"")}if(c==="bad"){BAD++;FX.bad()}else if(c==="ok")FX.ok()}
+function confetti(){const c=document.createElement("canvas");c.id="conf";c.width=innerWidth;c.height=innerHeight;document.body.appendChild(c);const x=c.getContext("2d"),P=[];for(let i=0;i<110;i++)P.push({x:Math.random()*c.width,y:-20-Math.random()*c.height*.5,vx:(Math.random()-.5)*3,vy:2+Math.random()*4,r:4+Math.random()*5,col:["#d9b878","#7fc79a","#e07b6a","#8ab4e8","#f1e8d8"][rnd(5)],a:Math.random()*6});let f=0;(function L(){x.clearRect(0,0,c.width,c.height);P.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.a+=.15;x.fillStyle=p.col;x.save();x.translate(p.x,p.y);x.rotate(p.a);x.fillRect(-p.r,-p.r/2,p.r*2,p.r);x.restore()});if(++f<170)requestAnimationFrame(L);else c.remove()})()}
+function win(){const st=BAD===0?3:BAD<=2?2:1,sec=Math.round((Date.now()-T0)/1000);
+ $("revealTxt").innerHTML=(CFG.noScore?'<div class="tip">用時 '+sec+' 秒</div>':'<div class="stars">'+[0,1,2].map(i=>'<span class="'+(i<st?"":"off")+'">★</span>').join("")+'</div><div class="tip">用時 '+sec+' 秒・失誤 '+BAD+' 次'+(st<3?"（不失誤就是三星）":"")+'</div>')+'<p>'+(CFG.reveal||"").replace(/\\n/g,"<br>")+'</p>';
+ $("win").style.display="flex";FX.win();confetti()}
+$("ttl").textContent=CFG.title;$("intro").textContent=CFG.intro;$("ico").textContent=META.icon||"🔐";$("story").textContent=META.story||"";
+$("mute").textContent=FX.muted()?"🔇":"🔊";$("mute").onclick=()=>{$("mute").textContent=FX.toggle()?"🔇":"🔊"};
+document.addEventListener("pointerdown",e=>{if(e.target.closest&&e.target.closest("button,.sw>div,.ch>div,.sn,.gr.r>div,.t,#pad")&&!e.target.closest("#mute"))FX.tick()},true);
+$("hintBtn").onclick=()=>{$("hintTxt").textContent=CFG.hint||"（沒有提示）"};$("again").onclick=()=>location.reload();
+let left=CFG.time,si=0,dead=false,ord=[];$("stage").innerHTML='<div class="tb"><i id="tb" style="width:100%"></i></div><div class="tip" id="tl" style="margin-bottom:6px"></div><div class="card" id="bd"></div><div class="msg" id="msg"></div>';
+const iv=setInterval(()=>{if(dead)return;left--;tl();if(left<=0)fail()},1000);
+function tl(){$("tb").style.width=Math.max(0,left/CFG.time*100)+"%";$("tb").className=left<=15?"low":"";$("tl").textContent="剩下 "+Math.max(0,left)+" 秒　（第 "+Math.min(si+1,CFG.stages.length)+" / "+CFG.stages.length+" 關）"}
+function fail(){dead=true;say("時間到！逃生失敗。2 秒後重來。","bad");setTimeout(()=>{left=CFG.time;si=0;dead=false;stage();tl();say("","")},2000)}
+function pen(){left-=5;tl();if(left<=0)fail()}
+function nextS(){si++;if(si>=CFG.stages.length){dead=true;clearInterval(iv);say("逃出來了！","ok");setTimeout(win,500)}else{say("通過！","ok");stage()}tl()}
+function stage(){const S=CFG.stages[si],b=$("bd");b.innerHTML="<b>"+S.q+"</b>";
+ if(S.type==="code"){b.innerHTML+='<div class="row" style="margin-top:8px"><input id="ans" type="text"><button id="ok">送出</button></div>';$("ok").onclick=()=>{if(dead)return;if(norm($("ans").value)===norm(S.a))nextS();else{say("不對（扣 5 秒）","bad");pen()}}}
+ else if(S.type==="choice"){const d=document.createElement("div");d.className="op";S.o.forEach((o,i)=>{const x=document.createElement("button");x.textContent=o;x.onclick=()=>{if(dead)return;if(i===S.a)nextS();else{say("不對（扣 5 秒）","bad");pen()}};d.appendChild(x)});b.appendChild(d)}
+ else{ord=shuffle(S.items.map((_,i)=>i));while(ord.every((v,i)=>v===i))ord=shuffle(ord);const o=document.createElement("div");o.className="ol";o.style.marginTop="8px";b.appendChild(o);const ck=document.createElement("button");ck.textContent="檢查";ck.style.marginTop="10px";b.appendChild(ck);
+  const rd=()=>{o.innerHTML="";ord.forEach((v,i)=>{const d=document.createElement("div");d.className="oi";d.innerHTML='<span class="t">'+S.items[v]+'</span>';const u=document.createElement("button");u.className="g";u.textContent="▲";u.disabled=i===0;u.onclick=()=>{[ord[i-1],ord[i]]=[ord[i],ord[i-1]];rd()};const w=document.createElement("button");w.className="g";w.textContent="▼";w.disabled=i===ord.length-1;w.onclick=()=>{[ord[i+1],ord[i]]=[ord[i],ord[i+1]];rd()};d.appendChild(u);d.appendChild(w);o.appendChild(d)})};rd();
+  ck.onclick=()=>{if(dead)return;if(ord.every((v,i)=>v===i))nextS();else{say("順序不對（扣 5 秒）","bad");pen()}}}}
+stage();tl();
+</script></body></html>
