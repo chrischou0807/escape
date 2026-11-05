@@ -62,11 +62,11 @@ footer{margin-top:40px;color:var(--dim);font-size:12.5px;border-top:1px solid va
 <div class="wrap">
 <h1>機關設計工作台</h1>
 <p class="lede">把課程裡的一個知識點，拆解成好玩的闖關機關。你在這裡填拆解卡，網站幫你組成提示詞；提示詞複製到你自己的 AI，做好再貼回來檢查。網站不會把你的內容傳到任何地方。</p>
-<div class="tabs"><button id="tabWork" class="on">工作台</button><button id="tabEx">範例庫（36 款）</button></div>
+<div class="tabs"><button id="tabWork" class="on">工作台</button><button id="tabEx">範例庫（44 款）</button></div>
 <section id="exView" style="display:none">
 <h2 style="margin-top:20px">機關範例庫</h2>
 <p class="note">先玩，再看它是怎麼把一個知識變成機關的。每一款都是獨立的單檔 HTML，可以直接用在真實世界的活動。<b>多數現有機關的判定是「知道答案就過」</b>，本身不測能力；下面每一款都標出它適合承載什麼、哪裡要小心、怎麼升級。</p>
-<div class="chips" id="exChips"></div>
+<div class="chips" id="exChips"></div><div class="chips" id="exForms" style="margin-top:-4px"></div>
 <div class="card" id="exDef" style="margin:0 0 14px"></div>
 <div id="exList"></div>
 </section>
@@ -284,7 +284,15 @@ var EX=[
 {"id": "deduce", "no": "33", "name": "邏輯推理密碼", "play": "解謎", "gate": "一般", "ok": 1, "what": "依「幾個數字對、位置對不對」的線索，推理出三位數密碼。", "suit": "判定等於能力：靠排除法才解得出，答案唯一（已驗證）。適合訓練邏輯推理與條件排除。", "care": "與課程知識無關，是通用推理。錯 3 次鎖定 15 秒，防止亂試。", "up": "把線索換成教材中的條件與規則，使答案要靠領域知識推出。", "struct": "線索（猜測碼＋文字說明）；答案；成功訊息。", "loc": 1},
 {"id": "cpr", "no": "34", "name": "按壓節奏", "play": "操作", "gate": "需要知識", "ok": 1, "what": "用手指在大按鈕上持續按壓，節奏要落在 100–120 次／分且穩定。", "suit": "判定等於能力：節奏只能靠真的按出來，無法背答案。適合 CPR、節拍、朗讀速度、運動節奏。", "care": "用螢幕點擊不等於真實按壓深度與位置，只能練節奏。需要老師另外確認動作。", "up": "加入節拍器開關、深度回饋（需要硬體）。", "struct": "目標每分鐘次數範圍；按壓次數；穩定度；成功訊息。", "loc": 1},
 {"id": "dilemma", "no": "35", "name": "兩難抉擇", "play": "選擇", "gate": "零門檻", "ok": 1, "what": "每題選一個立場和理由，最後看到取向與討論題，沒有對錯。", "suit": "真正沒有標準答案：判定是「做出選擇並說明理由」，後面由老師帶討論。適用於環境、倫理、公民議題。", "care": "程式不評分，也無法判斷理由好不好，討論的品質要靠老師。", "up": "加入同組比較（需要資料庫），目前沒有。", "struct": "兩難情境；每題選項與理由（含取向標籤）；討論題；成功訊息。", "loc": 1},
-{"id": "errorhunt", "no": "36", "name": "找出錯誤", "play": "探索", "gate": "需要知識", "ok": 1, "what": "一段文字裡藏了幾個錯誤的句子，找出來，只有 3 次機會。", "suit": "判定等於能力：要真的懂才看得出哪句錯。比條件挑戰更貼近「辨誤」的能力。", "care": "只回報找對與誤標的數量，3 次內仍可能逼近。", "up": "減少次數、讓錯誤更細微、要求寫出更正。", "struct": "句子（是否錯誤）；次數；成功訊息。", "loc": 1}];
+{"id": "errorhunt", "no": "36", "name": "找出錯誤", "play": "探索", "gate": "需要知識", "ok": 1, "what": "一段文字裡藏了幾個錯誤的句子，找出來，只有 3 次機會。", "suit": "判定等於能力：要真的懂才看得出哪句錯。比條件挑戰更貼近「辨誤」的能力。", "care": "只回報找對與誤標的數量，3 次內仍可能逼近。", "up": "減少次數、讓錯誤更細微、要求寫出更正。", "struct": "句子（是否錯誤）；次數；成功訊息。", "loc": 1},
+{"id": "hotspot", "no": "37", "name": "場景調查", "play": "探索", "gate": "一般", "ok": 1, "what": "點房間裡的物件讀線索，還有一條藏在沒有物件的空白處，集齊後輸入保險箱密碼。", "suit": "密室逃脫最基本的探索：觀察、發現、做筆記。可換成教材場景圖，讓線索散落在圖中。", "care": "線索都是明寫的數字，只要全點過就能解，不需要知識。隱藏熱點只有一個，點遍整個畫面可以試出來。", "up": "讓線索是需要理解場景才找得到的（例如要知道哪個器材代表什麼）；增加假線索。", "struct": "場景物件（圖示、位置、描述、是否線索）；隱藏熱點（位置、範圍、線索）；密碼；成功訊息。", "loc": 1},
+{"id": "drawers", "no": "38", "name": "容器翻找", "play": "探索", "gate": "零門檻", "ok": 1, "what": "一層一層打開抽屜、盒子，找出標星號的關鍵線索。", "suit": "多層容器的探索節奏：開了還有下一層，帶來『再找一下』的動力。", "care": "星號直接告訴你哪些是關鍵，遊戲性偏低。展開所有層就能解，不需要知識。", "up": "拿掉星號，讓玩家自己判斷哪些線索與目標有關；讓部分盒子要先取得鑰匙。", "struct": "容器樹（名稱、圖示、子項目）；關鍵線索標記；成功訊息。", "loc": 1},
+{"id": "inventory", "no": "39", "name": "道具收集與組合", "play": "解謎", "gate": "一般", "ok": 1, "what": "撿起道具放進背包，選兩樣組合出新道具，再用在門上。", "suit": "串接的基本形：前一關的產出是下一關的輸入。組合規則可以承載知識，例如 酸＋指示劑。", "care": "示範的組合只是『兩半鑰匙』，沒有知識含量。道具少，試錯就能過。", "up": "組合規則改成教材概念（例如元素化合、電路零件），並加入干擾道具。", "struct": "場景道具（圖示、位置）；組合配方（A＋B＝產物）；門與需要的道具；成功訊息。", "loc": 1},
+{"id": "slide", "no": "40", "name": "滑塊拼圖", "play": "操作", "gate": "一般", "ok": 1, "what": "把 8 個方塊滑進空格，排成正確順序。", "suit": "順序型知識：行星、時序、流程。方塊文字可換成任何要排序的概念。", "care": "滑塊本身是空間操作，排序答案若是常識，只是在玩滑塊。", "up": "方塊內容要是『排序本身就是知識』的題材（歷史事件先後、實驗步驟）。", "struct": "方塊標籤與正確順序；成功訊息。", "loc": 1},
+{"id": "rotate", "no": "41", "name": "圖案旋轉", "play": "操作", "gate": "零門檻", "ok": 1, "what": "點方塊旋轉，讓每個箭頭對齊目標圖的方向。", "suit": "方位與對齊：磁力線方向、水管、電路連接方向。", "care": "純視覺比對，不需要知識。", "up": "把『目標圖』換成需要推理才知道的方向（例如依規則判斷電流方向）。", "struct": "目標方向陣列；成功訊息。", "loc": 1},
+{"id": "coord", "no": "42", "name": "座標密碼", "play": "解謎", "gate": "一般", "ok": 1, "what": "依座標清單依序點格子，格子裡的字母拼成答案。", "suit": "座標系統、經緯度、行列定位。座標清單可由別的機關產出。", "care": "點對格子就過，不需要懂內容。字母是隨機填充的。", "up": "座標改由計算或判讀得出（例如經緯度、函數值）。", "struct": "地圖字母（6×6）；座標清單；答案；成功訊息。", "loc": 1},
+{"id": "binary", "no": "43", "name": "二進位燈泡", "play": "解謎", "gate": "需要知識", "ok": 1, "what": "把數字變成燈泡亮滅，或看燈泡寫出數字，三關連過。", "suit": "判定等於能力：每次數字隨機，會二進位才過。適用於資訊科技的進位制、編碼。", "care": "只有 6 位元、0–63；對沒學過的人，試錯是可行的。", "up": "加入 ASCII 字元、十六進位、位元運算。", "struct": "位數；關卡數與模式；成功訊息。", "loc": 1},
+{"id": "balance", "no": "44", "name": "天平找假幣", "play": "操作", "gate": "需要知識", "ok": 1, "what": "9 枚硬幣中找出較重的一枚，只能秤 2 次。", "suit": "判定等於能力：要分成三堆做比較才能兩次找到，是經典的演算法思維與推理。", "care": "可重新整理再試，另一次的重硬幣位置會不同，沒有防止試錯。", "up": "加到 27 枚、限制 3 次；或改成『不知道是輕還是重』。", "struct": "硬幣數；秤重上限；成功訊息。", "loc": 1}];
 var KEY="mech_workbench_v0";
 var S={base:"",line:"",pos:"",play:"",play2:"",gate:"",f:{},self:[],tech:null,step:0,seen:{}};
 var mem=null;
@@ -455,19 +463,55 @@ $("exBtn").onclick=function(){var d=JSON.stringify({v:0,saved:new Date().toISOSt
 $("imBtn").onclick=function(){$("imFile").click()};
 $("imFile").onchange=function(){var f=this.files[0];if(!f)return;var rd=new FileReader();rd.onload=function(){try{var o=JSON.parse(rd.result).card;if(!o)throw 0;for(var k in S)if(o[k]!==undefined)S[k]=o[k];save();init()}catch(e){alert("這不是有效的拆解卡檔案。")}};rd.readAsText(f)};
 $("rsBtn").onclick=function(){if(confirm("確定清空所有欄位？建議先匯出。")){S={line:"",pos:"",play:"",play2:"",gate:"",f:{},self:[],tech:null,step:0,seen:{}};$("techChk").innerHTML="";delete $("techChk").dataset.done;save();init()}};
+var FORMS=[
+{play:"探索",n:"場景調查",d:"點擊房間裡的物件取得線索，包含看不見的隱藏熱點。"},
+{play:"探索",n:"容器翻找",d:"開抽屜、櫃子、盒子，一層一層往裡面找。"},
+{play:"探索",n:"圖像細節",d:"放大檢查圖片或文件細節，或切換圖片的正反面、前後狀態。"},
+{play:"探索",n:"差異比對",d:"比較兩張圖找出不同。"},
+{play:"探索",n:"範圍與條件搜尋",d:"在限定範圍或符合某條件的東西裡找出目標。"},
+{play:"探索",n:"記憶辨認",d:"翻牌、記住位置與內容。"},
+{play:"解謎",n:"密碼鎖",d:"數字、字母、圖形、方向、轉盤等『輸入答案』的鎖。"},
+{play:"解謎",n:"密碼解碼",d:"摩斯、凱撒、對照表、座標、二進位等『要先翻譯』的密碼。"},
+{play:"解謎",n:"文字謎題",d:"燈謎、字謎、語文類的謎。"},
+{play:"解謎",n:"邏輯推理",d:"依線索排除、交叉比對，推出唯一答案（數獨、色彩序列、路線推理）。"},
+{play:"解謎",n:"配對連線",d:"把兩邊的資訊正確連起來，或把物品放到對應位置。"},
+{play:"解謎",n:"道具與組合",d:"收集道具、組合新道具、用在正確的地方。"},
+{play:"解謎",n:"排序與時間軸",d:"依時間、流程、順序排列選項。"},
+{play:"操作",n:"拼圖空間",d:"拼圖、滑塊、旋轉、迷宮路徑。"},
+{play:"操作",n:"影像圖層",d:"透明片疊合、顯影、刮刮、日夜切換、鏡面文字。"},
+{play:"操作",n:"機械互動",d:"電路、天平、齒輪、管線、雷射反射等有物理規則的機關。"},
+{play:"操作",n:"儀器與技能",d:"滴定、稀釋、讀刻度、按壓節奏等『動手做對才過』的操作。"},
+{play:"操作",n:"感官記憶",d:"聽音排序、節奏模仿、多階段記憶。"},
+{play:"操作",n:"口說表達",d:"用語音說出答案，由語音辨識判定。"},
+{play:"選擇",n:"劇情分支",d:"依選擇走向不同的故事線與結局。"},
+{play:"選擇",n:"策略取捨",d:"在資源有限下做決定，看結果的變化。"},
+{play:"選擇",n:"兩難抉擇",d:"沒有對錯、要說明理由的取捨。"},
+{play:"競爭",n:"計時挑戰",d:"限時完成，與時間賽跑。"},
+{play:"競爭",n:"對戰",d:"與電腦或同學較量。"},
+{play:"競爭",n:"完成度排行",d:"以完成度或成績和自己、和他人比較。"},
+{play:"創造",n:"建造",d:"在限制條件下組出結構。"},
+{play:"創造",n:"繪畫表達",d:"用畫面表達概念，讓別人猜。"},
+{play:"創造",n:"出題設計",d:"自己設計機關，給別人解。"}];
+var FORMOF={lock:"密碼鎖",morse:"密碼解碼",puzzle:"拼圖空間",cards:"記憶辨認",wires:"配對連線",uv:"影像圖層",bomb:"計時挑戰",lights:"感官記憶",cabinet:"配對連線",phone:"儀器與技能",radio:"儀器與技能",spell:"口說表達",switches:"儀器與技能",zoom:"圖像細節",titration:"儀器與技能",circuit:"機械互動",diff:"差異比對",range:"範圍與條件搜尋",cond:"範圍與條件搜尋",riddle:"文字謎題",caesar:"密碼解碼",table:"密碼解碼",strategy:"策略取捨",branch:"劇情分支",timer:"計時挑戰",score:"完成度排行",versus:"對戰",build:"建造",draw:"繪畫表達",design:"出題設計",dilute:"儀器與技能",scale:"儀器與技能",deduce:"邏輯推理",cpr:"儀器與技能",dilemma:"兩難抉擇",errorhunt:"範圍與條件搜尋",hotspot:"場景調查",drawers:"容器翻找",inventory:"道具與組合",slide:"拼圖空間",rotate:"拼圖空間",coord:"密碼解碼",binary:"密碼解碼",balance:"機械互動"};
+EX.forEach(function(e){e.form=FORMOF[e.id]||""});
+var formFilter="";
 var exFilter="全部";
 function exChips(t){var par=(t.match(/（[^）]*）/)||[""])[0];var ks=t.replace(/（[^）]*）/,"").split("、");
  return ks.map(function(k){var e=EX.filter(function(x){return x.kw===k})[0];return e?'<a href="#ex_'+e.id+'" data-jump="'+e.id+'" style="color:var(--brass)">'+esc(k)+' →</a>':'<span>'+esc(k)+'（尚無）</span>'}).join('　')+(par?' <span class="tip">'+esc(par)+'</span>':'')}
 document.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("[data-jump]");if(a){e.preventDefault();var el=$("ex_"+a.dataset.jump);if(el){el.scrollIntoView({behavior:"smooth",block:"center"});el.style.outline="2px solid var(--brass2)";setTimeout(function(){el.style.outline=""},1800)}}});
 function renderEx(){var plays=["全部","操作","探索","解謎","競爭","選擇","創造"];
- $("exChips").innerHTML="";plays.forEach(function(p){var b=document.createElement("button");b.textContent=p+" "+(p==="全部"?EX.length:EX.filter(function(x){return x.play.indexOf(p)>=0}).length);if(p===exFilter)b.className="on";b.onclick=function(){exFilter=p;renderEx()};$("exChips").appendChild(b)});
- var h="";EX.forEach(function(x){if(exFilter!=="全部"&&x.play.indexOf(exFilter)<0)return;
+ $("exChips").innerHTML="";plays.forEach(function(p){var b=document.createElement("button");b.textContent=p+" "+(p==="全部"?EX.length:EX.filter(function(x){return x.play.indexOf(p)>=0}).length);if(p===exFilter)b.className="on";b.onclick=function(){exFilter=p;formFilter="";renderEx()};$("exChips").appendChild(b)});
+ $("exForms").innerHTML="";if(exFilter!=="全部"){var fs=FORMS.filter(function(f){return f.play===exFilter});var ab=document.createElement("button");ab.textContent="全部形式 "+EX.filter(function(x){return x.play.indexOf(exFilter)>=0}).length;if(!formFilter)ab.className="on";ab.onclick=function(){formFilter="";renderEx()};$("exForms").appendChild(ab);
+  fs.forEach(function(f){var n=EX.filter(function(x){return x.form===f.n}).length;var b2=document.createElement("button");b2.textContent=f.n+" "+(n?n:"（尚無）");b2.title=f.d;if(f.n===formFilter)b2.className="on";if(!n)b2.style.opacity=".55";b2.onclick=function(){formFilter=f.n;renderEx()};$("exForms").appendChild(b2)})}
+ var h="";EX.forEach(function(x){if(exFilter!=="全部"&&x.play.indexOf(exFilter)<0)return;if(formFilter&&x.form!==formFilter)return;
   var q=x.ok===1?"":"";
-  h+='<div class="card ex" id="ex_'+x.id+'"><h3>'+x.no+' '+esc(x.name)+'<span class="tag">'+esc(x.play)+'</span><span class="tag">門檻：'+esc(x.gate)+'</span>'+(x.loc?'<span class="tag">新增</span>':(x.ok?'':'<span class="tag">依說明整理</span>'))+'</h3>'
+  h+='<div class="card ex" id="ex_'+x.id+'"><h3>'+x.no+' '+esc(x.name)+'<span class="tag">'+esc(x.play)+'</span><span class="tag">'+esc(x.form||"")+'</span><span class="tag">門檻：'+esc(x.gate)+'</span>'+(x.loc?'<span class="tag">新增</span>':(x.ok?'':'<span class="tag">依說明整理</span>'))+'</h3>'
    +'<p class="note" style="margin:4px 0 0">'+esc(x.what)+'</p><dl><dt>適合承載什麼</dt><dd>'+esc(x.suit)+'</dd><dt>要小心</dt><dd>'+esc(x.care)+'</dd><dt>怎麼升級成「判定等於能力」</dt><dd>'+esc(x.up)+'</dd></dl>'
    +'<div class="acts"><button class="btn" data-play="'+x.id+'">▶ 在這裡試玩</button><button class="btn g" data-new="'+x.id+'">新分頁開啟 ↗</button><button class="btn" data-base="'+x.id+'">用它當基礎</button></div></div>'});
  var pd=PLAY.filter(function(q){return q.name===exFilter})[0];
  $("exDef").innerHTML=pd?'<b>'+esc(pd.name)+'</b>：'+esc(pd.d)+'<div class="note" style="margin:6px 0 0">判定：'+esc(pd.j)+'</div><div class="note" style="margin:6px 0 0">例：'+exChips(pd.ex)+'</div>':'<b>全部</b>：六種玩法由「玩家要做什麼」區分。點上面任一種，看它的定義與判定。一款機關可以同時是兩種玩法（例如拆炸彈＝競爭＋解謎）。';
+ var fd=FORMS.filter(function(f){return f.n===formFilter})[0];if(fd){$("exDef").innerHTML+='<div class="note" style="margin:8px 0 0;border-top:1px solid var(--line);padding-top:8px"><b>形式：'+esc(fd.n)+'</b>　'+esc(fd.d)+'</div>'}
+ if(formFilter&&!h)h='<div class="card note">這個形式目前還沒有範例。</div>';
  $("exList").innerHTML=h;
  Array.prototype.forEach.call($("exList").querySelectorAll("[data-new]"),function(b){b.onclick=function(){var x=EX.filter(function(e){return e.id===b.dataset["new"]})[0];
   if(!x.loc){window.open(U+x.id+"/","_blank");return}
