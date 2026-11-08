@@ -145,15 +145,15 @@
 <header id="top">
   <div class="kicker">教師研習　115 年 11 月 19 日（四）14:00–16:30</div>
   <h1>AI 協作設計：做出一個能玩的線上機關</h1>
-  <p class="lede">不用寫程式。先把規格想清楚，再請 AI 實作，然後自己測、自己上架。今天結束時，每個人手上會有一款可以玩的機關，和一條能傳給別人的網址。</p>
+  <p class="lede">今天的核心只有一件事：把真實世界的情境，轉成玩家真的在做同一件事的遊戲，而不是把考題包上外殼。不用寫程式，先把規格想清楚，再請 AI 實作，自己測、自己上架。</p>
   <div class="meta">
     <span class="chip">共 2.5 小時，含休息 10 分鐘</span>
     <span class="chip">自備筆電與 AI 帳號</span>
   </div>
   <nav class="toc" aria-label="章節">
     <a href="#overview">總覽</a>
-    <a href="#s1">① 體驗與轉換</a>
-    <a href="#s2">② 規格先行</a>
+    <a href="#s1">① 玩與看懂</a>
+    <a href="#s2">② 轉化與規格</a>
     <a href="#s3">③ 發佈平台</a>
     <a href="#s4">④ 實作</a>
     <a href="#s5">⑤ 驗收除錯</a>
@@ -165,10 +165,10 @@
 <!-- ============ 總覽 ============ -->
 <section id="overview">
   <h2><span class="n">00</span>總覽</h2>
-  <p class="note">五個目標，對應下面的五段課程。</p>
+  <p class="note">整堂課照同一條線走：<b>玩 → 拆 → 做 → 驗</b>。先玩，看懂能力放在哪；再把自己的真實情境拆開；然後交給 AI 做；最後驗收上架。</p>
   <ol class="steps">
     <li><b>理解 AI 協作設計方法</b>：規格先行，逐步驗收。能用在教學或校園活動。</li>
-    <li><b>用「設計規格」描述機關</b>：六格寫清楚，AI 才不會亂猜。</li>
+    <li><b>用「情境轉化」寫出設計規格</b>：從真實行動出發，六格中前三格必填，AI 才不會亂猜。</li>
     <li><b>把規格變成提示詞，完成一款機關</b>：用產生器組提示詞，和 AI 一輪一輪改。</li>
     <li><b>發佈成果</b>：讓別人真的能玩到你的機關。</li>
     <li><b>建立驗收與除錯習慣</b>：自己實測，用具體現象回報問題。</li>
@@ -178,8 +178,8 @@
   <div class="scroll"><table>
     <thead><tr><th>時間</th><th>內容</th><th>你的產出</th></tr></thead>
     <tbody>
-      <tr><td class="time">14:00–14:25</td><td><b>① 機關體驗與概念轉換</b><small>開場 3 分、分組體驗 12 分、實體→線上轉換討論 10 分</small></td><td>一張轉換筆記</td></tr>
-      <tr><td class="time">14:25–14:50</td><td><b>② 規格先行、③ 認識發佈平台</b><small>講規格 8 分、現場寫前三格 7 分、發佈平台與常見問題 10 分</small></td><td>六格中的前三格</td></tr>
+      <tr><td class="time">14:00–14:25</td><td><b>① 玩與看懂</b><small>玩 3 款 10 分、對照「考題包裝」與「情境轉化」5 分、講五步轉化 5 分、寫自己的情境三句 5 分</small></td><td>三句真實情境筆記</td></tr>
+      <tr><td class="time">14:25–14:50</td><td><b>② 轉化與規格、③ 認識發佈平台</b><small>講規格與密碼鎖升級示範 10 分、現場寫前三格 5 分、發佈平台 10 分</small></td><td>六格中的前三格</td></tr>
       <tr class="rest"><td class="time">14:50–15:00</td><td>休息。請順便確認 AI 帳號登得進去。</td><td></td></tr>
       <tr><td class="time">15:00–16:00</td><td><b>④ 專屬機關實作</b><small>寫完六格 10 分、第 1 版 10 分、實測並改第 1 次 10 分、改第 2、3 次 15 分、收尾 15 分</small></td><td>一款可玩的機關</td></tr>
       <tr><td class="time">16:00–16:30</td><td><b>⑤ 驗收除錯、⑥ 上架</b><small>驗收 8 分、上架 12 分、互玩互測與總結 10 分</small></td><td>一條可分享的網址</td></tr>
@@ -192,7 +192,7 @@
     <label class="chk"><input type="checkbox" data-k="prep1"><span>筆電可上網，充電器帶著。<span class="why">現場有很多人同時連線，建議手機熱點當備案。</span></span></label>
     <label class="chk"><input type="checkbox" data-k="prep2"><span>一個 AI 對話工具的帳號，能登入（Claude、ChatGPT、Gemini 都可以，免費版即可）。<span class="why">課前先登入一次，確認沒有被要求驗證。</span></span></label>
     <label class="chk"><input type="checkbox" data-k="prep3"><span>GitHub 帳號（進階）。<span class="why">只有想用 GitHub Pages 發佈才需要，可以現場註冊，但會花 5 分鐘。</span></span></label>
-    <label class="chk"><input type="checkbox" data-k="prep4"><span>想一個你的教學或活動情境。<span class="why">例如：某單元的複習、校慶攤位、班級破冰。想不到也沒關係，④ 有 5 份範例可以改著做。</span></span></label>
+    <label class="chk"><input type="checkbox" data-k="prep4"><span>想一個「真實世界裡有人在做的事」。<span class="why">例如：實驗員辨識標籤脫落的藥瓶、旅客在櫃台點餐、校園裡找一個地點。想不到也沒關係，④ 有 5 份範例可以改著做。</span></span></label>
   </div>
 
   <details>
@@ -214,98 +214,113 @@
   </details>
 </section>
 
-<!-- ============ ① 體驗與轉換 ============ -->
+<!-- ============ ① 玩與看懂 ============ -->
 <section id="s1">
-  <h2><span class="n">①</span>機關體驗與概念轉換<span class="t">14:00–14:25</span></h2>
-  <p class="note">先玩，再想「這個東西在實體世界長什麼樣」。轉換時最常見的失誤，是把一張考卷搬到螢幕上，變成按鈕。</p>
+  <h2><span class="n">①</span>玩與看懂<span class="t">14:00–14:25</span></h2>
+  <p class="note">先玩三款機關，每一款只問一件事：<b>這裡的能力，放在哪裡？</b></p>
 
   <h3>分組體驗（每款約 3 分鐘）</h3>
-  <div class="grid2 xp">
-    <div class="card"><span class="tag">解謎</span><b>密碼鎖</b>
-      <p style="margin:8px 0 0;font-size:14px">轉動轉盤。問自己：這個鎖在測玩家會什麼？</p>
+  <div class="grid3 xp">
+    <div class="card"><span class="tag">能力在題目</span><b>密碼鎖</b>
+      <p style="margin:8px 0 0;font-size:14px">轉動轉盤。鎖只判斷「密碼對不對」，所以能力得來自「密碼是怎麼得到的」。</p>
       <a class="go gl" data-path="lock/" target="_blank" rel="noopener">開啟機關</a></div>
-    <div class="card"><span class="tag">操作</span><b>刮刮樂顯影</b>
-      <p style="margin:8px 0 0;font-size:14px">刮開塗層。問自己：刮的動作跟知識有關嗎？</p>
-      <a class="go gl" data-path="workbench/ex/scratch.html" target="_blank" rel="noopener">開啟機關</a></div>
-    <div class="card"><span class="tag">配對</span><b>暗門櫃</b>
-      <p style="margin:8px 0 0;font-size:14px">把物品放進對的格子。問自己：放錯時怎麼知道？可以亂試嗎？</p>
-      <a class="go gl" data-path="cabinet/" target="_blank" rel="noopener">開啟機關</a></div>
-    <div class="card"><span class="tag">探索</span><b>實景尋物</b>
-      <p style="margin:8px 0 0;font-size:14px">模擬到現場掃碼回報。問自己：哪一題一定要在現場才答得出來？</p>
+    <div class="card"><span class="tag">能力在動作</span><b>稀釋配製</b>
+      <p style="margin:8px 0 0;font-size:14px">用滑桿配出指定濃度。做對這個動作，就等於會了。</p>
+      <a class="go gl" data-path="workbench/ex/dilute.html" target="_blank" rel="noopener">開啟機關</a></div>
+    <div class="card"><span class="tag">能力在現場</span><b>實景尋物</b>
+      <p style="margin:8px 0 0;font-size:14px">要到現場觀察，才找得到追蹤碼。離開現場就做不到。</p>
       <a class="go gl" data-path="workbench/ex/realfind.html" target="_blank" rel="noopener">開啟機關</a></div>
   </div>
-  <p class="note" style="margin-top:12px">想看更多：<a class="gl" data-path="workbench/" target="_blank" rel="noopener">機關範例庫</a>，78 款，依六種玩法分類。</p>
+  <p class="note" style="margin-top:12px">想看更多：<a class="gl" data-path="workbench/" target="_blank" rel="noopener">機關範例庫</a>，78 款，依六種玩法分類。機關只是媒介，同一個能力可以放在不同的位置。</p>
 
-  <h3>實體 → 線上，怎麼轉</h3>
-  <p class="note">每一列都問同一件事：實體版靠什麼動作成功？線上版還保留得住嗎？</p>
-  <div class="scroll"><table>
-    <thead><tr><th>實體謎題</th><th>線上對應</th><th>會失去</th><th>會多出</th></tr></thead>
-    <tbody>
-      <tr><td>數字掛鎖</td><td>轉盤密碼鎖<small><a class="gl" data-path="lock/" target="_blank" rel="noopener">lock</a></small></td><td>手上轉動的觸感</td><td>可重設、可換答案</td></tr>
-      <tr><td>藏在教室裡的線索紙條</td><td>點擊調查<small><a class="gl" data-path="workbench/ex/hotspot.html" target="_blank" rel="noopener">hotspot</a></small></td><td>真的走動、翻找</td><td>線索可隨機、可限制次數</td></tr>
-      <tr><td>實體拼圖</td><td>拖曳吸附拼圖<small><a class="gl" data-path="workbench/ex/jigsaw.html" target="_blank" rel="noopener">jigsaw</a></small></td><td>握在手裡的感覺</td><td>自動判定拼對、可換圖</td></tr>
-      <tr><td>配對卡片</td><td>連線謎題<small><a class="gl" data-path="wires/" target="_blank" rel="noopener">wires</a></small></td><td>圍著桌子一起擺</td><td>自動檢查、可換題</td></tr>
-      <tr><td>螢光墨水加黑光燈</td><td>紫外線顯影<small><a class="gl" data-path="uv/" target="_blank" rel="noopener">uv</a></small></td><td>真實的光學現象</td><td>不需要藥品與燈</td></tr>
-      <tr><td>貼在校園各處的 QR 尋寶</td><td>實景尋物<small><a class="gl" data-path="workbench/ex/realfind.html" target="_blank" rel="noopener">realfind</a></small></td><td>幾乎沒有，本來就要在現場</td><td>自動記錄、安全鎖驗證</td></tr>
-    </tbody>
-  </table></div>
-  <div class="warnbox"><b>三個轉換問題：</b>① 實體版是靠哪個動作成功的？② 線上版能保留這個動作嗎？③ 不能的話，換一個動作，還是乾脆留在實體？<br>若答案是「把題目直接搬上螢幕」，這只是換外殼。</div>
+  <h3>對照：考題包裝 vs 情境轉化</h3>
+  <div class="grid2">
+    <div class="well"><b style="color:var(--bad)">考題包裝</b>
+      <p style="margin:8px 0 0;font-size:14px;color:var(--dim)">「100 mL、20% 的溶液加水到 400 mL，濃度是多少？」答案 5，輸入密碼鎖 0005。<br>把故事拿掉，題目照樣成立。鎖只是出口。</p></div>
+    <div class="well"><b style="color:var(--ok)">情境轉化</b>
+      <p style="margin:8px 0 0;font-size:14px;color:var(--dim)">實驗室的櫃子被反鎖，桌上有三瓶沒貼標籤的溶液和一本配製紀錄。玩家判斷三瓶濃度高低，把順序輸入鎖。<br>拿掉故事，這件事就不存在了。</p></div>
+  </div>
+  <div class="warnbox"><b>例外：</b>如果劇情本身就需要「現場配出一瓶指定濃度的溶液」，稀釋計算就站得住。但這時判定應該放在「配製」這個動作上，不要放在密碼鎖上。</div>
 
-  <h3>你的轉換筆記（約 10 分鐘）</h3>
+  <h3>真實情境怎麼變成遊戲：五步</h3>
+  <p class="note">前三步現在寫成筆記；第四、五步在下一段做。</p>
+  <ol class="steps">
+    <li><b>找出真實的行動。</b>先問「在真實世界裡，這個人實際會做什麼？」，不要先問要考什麼。</li>
+    <li><b>找出能力發生的那一刻。</b>真實行動裡，哪個瞬間需要用到這項能力？這個瞬間就是遊戲的判定點。</li>
+    <li><b>找出做錯的後果。</b>真實世界裡，判斷錯了會怎樣？這個後果就是遊戲裡失敗的樣子。</li>
+    <li><b>把行動換成玩家的動作，再挑機關。</b>查資料是探索，辨別是選擇，配製是操作。機關只是把動作做出來的媒介。</li>
+    <li><b>把專家的判斷變成線索。</b>真實裡專家靠經驗、紀錄、現象下判斷，這些就是要給玩家的線索，不要直接給答案。</li>
+  </ol>
+
+  <h3>你的真實情境筆記（約 5 分鐘）</h3>
   <div class="card">
-    <label class="lbl" for="n1" style="display:block;font-weight:600;color:var(--head);margin-bottom:6px">我熟悉的實體謎題或活動</label>
-    <textarea id="n1" data-k="note1" placeholder="例如：生物課的標本辨認站、校慶的闖關攤位"></textarea>
-    <label class="lbl" for="n2" style="display:block;font-weight:600;color:var(--head);margin:12px 0 6px">它靠什麼動作成功？</label>
-    <textarea id="n2" data-k="note2" placeholder="例如：要拿起標本、對照特徵、說出名稱"></textarea>
-    <label class="lbl" for="n3" style="display:block;font-weight:600;color:var(--head);margin:12px 0 6px">線上版要怎麼做？會失去什麼、多出什麼？</label>
-    <textarea id="n3" data-k="note3" placeholder="例如：改成點選特徵並拖到名稱上；失去拿起標本，多出可以放大看細節"></textarea>
+    <label class="lbl" for="n1" style="display:block;font-weight:600;color:var(--head);margin-bottom:6px">① 真實世界裡，這個人實際會做什麼？</label>
+    <textarea id="n1" data-k="note1" placeholder="例如：實驗員拿到幾瓶標籤脫落的溶液，要先辨認清楚才能使用"></textarea>
+    <label class="lbl" for="n2" style="display:block;font-weight:600;color:var(--head);margin:12px 0 6px">② 哪個瞬間需要用到能力？</label>
+    <textarea id="n2" data-k="note2" placeholder="例如：用指示劑的變色，判斷這瓶是酸、鹼還是中性"></textarea>
+    <label class="lbl" for="n3" style="display:block;font-weight:600;color:var(--head);margin:12px 0 6px">③ 做錯會怎樣？</label>
+    <textarea id="n3" data-k="note3" placeholder="例如：把鹼性溶液當成酸性使用，反應會失敗，甚至有危險"></textarea>
     <div class="row"><button class="btn sm ghost" id="noteCopy" type="button">複製我的筆記</button><span class="copied" id="noteMsg"></span></div>
   </div>
 </section>
 
-<!-- ============ ② 規格先行 ============ -->
+<!-- ============ ② 轉化與規格 ============ -->
 <section id="s2">
-  <h2><span class="n">②</span>規格先行<span class="t">14:25–14:40　講 8 分＋寫 7 分</span></h2>
+  <h2><span class="n">②</span>轉化與規格<span class="t">14:25–14:40　講 10 分＋寫 5 分</span></h2>
   <p class="note">與其叫 AI「做一個密碼鎖」，不如先把設計寫清楚。沒寫的部分，AI 會自己猜，猜的結果常常看起來對，實際不對。</p>
 
   <div class="grid2">
     <div class="well"><b>沒有規格</b><p style="margin:8px 0 0;font-size:14px;color:var(--dim)">「幫我做一個酸鹼的闖關遊戲。」<br>AI 會自己決定怎麼玩、怎樣算過關、答案是什麼。你不知道它猜了什麼。</p></div>
-    <div class="well"><b>有規格</b><p style="margin:8px 0 0;font-size:14px;color:var(--dim)">六格寫完。AI 只剩下實作要做，你可以拿規格逐項檢查它做出來的東西。</p></div>
+    <div class="well"><b>有規格</b><p style="margin:8px 0 0;font-size:14px;color:var(--dim)">從真實行動出發，寫清楚三格。AI 只剩下實作要做，你可以拿規格逐項檢查它做出來的東西。</p></div>
   </div>
 
   <h3>六格設計規格</h3>
-  <p class="note">以「酸鹼判斷」為例。第一格是新加的，也是最容易被跳過的一格。</p>
+  <p class="note">以「辨識標籤脫落的溶液」為例。<b>第一、二、三格必填</b>，第四、五格之後再補，第六格先不要寫。</p>
   <div class="six">
-    <div class="box new"><div class="q">① 學生要做到什麼</div><div class="d">玩的人要「做到」哪件事，才算真的會？</div>
+    <div class="box new"><div class="q">① 真實情境與行動</div><div class="d">真實世界裡誰在做什麼？玩的人要「做到」哪件事？</div>
       <div class="bad">學生要知道酸鹼性。</div>
-      <div class="good">學生能依指示劑的變色，判斷 6 種日常溶液是酸性、鹼性還是中性。</div></div>
+      <div class="good">實驗室有 6 瓶標籤脫落的溶液。學生要像實驗員一樣，用有限的指示劑辨識每瓶是酸性、鹼性還是中性；放錯的瓶子拿去用，會讓實驗失敗。</div></div>
     <div class="box"><div class="q">② 玩法</div><div class="d">玩家看到什麼？要做什麼動作？</div>
       <div class="bad">做一個找東西的遊戲。</div>
       <div class="good">畫面有 6 瓶溶液和 4 滴指示劑，玩家可以滴進任一瓶看變色，再把每瓶拖進「酸性」「鹼性」「中性」盤。</div></div>
     <div class="box"><div class="q">③ 怎樣算過關</div><div class="d">一個明確、不含糊的成功條件。</div>
       <div class="bad">答對就過關。</div>
       <div class="good">6 瓶全部放對才過關。放錯時只說「還有 N 瓶放錯」，不說是哪幾瓶；最多送出 3 次。</div></div>
-    <div class="box"><div class="q">④ 過關給什麼線索</div><div class="d">成功後顯示的文字或圖片，接到下一關。</div>
+    <div class="box"><div class="q">④ 過關給什麼線索　<span class="tag lv">之後補</span></div><div class="d">成功後顯示的文字或圖片，接到下一關。</div>
       <div class="bad">顯示恭喜。</div>
       <div class="good">顯示一張紙條：「藥品櫃第 3 層，密碼 472。」</div></div>
-    <div class="box"><div class="q">⑤ 風格與氛圍</div><div class="d">美術、背景、配色、字體感覺。</div>
+    <div class="box"><div class="q">⑤ 風格與氛圍　<span class="tag lv">之後補</span></div><div class="d">美術、背景、配色、字體感覺。</div>
       <div class="bad">好看一點。</div>
       <div class="good">理化實驗室，白色桌面，淺藍玻璃瓶，字體清楚，像課本插圖。</div></div>
-    <div class="box"><div class="q">⑥ 後台能調什麼　<span class="tag lv">選用</span></div><div class="d">之後要快速改答案、題目、次數時才需要。第一版可以先不要。</div>
+    <div class="box"><div class="q">⑥ 後台能調什麼　<span class="tag lv">選用，先跳過</span></div><div class="d">之後要快速改答案、題目、次數時才需要。第一版可以不寫。</div>
       <div class="good">可以改瓶子名稱、正確分類、滴數上限、紙條文字。</div></div>
   </div>
 
-  <h3>寫完以後，用三個問題檢查</h3>
-  <p class="note">這三題對應「判定剛好等於能力」。答案只要有一題是「會」，就回去改第③格。</p>
+  <h3>示範：同一把密碼鎖，從初階改到進階</h3>
+  <p class="note">情境：實驗室的櫃子被反鎖，桌上有三瓶沒貼標籤的溶液和一本配製紀錄。玩家要判斷三瓶濃度，開鎖。每一步<b>只改一件事</b>，現場請 AI 改給大家看。</p>
+  <div class="scroll"><table>
+    <thead><tr><th>版本</th><th>怎麼做</th><th>能力在哪</th><th>對 AI 說的一句話</th></tr></thead>
+    <tbody>
+      <tr><td><b>初階</b></td><td>三位數字鎖。紀錄裡寫各瓶的配製過程（例如「50 mL 原液加水到 200 mL」），沒有直接寫濃度。玩家判斷由濃到淡的順序，輸入如 213。</td><td>題目（比較濃度）</td><td>先貼六格規格的前三格。</td></tr>
+      <tr><td><b>進階一</b><small>改動作</small></td><td>撥輪的字元改成瓶子標籤 A、B、C，答案是三瓶由濃到淡的排列，例如 B A C。</td><td>題目＋選擇</td><td>「把三個撥輪的字元改成 A、B、C，答案是三瓶由濃到淡的排列，其他都不要動。」</td></tr>
+      <tr><td><b>進階二</b><small>改情境</small></td><td>其中一瓶的配製紀錄不印在畫面上，要到實驗桌上找瓶身的刻度標籤才知道。</td><td>現場</td><td>「其中一瓶的配製紀錄不要寫在畫面上，改成要到現場看瓶身標籤才知道，其他都不要動。」</td></tr>
+      <tr><td><b>進階三</b><small>改結構</small></td><td>不要用鎖。玩家依序把三瓶倒進反應槽，先倒錯就觸發警示，要重來。</td><td>動作（鎖消失）</td><td>「不要用密碼鎖，改成玩家依序倒三瓶，倒錯順序就觸發警示並重來。」</td></tr>
+    </tbody>
+  </table></div>
+  <p class="note">到了進階三，鎖只剩出口的作用甚至消失，能力已經轉到動作上。這就是「機關只是媒介」。同一個鎖也可以設定每個撥輪各自的字元（數字、字母、符號、方向），並內建錯誤次數鎖定，亂猜不會過。</p>
+
+  <h3>寫完以後，用四個問題檢查</h3>
+  <p class="note">四題對應「判定剛好等於能力」，再加上「符合這次的情境」。有任何一題過不了，就回去改第一格或第三格。</p>
   <div class="card">
     <ol class="steps">
-      <li><b>不懂的人，會不會靠亂猜、亂點或抄答案過關？</b><br><span style="color:var(--dim);font-size:14px">上面的例子有 3 個盤、6 瓶，共 729 種放法，只能送出 3 次，所以猜不過。</span></li>
-      <li><b>把知識拿掉，這個機關還成立嗎？</b><br><span style="color:var(--dim);font-size:14px">還成立，代表知識只是裝飾。例如把「酸鹼」換成「紅藍」，遊戲一樣能玩，就是換外殼。</span></li>
-      <li><b>成功是靠「做到」，還是靠「看了答案再填」？</b><br><span style="color:var(--dim);font-size:14px">答案直接寫在畫面或海報上，玩家只是抄寫，就沒有測到能力。</span></li>
+      <li><b>玩家做的事，和真實的人做的事，是同一件事嗎？</b><br><span style="color:var(--dim);font-size:14px">不是同一件事，就是換了外殼。例如真實的實驗員是「辨識」，遊戲卻只是「背答案」。</span></li>
+      <li><b>把故事拿掉，題目還成立嗎？</b><br><span style="color:var(--dim);font-size:14px">還成立，就是考題包裝。把「酸鹼」換成「紅藍」，遊戲一樣能玩，知識就只是裝飾。</span></li>
+      <li><b>不懂的人，能不能靠亂猜、亂點、抄答案或繞過就過關？</b><br><span style="color:var(--dim);font-size:14px">上面的例子有 3 個盤、6 瓶，共 729 種放法，只能送出 3 次，所以猜不過。</span></li>
+      <li><b>符合這次的情境嗎？</b><br><span style="color:var(--dim);font-size:14px">誰玩、教學定位（教新知、練習、檢核）、有多少時間、幾個人、用什麼裝置、在哪裡玩。例如單人自學適合題目型，小組或全班適合現場型。</span></li>
     </ol>
   </div>
 
-  <div class="tip"><b>現場練習（7 分鐘）：</b>先寫 ①②③ 三格，貼到下面「④ 實作」的產生器裡。想不到題材，可以先挑一份範例規格來改。</div>
+  <div class="tip"><b>現場練習（5 分鐘）：</b>把剛才的三句筆記，整理成六格中的前三格，貼到下面「④ 實作」的產生器裡。想不到題材，可以先挑一份範例規格來改。</div>
 </section>
 
 <!-- ============ ③ 發佈平台 ============ -->
@@ -347,29 +362,29 @@
   <div class="scroll"><table>
     <thead><tr><th>時間</th><th>這一輪做什麼</th></tr></thead>
     <tbody>
-      <tr><td class="time">15:00–15:10</td><td>把六格寫完，產生提示詞。</td></tr>
+      <tr><td class="time">15:00–15:10</td><td>補完第四、五格，產生提示詞。</td></tr>
       <tr><td class="time">15:10–15:20</td><td>貼給 AI，拿到第 1 版。不要急著改，先玩一遍。</td></tr>
       <tr><td class="time">15:20–15:30</td><td>實測。用回報句型告訴 AI 一個具體問題，改第 1 次。</td></tr>
-      <tr><td class="time">15:30–15:45</td><td>改第 2、3 次。例如：加上答錯的回饋、限制嘗試次數。</td></tr>
+      <tr><td class="time">15:30–15:45</td><td>改第 2、3 次。例如：加上答錯的回饋、把能力往「動作」或「現場」移一步。</td></tr>
       <tr><td class="time">15:45–16:00</td><td>收尾：風格、文字，確認這一版穩定，存成檔案。</td></tr>
     </tbody>
   </table></div>
 
   <h3>範例規格（卡住時用）</h3>
-  <p class="note">5 份都寫好六格，也都過了上面的三項檢查。點「帶入產生器」，再照你的情境改。卡住超過 5 分鐘就選一份。</p>
+  <p class="note">5 份都從真實行動寫起，也都過了上面的四個問題。點「帶入產生器」，再照你的情境改。卡住超過 5 分鐘就選一份。</p>
   <div id="specs"></div>
 
   <h3>規格 → 提示詞產生器</h3>
-  <p class="note">填完六格，技術要點建議全勾，按「產生提示詞」，複製後貼給你的 AI。</p>
+  <p class="note">前三格必填，第四、五格有想法再補，第六格可以空著。技術要點建議全勾，按「產生提示詞」，複製後貼給你的 AI。</p>
   <div class="card gen">
-    <label class="lbl" for="qCap">① 學生要做到什麼</label>
-    <textarea id="qCap" placeholder="例如：學生能依指示劑的變色，判斷 6 種日常溶液的酸鹼。"></textarea>
+    <label class="lbl" for="qCap">① 真實情境與行動（誰在做什麼、玩的人要做到什麼）</label>
+    <textarea id="qCap" placeholder="例如：實驗室有 6 瓶標籤脫落的溶液，學生要像實驗員一樣用指示劑辨識每瓶的酸鹼；放錯會讓實驗失敗。"></textarea>
     <label class="lbl" for="qPlay">② 玩法（玩家看到什麼、做什麼）</label>
     <textarea id="qPlay" placeholder="例如：畫面有 6 瓶溶液和 4 滴指示劑，玩家滴進任一瓶看變色，再把每瓶拖進分類盤。"></textarea>
     <label class="lbl" for="qWin">③ 怎樣算過關</label>
     <textarea id="qWin" placeholder="例如：6 瓶全部放對才過關；放錯時只說還有幾瓶錯，不說是哪幾瓶。"></textarea>
     <label class="lbl" for="qClue">④ 過關後給玩家的線索</label>
-    <textarea id="qClue" placeholder="例如：顯示一張紙條，寫出下一個地點。"></textarea>
+    <textarea id="qClue" placeholder="（之後補也可以）例如：顯示一張紙條，寫出下一個地點。"></textarea>
     <label class="lbl" for="qStyle">⑤ 風格與氛圍</label>
     <textarea id="qStyle" placeholder="例如：理化實驗室，白色桌面，淺藍玻璃瓶，字體清楚。"></textarea>
     <label class="lbl" for="qAdmin">⑥ 後台要能調整的東西（選用，可留空）</label>
@@ -413,6 +428,7 @@
     <label class="chk"><input type="checkbox" data-k="qa6"><span><b>亂猜過得了嗎？</b>不看線索，連續亂點 20 秒。過得了就回去改規格第③格。</span></label>
     <label class="chk"><input type="checkbox" data-k="qa7"><span><b>手機或平板</b>能操作（可以的話，請旁邊的人借你手機試）。</span></label>
     <label class="chk"><input type="checkbox" data-k="qa8"><span><b>交給旁邊的人玩</b>：不用你解釋，他就知道怎麼玩。</span></label>
+    <label class="chk"><input type="checkbox" data-k="qa9"><span><b>同一件事嗎</b>：玩家做的事，和真實情境裡的人做的事一樣嗎？把故事拿掉，還成立就回去改第一格。</span></label>
   </div>
 
   <h3>回報問題：說現象，不說感覺</h3>
@@ -482,7 +498,7 @@
   <details>
     <summary><span class="ttl">C　Google Apps Script</span><span class="tag lv">只示範</span></summary>
     <div class="body">
-      <p>需要存分數、共享設定，或限定學校帳號才能玩時用。流程是：新增專案 → 寫 <code>doGet()</code> 回傳網頁 → 部署為網頁應用程式 → 取得網址。講師會用一個實際的校園活動示範，今天不要求實作。</p>
+      <p>需要存分數或限定學校帳號時才用，今天不實作。</p>
       <p style="margin:0"><a href="https://script.google.com/" target="_blank" rel="noopener">開啟 Apps Script</a></p>
     </div>
   </details>
@@ -551,7 +567,7 @@
     upd();
   }
   bindChecks("prep","prepProg",4,"已準備");
-  bindChecks("qa","qaProg",8,"已通過");
+  bindChecks("qa","qaProg",9,"已通過");
 
   /* ---------- 轉換筆記 ---------- */
   ["n1","n2","n3"].forEach(function(id){
@@ -559,52 +575,52 @@
     el.addEventListener("input",function(){ sset(k,el.value); });
   });
   $("noteCopy").onclick=function(){
-    var t="我熟悉的實體謎題或活動：\n"+$("n1").value+"\n\n它靠什麼動作成功：\n"+$("n2").value+"\n\n線上版怎麼做、失去什麼、多出什麼：\n"+$("n3").value;
+    var t="真實世界裡，這個人實際會做什麼：\n"+$("n1").value+"\n\n哪個瞬間需要用到能力：\n"+$("n2").value+"\n\n做錯會怎樣：\n"+$("n3").value;
     copyText(t,function(){ flash($("noteMsg"),"已複製"); },function(){ flash($("noteMsg"),"請手動選取複製"); });
   };
 
   /* ---------- 5 份範例規格 ---------- */
   var SPECS=[
-    { id:"acid", name:"酸鹼判斷", subj:"自然", play:"操作＋探索", lv:"入門", ref:["條件挑戰","workbench/ex/cond.html"],
-      cap:"學生能依指示劑的變色，判斷 6 種日常溶液（檸檬汁、醋、小蘇打水、肥皂水、清水、汽水）是酸性、鹼性還是中性。",
-      play_:"畫面上有 6 瓶溶液，玩家有 4 滴紫甘藍指示劑，可以滴進任一瓶看變色（滴數少於瓶數，所以不能每瓶都試）。接著把每瓶拖進「酸性」「鹼性」「中性」三個盤子。",
+    { id:"acid", name:"辨識標籤脫落的溶液", subj:"自然", play:"操作＋探索", lv:"入門", ref:["條件挑戰","workbench/ex/cond.html"],
+      cap:"實驗室有 6 瓶標籤脫落的溶液（檸檬汁、醋、小蘇打水、肥皂水、清水、汽水）。學生要像實驗員一樣，用有限的紫甘藍指示劑，辨識每瓶是酸性、鹼性還是中性；放錯的瓶子拿去用，會讓實驗失敗。",
+      play_:"畫面上有 6 瓶溶液，玩家只有 4 滴指示劑，可以滴進任一瓶看變色（滴數少於瓶數，所以不能每瓶都試，要靠已知的對照推論）。接著把每瓶拖進「酸性」「鹼性」「中性」三個盤子。",
       win:"6 瓶全部放對才過關。放錯時只顯示「還有 N 瓶放錯了」，不說是哪幾瓶；最多送出 3 次，用完就重新開始。",
-      clue:"過關後顯示一張紙條：「藥品櫃第 3 層，密碼 472。」",
+      clue:"過關後顯示一張實驗室留言：「藥品櫃第 3 層，密碼 472。」",
       style:"理化實驗室，白色桌面，淺藍色玻璃瓶，字體清楚，像課本插圖。",
-      admin:"可以改瓶子名稱、每瓶的正確分類、滴數上限、紙條文字。",
-      check:"3 個盤、6 瓶共 729 種放法，只能送出 3 次，亂猜過不了。" },
+      admin:"可以改瓶子名稱、每瓶的正確分類、滴數上限、留言文字。",
+      check:"四問：① 玩家做的是辨識，和實驗員做的同一件事。② 拿掉「實驗員」的故事，仍是一般的酸鹼分類題，所以故事裡的後果（放錯會使實驗失敗）要放進畫面。③ 3 個盤、6 瓶共 729 種放法，只能送出 3 次，亂猜過不了。④ 適合單人或雙人，約 10 分鐘。" },
     { id:"hunt", name:"校園尋寶（實景）", subj:"校園活動", play:"探索", lv:"中", ref:["實景尋物","workbench/ex/realfind.html"],
-      cap:"參加者必須走到現場、仔細觀察，才找得到 5 個地點的追蹤碼，並答得出只有現場看得到的問題。",
+      cap:"校慶活動，參加者要像偵探一樣，走到校園各處仔細觀察，找到 5 個地點的追蹤碼，並答得出只有現場看得到的問題。",
       play_:"手機畫面列出 5 個地點的目擊情報（只講大概位置）。參加者到現場找到貼紙上的追蹤碼，輸入後回報。其中 2 個地點有安全鎖：要答對一題只有現場才看得到的問題（例如「旁邊的告示牌寫幾樓」）才算找到。",
       win:"找到 4 個以上就過關。追蹤碼輸入錯誤 3 次，要等 30 秒才能再試；每個地點只算一次。",
       clue:"過關後顯示集合地點和一句通關暗語。",
       style:"偵探地圖，牛皮紙色，手寫字體，邊緣有咖啡漬。",
       admin:"可以改地點、追蹤碼、安全鎖的問題與答案、過關所需數量。",
-      check:"需要現場貼好追蹤碼。沒有安全鎖的地點，追蹤碼傳給別人就能不到現場回報，所以至少一半要有安全鎖，題目要綁現場，不能上網查得到。" },
-    { id:"speak", name:"朗讀通關", subj:"英語、國語", play:"操作（口說）", lv:"進階", ref:["咒語","spell/"],
-      cap:"學生能清楚唸出一句目標英文句子，被語音辨識判斷為正確。",
-      play_:"畫面出現一句英文和一個麥克風按鈕。玩家按下去朗讀，系統顯示辨識到的文字，並和目標句子逐字比對，沒唸對的字用紅色標出來。",
-      win:"整句辨識結果與目標相符（大小寫與標點不計）。最多嘗試 5 次。瀏覽器不支援語音辨識時，提示改用 Chrome 或 Edge，不提供打字過關。",
-      clue:"過關後顯示下一關的提示。",
-      style:"舞台聚光燈，深色背景，金色字體，麥克風按鈕有呼吸燈效果。",
-      admin:"可以改句子、容許錯幾個字、嘗試次數。",
-      check:"要發佈到 https 網址、允許麥克風才測得到；很多預覽視窗不行。這份比較進階，建議排在最後。" },
-    { id:"dilute", name:"稀釋配製", subj:"理化、數學", play:"操作（技能）", lv:"中", ref:["稀釋配製","workbench/ex/dilute.html"],
-      cap:"學生能用 C₁V₁＝C₂V₂，算出要取多少原液、加多少水，才配得出指定濃度與體積。",
-      play_:"畫面有一瓶 10% 的糖水原液、量筒和水。每次題目不同，例如「配 200 mL、2.5% 的糖水」。玩家用滑桿設定「取原液 mL」與「加水 mL」，按「倒入」，量筒液面與顏色隨之改變。",
-      win:"原液量誤差在 ±2 mL、總量誤差在 ±3 mL 內才算一題成功；連續 3 題成功（每題數字都不同）才過關；每題最多嘗試 3 次。",
-      clue:"3 題全對後顯示一張實驗紀錄紙，上面有下一關的提示。",
-      style:"實驗報告風，格線紙背景，數字用等寬字體。",
+      check:"四問：① 玩家做的是現場觀察，離開現場就做不到。② 拿掉故事，仍然得到現場才過關，能力在現場。③ 沒有安全鎖的地點，追蹤碼傳給別人就能不到現場回報，所以至少一半要有安全鎖，題目要綁現場，不能上網查得到。④ 需要現場貼好追蹤碼，適合小組或全班。" },
+    { id:"speak", name:"櫃台點餐說英文", subj:"英語", play:"操作（口說）", lv:"進階", ref:["咒語","spell/"],
+      cap:"旅行時在國外餐廳櫃台點餐。學生要清楚唸出一句點餐的英文，讓店員（語音辨識）聽懂；店員聽成別的，就會端錯餐點。",
+      play_:"畫面是餐廳櫃台和菜單，目標是「點一份指定的餐」。玩家按下麥克風唸一句英文，系統顯示辨識到的文字，並和目標句子逐字比對；沒唸清楚的字會被「聽成別的字」，店員端出另一道餐。",
+      win:"整句辨識結果與目標相符（大小寫與標點不計），店員端出對的餐點。最多嘗試 5 次。瀏覽器不支援語音辨識時，提示改用 Chrome 或 Edge，不提供打字過關。",
+      clue:"過關後店員給一張收據，上面印著下一關的提示。",
+      style:"小餐館，木桌、暖黃燈光、手寫菜單，麥克風按鈕有呼吸燈效果。",
+      admin:"可以改菜單、要點的句子、容許錯幾個字、嘗試次數。",
+      check:"四問：① 玩家做的就是開口說英文，和旅行時做的同一件事。② 後果由故事帶出（端錯餐），所以故事不能拿掉。③ 不提供打字過關，不能繞過。④ 要發佈到 https 網址、允許麥克風才測得到，很多預覽視窗不行，這份比較進階，建議排在最後。" },
+    { id:"dilute", name:"配製指定濃度的解毒劑", subj:"理化、數學", play:"操作（技能）", lv:"中", ref:["稀釋配製","workbench/ex/dilute.html"],
+      cap:"故事裡有人需要 2.5% 的解毒劑，櫃子裡只有 10% 的原液。學生要像藥劑師一樣，現場配出指定濃度與體積的溶液；配錯會失效或有害。",
+      play_:"畫面有一瓶 10% 的原液、量筒和水。每次題目不同，例如「配 200 mL、2.5% 的溶液」。玩家用滑桿設定「取原液 mL」與「加水 mL」，按「倒入」，量筒液面與顏色隨之改變。不顯示算式。",
+      win:"原液量誤差在 ±2 mL、總量誤差在 ±3 mL 內才算一題成功；連續 3 題成功（每題數字都不同）才過關；每題最多嘗試 3 次。配錯時量筒變色並顯示「這瓶不能用」。",
+      clue:"3 題全部配對後，解毒劑送出，顯示下一關的提示。",
+      style:"診所藥局，白色櫃台，量筒與藥瓶，數字用等寬字體。",
       admin:"可以改原液濃度、目標濃度範圍、容許誤差、題數。",
-      check:"每次數字隨機，背答案沒用。例：10% 配 200 mL、2.5%，原液 50 mL、水 150 mL。" },
+      check:"四問：① 玩家做的是配製，和藥劑師做的同一件事。② 這裡「現場配出指定溶液」是故事真的需要的行動，所以稀釋計算站得住；判定放在配製動作上。③ 每次數字隨機，背答案沒用。④ 適合單人練習，約 10 分鐘。" },
     { id:"dilemma", name:"水庫抉擇", subj:"公民、社會", play:"選擇", lv:"中", ref:["多重結局","workbench/ex/endings.html"],
-      cap:"學生能在沒有標準答案的情境中做出選擇，並說明自己的依據與代價。",
-      play_:"三回合的情境：小鎮的水庫水位下降。每回合有 3 個決策（限水、調高水價、開發新水源等），每個選項對「市民滿意」「環境」「財政」三個指標各有不同影響，畫面只用上升或下降的箭頭，不顯示數字。",
+      cap:"小鎮的水庫水位下降，市政顧問要在沒有標準答案的情況下做決策。學生要做出選擇，並說明自己的依據與代價。",
+      play_:"三回合的情境。每回合有 3 個決策（限水、調高水價、開發新水源等），每個選項對「市民滿意」「環境」「財政」三個指標各有不同影響，畫面只用上升或下降的箭頭，不顯示數字。",
       win:"沒有輸贏。每回合要寫下一句選擇的理由，才能進入下一回合；三回合後依選擇進入 4 種以上不同的結局。程式只檢查有沒有寫理由，不評分。",
       clue:"結局頁顯示給老師帶討論的問題，並附上下一個線索。",
       style:"舊報紙頭版，米色紙張，黑白照片感，標題粗黑字。",
       admin:"可以改情境、選項、各指標的影響、結局文字、討論題。",
-      check:"沒有「正確結局」，所以不能給結局打好壞。理由的好壞由老師在課堂上帶討論。" }
+      check:"四問：① 玩家做的就是權衡取捨，和真實的決策者做的同一件事。② 拿掉故事，這件事就不存在了。③ 沒有「正確結局」，所以不能給結局打好壞，理由的好壞由老師在課堂上帶討論。④ 適合小組討論，一場約 20 分鐘。" }
   ];
   function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
   var specsEl=$("specs");
@@ -612,13 +628,13 @@
     var d=document.createElement("details");
     d.innerHTML='<summary><span class="ttl">'+esc(s.name)+'</span><span class="tag">'+esc(s.subj)+'</span><span class="tag">'+esc(s.play)+'</span><span class="tag lv">'+esc(s.lv)+'</span></summary>'+
       '<div class="body"><dl class="f">'+
-      '<dt>① 學生要做到什麼</dt><dd>'+esc(s.cap)+'</dd>'+
+      '<dt>① 真實情境與行動</dt><dd>'+esc(s.cap)+'</dd>'+
       '<dt>② 玩法</dt><dd>'+esc(s.play_)+'</dd>'+
       '<dt>③ 怎樣算過關</dt><dd>'+esc(s.win)+'</dd>'+
-      '<dt>④ 過關後給什麼線索</dt><dd>'+esc(s.clue)+'</dd>'+
-      '<dt>⑤ 風格與氛圍</dt><dd>'+esc(s.style)+'</dd>'+
+      '<dt>④ 過關後給什麼線索（之後補）</dt><dd>'+esc(s.clue)+'</dd>'+
+      '<dt>⑤ 風格與氛圍（之後補）</dt><dd>'+esc(s.style)+'</dd>'+
       '<dt>⑥ 後台（選用）</dt><dd>'+esc(s.admin)+'</dd>'+
-      '<dt>檢查與注意</dt><dd>'+esc(s.check)+'</dd></dl>'+
+      '<dt>四問檢查與注意</dt><dd>'+esc(s.check)+'</dd></dl>'+
       '<div class="row"><button class="btn sm primary" type="button" data-i="'+i+'">帶入產生器</button>'+
       '<a class="gl" data-path="'+esc(s.ref[1])+'" target="_blank" rel="noopener">參考範例庫：'+esc(s.ref[0])+'</a></div></div>';
     specsEl.appendChild(d);
@@ -634,7 +650,8 @@
 
   /* ---------- 提示詞產生器 ---------- */
   var JUDGE=[
-    { rule:"過關必須剛好對應上面「學生要做到什麼」：不懂的人不能靠亂猜、連續亂點或繞過就過關（例如限制嘗試次數，或答錯時只說錯了幾個、不說是哪一個）。", why:"沒寫 → AI 會做出一個點一點就過的版本，題目只是外殼。" }
+    { rule:"過關必須剛好對應上面「真實情境與行動」中玩的人要做到的事：不懂的人不能靠亂猜、連續亂點或繞過就過關（例如限制嘗試次數，或答錯時只說錯了幾個、不說是哪一個）。", why:"沒寫 → AI 會做出一個點一點就過的版本，題目只是外殼。" },
+    { rule:"玩家在機關裡做的事，要和真實情境裡的人做的事是同一件事；把故事拿掉，這個機關不應該還能照樣成立。不要把一般的考題（選擇題、計算題）直接放進機關。", why:"沒寫 → AI 傾向把題目包成選擇題加一個鎖，變成考題包裝。" }
   ];
   var TECH=[
     { rule:"音效要等使用者第一次點擊之後才出聲。", why:"行動瀏覽器會擋自動播放，一載入就播會變靜音或報錯。" },
@@ -660,12 +677,12 @@
   var last="";
   function val(id){ return $(id).value.trim(); }
   function build(){
-    var p="我想做一個校園密室／闖關用的互動機關網頁。請用「單一 HTML 檔」（HTML、CSS、JavaScript 全部寫在同一個檔案）、繁體中文介面、手機與平板可直接觸控操作。\n\n";
-    p+="【學生要做到什麼】\n"+(val("qCap")||"（請寫玩的人要做到哪件事才算真的會）")+"\n\n";
+    var p="我想把一個真實世界的情境，轉成校園密室／闖關用的互動機關網頁。請用「單一 HTML 檔」（HTML、CSS、JavaScript 全部寫在同一個檔案）、繁體中文介面、手機與平板可直接觸控操作。\n\n";
+    p+="【真實情境與行動】\n"+(val("qCap")||"（請寫真實世界裡誰在做什麼、玩的人要做到哪件事）")+"\n\n";
     p+="【玩法】\n"+(val("qPlay")||"（請描述玩家看到什麼、要做什麼動作）")+"\n\n";
     p+="【怎樣算過關】\n"+(val("qWin")||"（請描述明確的成功條件）")+"\n\n";
-    p+="【過關後給玩家的線索】\n"+(val("qClue")||"（例如：顯示一段文字或一張圖）")+"\n\n";
-    p+="【風格與氛圍】\n"+(val("qStyle")||"（例如：美術風格、背景、配色、字體感覺）")+"\n\n";
+    p+="【過關後給玩家的線索】\n"+(val("qClue")||"（未指定，請設計一個簡短的過關訊息）")+"\n\n";
+    p+="【風格與氛圍】\n"+(val("qStyle")||"（未指定，請用乾淨清楚的風格）")+"\n\n";
     if(val("qAdmin")) p+="【後台要能調整的東西（選用）】\n"+val("qAdmin")+"\n\n";
     var j=[]; Array.prototype.forEach.call($("judge").querySelectorAll("input"),function(cb){ if(cb.checked) j.push(JUDGE[+cb.getAttribute("data-j")].rule); });
     if(j.length){ p+="【判定要求】\n"+j.join("\n")+"\n\n"; }
