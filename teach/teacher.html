@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 協作設計研習</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* 版面：單欄閱讀頁，像一本研習手冊；暗色銅黃，與範例庫、學生版教學頁同一個世界。
+     這頁刻意只做暗色，所有顏色都由下面的 token 控制。 */
+  :root{
+    --bg:#1c2128; --bg2:#161a20; --panel:#232a33; --well:#15191f;
+    --ink:#e7e3da; --dim:#9aa1a9; --head:#ffffff;
+    --brass:#d9b878; --brass-d:#b8935a; --amber:#ffce78;
+    --ok:#6fcf8e; --warn:#e0a04e; --bad:#e58a7a;
+    --line:rgba(255,255,255,.09);
+    --display:"Chakra Petch", system-ui, sans-serif;
+    --cjk:"PingFang TC","Microsoft JhengHei","Noto Sans TC", system-ui, sans-serif;
+    color-scheme:dark;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html{scroll-behavior:smooth}
+  body{margin:0;font-family:var(--cjk);color:var(--ink);line-height:1.8;background-color:var(--bg);
+    background-image:radial-gradient(120% 70% at 50% 0%, #29313a 0%, var(--bg) 46%, var(--bg2) 100%);background-attachment:fixed}
+  .wrap{max-width:800px;margin:0 auto;padding:64px 18px 90px}
+  a{color:var(--brass)}
+  strong,b{color:var(--head)}
+  p{margin:0 0 14px}
+  h1,h2,h3{font-family:var(--display);text-wrap:balance}
+  code{background:#0e1216;border:1px solid var(--line);border-radius:6px;padding:1px 6px;font-family:var(--display);font-size:.9em;color:var(--brass);word-break:break-word}
+  :focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+
+  header{margin-bottom:10px}
+  .kicker{font-family:var(--display);font-weight:600;letter-spacing:2px;font-size:12px;color:var(--brass-d)}
+  h1{font-weight:700;letter-spacing:1px;font-size:30px;line-height:1.3;margin:10px 0 8px}
+  .lede{color:var(--dim);font-size:15px;max-width:620px;margin:0}
+  .meta{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 0}
+  .chip{font-size:13px;color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:4px 12px;background:rgba(0,0,0,.18)}
+  .toc{display:flex;flex-wrap:wrap;gap:8px;margin:22px 0 0}
+  .toc a{font-size:13px;color:var(--dim);text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:6px 14px}
+  .toc a:hover{color:var(--brass);border-color:rgba(217,184,120,.4)}
+
+  section{margin-top:46px;scroll-margin-top:16px}
+  h2{font-weight:700;font-size:22px;letter-spacing:1px;margin:0 0 4px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+  h2 .n{color:var(--brass);font-size:15px}
+  h2 .t{font-family:var(--display);font-size:13px;color:var(--dim);font-weight:500;letter-spacing:.5px}
+  h3{font-size:17px;margin:22px 0 8px;color:var(--head)}
+  .note{color:var(--dim);font-size:14px;margin:0 0 16px}
+
+  .card{background:linear-gradient(180deg,#262d36,#1d232b);border:1px solid var(--line);border-radius:16px;padding:18px;margin:14px 0}
+  .well{background:var(--well);border:1px solid var(--line);border-radius:12px;padding:14px}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  @media (max-width:640px){.grid2,.grid3{grid-template-columns:1fr}}
+  .tag{display:inline-block;font-size:12px;border:1px solid var(--line);border-radius:999px;padding:1px 9px;color:var(--brass);margin-right:6px}
+  .tag.lv{color:var(--dim)}
+  .tip{background:rgba(217,184,120,.08);border:1px solid rgba(217,184,120,.25);border-radius:12px;padding:14px 16px;color:#ecd9b0;font-size:14px;margin:14px 0}
+  .warnbox{background:rgba(224,160,78,.09);border:1px solid rgba(224,160,78,.35);border-radius:12px;padding:14px 16px;color:#f0d3a6;font-size:14px;margin:14px 0}
+
+  .scroll{overflow-x:auto;margin:12px 0;border:1px solid var(--line);border-radius:12px}
+  table{border-collapse:collapse;width:100%;min-width:560px;font-size:14px}
+  th,td{padding:10px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+  th{font-weight:600;color:var(--brass);background:rgba(0,0,0,.2);white-space:nowrap}
+  tr:last-child td{border-bottom:none}
+  td.time{font-family:var(--display);white-space:nowrap;color:var(--head)}
+  tr.rest td{color:var(--dim);background:rgba(255,255,255,.02)}
+  td small{display:block;color:var(--dim);font-size:12.5px;margin-top:2px}
+
+  ol.steps{counter-reset:s;list-style:none;padding:0;margin:0}
+  ol.steps>li{position:relative;padding:14px 14px 14px 56px;background:var(--well);border:1px solid var(--line);border-radius:12px;margin-bottom:10px}
+  ol.steps>li::before{counter-increment:s;content:counter(s);position:absolute;left:14px;top:14px;width:28px;height:28px;border-radius:8px;background:var(--brass-d);color:#1c1206;font-family:var(--display);font-weight:700;display:flex;align-items:center;justify-content:center}
+  ul.plain{list-style:none;padding:0;margin:0}
+  ul.plain li{padding:9px 0;border-bottom:1px solid var(--line)}
+  ul.plain li:last-child{border-bottom:none}
+
+  .six{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media (max-width:640px){.six{grid-template-columns:1fr}}
+  .six .box{background:var(--well);border:1px solid var(--line);border-radius:12px;padding:14px}
+  .six .box.new{border-color:rgba(217,184,120,.55)}
+  .six .q{font-family:var(--display);color:var(--brass);font-size:15px;margin-bottom:4px}
+  .six .d{color:var(--dim);font-size:13.5px;margin-bottom:8px}
+  .six .bad,.six .good{font-size:13.5px;padding:6px 10px;border-radius:8px;margin-top:6px}
+  .six .bad{background:rgba(229,138,122,.1);color:#f0b5a9}
+  .six .good{background:rgba(111,207,142,.1);color:#bfe9cc}
+  .six .bad::before{content:"較弱　";color:var(--bad);font-weight:600}
+  .six .good::before{content:"較好　";color:var(--ok);font-weight:600}
+
+  details{background:var(--well);border:1px solid var(--line);border-radius:12px;margin:10px 0}
+  details>summary{list-style:none;cursor:pointer;padding:13px 14px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  details>summary::-webkit-details-marker{display:none}
+  details>summary::after{content:"＋";margin-left:auto;color:var(--dim);font-family:var(--display)}
+  details[open]>summary::after{content:"－"}
+  details>.body{padding:0 14px 14px}
+  summary .ttl{font-weight:600;color:var(--head)}
+  dl.f{margin:0;display:grid;gap:8px}
+  dl.f dt{font-family:var(--display);font-size:13px;color:var(--brass);margin-top:4px}
+  dl.f dd{margin:0;font-size:14px}
+
+  label.chk{display:flex;gap:10px;align-items:flex-start;padding:10px 0;cursor:pointer;border-bottom:1px solid var(--line)}
+  label.chk:last-child{border-bottom:none}
+  label.chk input{margin-top:5px;width:18px;height:18px;accent-color:var(--brass-d);flex:none}
+  label.chk .why{display:block;color:var(--dim);font-size:13px}
+  .prog{font-family:var(--display);color:var(--brass);font-size:14px;margin:0 0 6px}
+
+  .gen label.lbl{display:block;font-size:14px;color:var(--head);font-weight:600;margin:14px 0 6px}
+  textarea,input[type=text]{width:100%;background:#13171c;border:1px solid var(--line);border-radius:11px;color:var(--ink);padding:11px 13px;font-size:15px;font-family:var(--cjk);line-height:1.6}
+  textarea{min-height:62px;resize:vertical}
+  textarea:focus,input[type=text]:focus{outline:none;border-color:var(--brass-d)}
+  .btn{border:none;border-radius:12px;padding:12px 20px;font-family:var(--cjk);font-weight:700;font-size:15px;cursor:pointer}
+  .btn.primary{background:linear-gradient(180deg,var(--brass),var(--brass-d));color:#1c1206}
+  .btn.ghost{background:transparent;border:1px solid var(--line);color:var(--ink)}
+  .btn.sm{padding:7px 14px;font-size:13.5px;border-radius:10px}
+  .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;align-items:center}
+  .out{margin-top:14px;background:#0e1216;border:1px solid var(--line);border-radius:12px;padding:14px;white-space:pre-wrap;font-size:13.5px;color:#d8e0e6;line-height:1.7;display:none}
+  .out.show{display:block}
+  .copied{color:var(--ok);font-size:13px}
+  .why b{color:var(--warn);font-weight:600}
+
+  .xp a.go{display:inline-block;margin-top:8px;font-size:14px}
+  footer{margin-top:54px;text-align:center;color:var(--dim);font-size:13px;border-top:1px solid var(--line);padding-top:24px}
+
+  #presentBtn{position:fixed;top:14px;right:14px;z-index:30;border:1px solid rgba(217,184,120,.4);background:rgba(0,0,0,.45);color:var(--brass);border-radius:999px;padding:8px 16px;font-family:var(--cjk);font-size:13px;cursor:pointer}
+  #slideNav{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);z-index:60;display:none;align-items:center;gap:10px;background:rgba(20,24,30,.94);border:1px solid var(--line);border-radius:999px;padding:8px 12px}
+  body.present #slideNav{display:flex}
+  #slideNav button{border:none;background:transparent;color:var(--ink);font-size:18px;cursor:pointer;width:40px;height:40px;border-radius:50%}
+  #slideNav .count{font-family:var(--display);font-size:14px;color:var(--dim);min-width:58px;text-align:center}
+  body.present{overflow:hidden}
+  body.present .wrap{max-width:none;margin:0;padding:0}
+  body.present .toc,body.present footer,body.present #presentBtn,body.present .meta{display:none}
+  body.present header,body.present section{display:none}
+  body.present .slide-active{display:block;position:fixed;inset:0;overflow:auto;padding:6vh 7vw 14vh;margin:0;background-color:var(--bg);background-image:radial-gradient(120% 70% at 50% 0%, #29313a 0%, var(--bg) 46%, var(--bg2) 100%)}
+  body.present .slide-active>*{max-width:960px;margin-left:auto;margin-right:auto}
+  body.present .slide-active h1{font-size:42px}
+  body.present .slide-active h2{font-size:32px}
+  body.present .slide-active p,body.present .slide-active li,body.present .slide-active td,body.present .slide-active th{font-size:18px}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+  @media print{body{background:#fff;color:#000}.toc,#presentBtn,.row,.out{display:none!important}.card,.well,details{border-color:#bbb;background:#fff}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header id="top">
+  <div class="kicker">教師研習　115 年 11 月 19 日（四）14:00–16:30</div>
+  <h1>AI 協作設計：做出一個能玩的線上機關</h1>
+  <p class="lede">不用寫程式。先把規格想清楚，再請 AI 實作，然後自己測、自己上架。今天結束時，每個人手上會有一款可以玩的機關，和一條能傳給別人的網址。</p>
+  <div class="meta">
+    <span class="chip">共 2.5 小時，含休息 10 分鐘</span>
+    <span class="chip">自備筆電與 AI 帳號</span>
+  </div>
+  <nav class="toc" aria-label="章節">
+    <a href="#overview">總覽</a>
+    <a href="#s1">① 體驗與轉換</a>
+    <a href="#s2">② 規格先行</a>
+    <a href="#s3">③ 發佈平台</a>
+    <a href="#s4">④ 實作</a>
+    <a href="#s5">⑤ 驗收除錯</a>
+    <a href="#s6">⑥ 上架</a>
+    <a href="#after">課後資源</a>
+  </nav>
+</header>
+
+<!-- ============ 總覽 ============ -->
+<section id="overview">
+  <h2><span class="n">00</span>總覽</h2>
+  <p class="note">五個目標，對應下面的五段課程。</p>
+  <ol class="steps">
+    <li><b>理解 AI 協作設計方法</b>：規格先行，逐步驗收。能用在教學或校園活動。</li>
+    <li><b>用「設計規格」描述機關</b>：六格寫清楚，AI 才不會亂猜。</li>
+    <li><b>把規格變成提示詞，完成一款機關</b>：用產生器組提示詞，和 AI 一輪一輪改。</li>
+    <li><b>發佈成果</b>：讓別人真的能玩到你的機關。</li>
+    <li><b>建立驗收與除錯習慣</b>：自己實測，用具體現象回報問題。</li>
+  </ol>
+
+  <h3>時程</h3>
+  <div class="scroll"><table>
+    <thead><tr><th>時間</th><th>內容</th><th>你的產出</th></tr></thead>
+    <tbody>
+      <tr><td class="time">14:00–14:25</td><td><b>① 機關體驗與概念轉換</b><small>開場 3 分、分組體驗 12 分、實體→線上轉換討論 10 分</small></td><td>一張轉換筆記</td></tr>
+      <tr><td class="time">14:25–14:50</td><td><b>② 規格先行、③ 認識發佈平台</b><small>講規格 8 分、現場寫前三格 7 分、發佈平台與常見問題 10 分</small></td><td>六格中的前三格</td></tr>
+      <tr class="rest"><td class="time">14:50–15:00</td><td>休息。請順便確認 AI 帳號登得進去。</td><td></td></tr>
+      <tr><td class="time">15:00–16:00</td><td><b>④ 專屬機關實作</b><small>寫完六格 10 分、第 1 版 10 分、實測並改第 1 次 10 分、改第 2、3 次 15 分、收尾 15 分</small></td><td>一款可玩的機關</td></tr>
+      <tr><td class="time">16:00–16:30</td><td><b>⑤ 驗收除錯、⑥ 上架</b><small>驗收 8 分、上架 12 分、互玩互測與總結 10 分</small></td><td>一條可分享的網址</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>課前準備</h3>
+  <div class="card" id="prep">
+    <p class="prog" id="prepProg"></p>
+    <label class="chk"><input type="checkbox" data-k="prep1"><span>筆電可上網，充電器帶著。<span class="why">現場有很多人同時連線，建議手機熱點當備案。</span></span></label>
+    <label class="chk"><input type="checkbox" data-k="prep2"><span>一個 AI 對話工具的帳號，能登入（Claude、ChatGPT、Gemini 都可以，免費版即可）。<span class="why">課前先登入一次，確認沒有被要求驗證。</span></span></label>
+    <label class="chk"><input type="checkbox" data-k="prep3"><span>GitHub 帳號（進階）。<span class="why">只有想用 GitHub Pages 發佈才需要，可以現場註冊，但會花 5 分鐘。</span></span></label>
+    <label class="chk"><input type="checkbox" data-k="prep4"><span>想一個你的教學或活動情境。<span class="why">例如：某單元的複習、校慶攤位、班級破冰。想不到也沒關係，④ 有 5 份範例可以改著做。</span></span></label>
+  </div>
+
+  <details>
+    <summary><span class="ttl">講師設定與課前備忘</span><span class="tag lv">只給講師</span></summary>
+    <div class="body">
+      <p class="note">這一頁的「範例庫連結」都從下面這個網址組出來。網址不對時，改掉再按儲存。</p>
+      <label class="lbl" for="baseUrl" style="display:block;font-weight:600;color:var(--head);margin-bottom:6px">範例庫網址（結尾要有斜線）</label>
+      <input type="text" id="baseUrl" autocomplete="off">
+      <div class="row" style="margin-top:10px"><button class="btn sm primary" id="baseSave" type="button">儲存</button><button class="btn sm ghost" id="baseReset" type="button">還原預設</button><span class="copied" id="baseMsg"></span></div>
+      <h3>課前一週要做的事</h3>
+      <ul class="plain">
+        <li><b>實測學員會用的 AI 工具。</b>三件事：能不能產出單一 HTML 檔、能不能預覽、能不能發佈或匯出。目前只有 Claude 的「發佈」功能我查過官方說明；ChatGPT、Gemini 請你自己試，結果決定那些學員走哪一種上架方式。</li>
+        <li><b>確認範例庫網址打得開。</b>用手機和筆電各開一次，並玩一款有麥克風的（咒語），確認 https 與權限提示正常。</li>
+        <li><b>準備一份共用文件或表單，收學員的網址。</b>⑥ 互玩時用。</li>
+        <li><b>準備 3 款「保底成品」。</b>某位學員 15:30 還沒有第 1 版時，讓他改這幾款，不要讓人空手下課。</li>
+        <li><b>時間控管。</b>15:30 還沒有可玩的第 1 版，就請學員改用 ④ 的範例規格，先做出東西。</li>
+      </ul>
+    </div>
+  </details>
+</section>
+
+<!-- ============ ① 體驗與轉換 ============ -->
+<section id="s1">
+  <h2><span class="n">①</span>機關體驗與概念轉換<span class="t">14:00–14:25</span></h2>
+  <p class="note">先玩，再想「這個東西在實體世界長什麼樣」。轉換時最常見的失誤，是把一張考卷搬到螢幕上，變成按鈕。</p>
+
+  <h3>分組體驗（每款約 3 分鐘）</h3>
+  <div class="grid2 xp">
+    <div class="card"><span class="tag">解謎</span><b>密碼鎖</b>
+      <p style="margin:8px 0 0;font-size:14px">轉動轉盤。問自己：這個鎖在測玩家會什麼？</p>
+      <a class="go gl" data-path="lock/" target="_blank" rel="noopener">開啟機關</a></div>
+    <div class="card"><span class="tag">操作</span><b>刮刮樂顯影</b>
+      <p style="margin:8px 0 0;font-size:14px">刮開塗層。問自己：刮的動作跟知識有關嗎？</p>
+      <a class="go gl" data-path="workbench/ex/scratch.html" target="_blank" rel="noopener">開啟機關</a></div>
+    <div class="card"><span class="tag">配對</span><b>暗門櫃</b>
+      <p style="margin:8px 0 0;font-size:14px">把物品放進對的格子。問自己：放錯時怎麼知道？可以亂試嗎？</p>
+      <a class="go gl" data-path="cabinet/" target="_blank" rel="noopener">開啟機關</a></div>
+    <div class="card"><span class="tag">探索</span><b>實景尋物</b>
+      <p style="margin:8px 0 0;font-size:14px">模擬到現場掃碼回報。問自己：哪一題一定要在現場才答得出來？</p>
+      <a class="go gl" data-path="workbench/ex/realfind.html" target="_blank" rel="noopener">開啟機關</a></div>
+  </div>
+  <p class="note" style="margin-top:12px">想看更多：<a class="gl" data-path="workbench/" target="_blank" rel="noopener">機關範例庫</a>，78 款，依六種玩法分類。</p>
+
+  <h3>實體 → 線上，怎麼轉</h3>
+  <p class="note">每一列都問同一件事：實體版靠什麼動作成功？線上版還保留得住嗎？</p>
+  <div class="scroll"><table>
+    <thead><tr><th>實體謎題</th><th>線上對應</th><th>會失去</th><th>會多出</th></tr></thead>
+    <tbody>
+      <tr><td>數字掛鎖</td><td>轉盤密碼鎖<small><a class="gl" data-path="lock/" target="_blank" rel="noopener">lock</a></small></td><td>手上轉動的觸感</td><td>可重設、可換答案</td></tr>
+      <tr><td>藏在教室裡的線索紙條</td><td>點擊調查<small><a class="gl" data-path="workbench/ex/hotspot.html" target="_blank" rel="noopener">hotspot</a></small></td><td>真的走動、翻找</td><td>線索可隨機、可限制次數</td></tr>
+      <tr><td>實體拼圖</td><td>拖曳吸附拼圖<small><a class="gl" data-path="workbench/ex/jigsaw.html" target="_blank" rel="noopener">jigsaw</a></small></td><td>握在手裡的感覺</td><td>自動判定拼對、可換圖</td></tr>
+      <tr><td>配對卡片</td><td>連線謎題<small><a class="gl" data-path="wires/" target="_blank" rel="noopener">wires</a></small></td><td>圍著桌子一起擺</td><td>自動檢查、可換題</td></tr>
+      <tr><td>螢光墨水加黑光燈</td><td>紫外線顯影<small><a class="gl" data-path="uv/" target="_blank" rel="noopener">uv</a></small></td><td>真實的光學現象</td><td>不需要藥品與燈</td></tr>
+      <tr><td>貼在校園各處的 QR 尋寶</td><td>實景尋物<small><a class="gl" data-path="workbench/ex/realfind.html" target="_blank" rel="noopener">realfind</a></small></td><td>幾乎沒有，本來就要在現場</td><td>自動記錄、安全鎖驗證</td></tr>
+    </tbody>
+  </table></div>
+  <div class="warnbox"><b>三個轉換問題：</b>① 實體版是靠哪個動作成功的？② 線上版能保留這個動作嗎？③ 不能的話，換一個動作，還是乾脆留在實體？<br>若答案是「把題目直接搬上螢幕」，這只是換外殼。</div>
+
+  <h3>你的轉換筆記（約 10 分鐘）</h3>
+  <div class="card">
+    <label class="lbl" for="n1" style="display:block;font-weight:600;color:var(--head);margin-bottom:6px">我熟悉的實體謎題或活動</label>
+    <textarea id="n1" data-k="note1" placeholder="例如：生物課的標本辨認站、校慶的闖關攤位"></textarea>
+    <label class="lbl" for="n2" style="display:block;font-weight:600;color:var(--head);margin:12px 0 6px">它靠什麼動作成功？</label>
+    <textarea id="n2" data-k="note2" placeholder="例如：要拿起標本、對照特徵、說出名稱"></textarea>
+    <label class="lbl" for="n3" style="display:block;font-weight:600;color:var(--head);margin:12px 0 6px">線上版要怎麼做？會失去什麼、多出什麼？</label>
+    <textarea id="n3" data-k="note3" placeholder="例如：改成點選特徵並拖到名稱上；失去拿起標本，多出可以放大看細節"></textarea>
+    <div class="row"><button class="btn sm ghost" id="noteCopy" type="button">複製我的筆記</button><span class="copied" id="noteMsg"></span></div>
+  </div>
+</section>
+
+<!-- ============ ② 規格先行 ============ -->
+<section id="s2">
+  <h2><span class="n">②</span>規格先行<span class="t">14:25–14:40　講 8 分＋寫 7 分</span></h2>
+  <p class="note">與其叫 AI「做一個密碼鎖」，不如先把設計寫清楚。沒寫的部分，AI 會自己猜，猜的結果常常看起來對，實際不對。</p>
+
+  <div class="grid2">
+    <div class="well"><b>沒有規格</b><p style="margin:8px 0 0;font-size:14px;color:var(--dim)">「幫我做一個酸鹼的闖關遊戲。」<br>AI 會自己決定怎麼玩、怎樣算過關、答案是什麼。你不知道它猜了什麼。</p></div>
+    <div class="well"><b>有規格</b><p style="margin:8px 0 0;font-size:14px;color:var(--dim)">六格寫完。AI 只剩下實作要做，你可以拿規格逐項檢查它做出來的東西。</p></div>
+  </div>
+
+  <h3>六格設計規格</h3>
+  <p class="note">以「酸鹼判斷」為例。第一格是新加的，也是最容易被跳過的一格。</p>
+  <div class="six">
+    <div class="box new"><div class="q">① 學生要做到什麼</div><div class="d">玩的人要「做到」哪件事，才算真的會？</div>
+      <div class="bad">學生要知道酸鹼性。</div>
+      <div class="good">學生能依指示劑的變色，判斷 6 種日常溶液是酸性、鹼性還是中性。</div></div>
+    <div class="box"><div class="q">② 玩法</div><div class="d">玩家看到什麼？要做什麼動作？</div>
+      <div class="bad">做一個找東西的遊戲。</div>
+      <div class="good">畫面有 6 瓶溶液和 4 滴指示劑，玩家可以滴進任一瓶看變色，再把每瓶拖進「酸性」「鹼性」「中性」盤。</div></div>
+    <div class="box"><div class="q">③ 怎樣算過關</div><div class="d">一個明確、不含糊的成功條件。</div>
+      <div class="bad">答對就過關。</div>
+      <div class="good">6 瓶全部放對才過關。放錯時只說「還有 N 瓶放錯」，不說是哪幾瓶；最多送出 3 次。</div></div>
+    <div class="box"><div class="q">④ 過關給什麼線索</div><div class="d">成功後顯示的文字或圖片，接到下一關。</div>
+      <div class="bad">顯示恭喜。</div>
+      <div class="good">顯示一張紙條：「藥品櫃第 3 層，密碼 472。」</div></div>
+    <div class="box"><div class="q">⑤ 風格與氛圍</div><div class="d">美術、背景、配色、字體感覺。</div>
+      <div class="bad">好看一點。</div>
+      <div class="good">理化實驗室，白色桌面，淺藍玻璃瓶，字體清楚，像課本插圖。</div></div>
+    <div class="box"><div class="q">⑥ 後台能調什麼　<span class="tag lv">選用</span></div><div class="d">之後要快速改答案、題目、次數時才需要。第一版可以先不要。</div>
+      <div class="good">可以改瓶子名稱、正確分類、滴數上限、紙條文字。</div></div>
+  </div>
+
+  <h3>寫完以後，用三個問題檢查</h3>
+  <p class="note">這三題對應「判定剛好等於能力」。答案只要有一題是「會」，就回去改第③格。</p>
+  <div class="card">
+    <ol class="steps">
+      <li><b>不懂的人，會不會靠亂猜、亂點或抄答案過關？</b><br><span style="color:var(--dim);font-size:14px">上面的例子有 3 個盤、6 瓶，共 729 種放法，只能送出 3 次，所以猜不過。</span></li>
+      <li><b>把知識拿掉，這個機關還成立嗎？</b><br><span style="color:var(--dim);font-size:14px">還成立，代表知識只是裝飾。例如把「酸鹼」換成「紅藍」，遊戲一樣能玩，就是換外殼。</span></li>
+      <li><b>成功是靠「做到」，還是靠「看了答案再填」？</b><br><span style="color:var(--dim);font-size:14px">答案直接寫在畫面或海報上，玩家只是抄寫，就沒有測到能力。</span></li>
+    </ol>
+  </div>
+
+  <div class="tip"><b>現場練習（7 分鐘）：</b>先寫 ①②③ 三格，貼到下面「④ 實作」的產生器裡。想不到題材，可以先挑一份範例規格來改。</div>
+</section>
+
+<!-- ============ ③ 發佈平台 ============ -->
+<section id="s3">
+  <h2><span class="n">③</span>認識發佈平台<span class="t">14:40–14:50　10 分</span></h2>
+  <p class="note">機關做好是一個 HTML 檔。要讓別人玩，得放到網路上。先看有哪些路，再決定。</p>
+
+  <div class="scroll"><table>
+    <thead><tr><th>方式</th><th>需要什麼</th><th>大約時間</th><th>適合</th><th>限制</th></tr></thead>
+    <tbody>
+      <tr><td><b>A　AI 工具內發佈</b><small>例：Claude 的「發佈」</small></td><td>該 AI 工具的帳號</td><td>約 1 分鐘</td><td>保底。最快有網址。</td><td>連結由工具決定，不能自訂。其他 AI 工具有沒有這個功能，要事先確認。</td></tr>
+      <tr><td><b>B　GitHub Pages</b></td><td>GitHub 帳號（免費）</td><td>約 5–10 分鐘</td><td>想要固定、可自己管理的網址。</td><td>檔名要是 <code>index.html</code>；上傳後要等 1–2 分鐘；公開倉庫的程式碼人人看得到。</td></tr>
+      <tr><td><b>C　Google Apps Script</b></td><td>Google 帳號</td><td>10 分鐘以上</td><td>要存分數、設定，或要登入驗證身分時。</td><td>要寫後端程式，今天只示範不實作。</td></tr>
+    </tbody>
+  </table></div>
+  <div class="tip">依據：Claude 說明頁寫明免費版可以「發佈」，並取得公開連結，對方開連結不需要帳號。GitHub Pages 的步驟見 ⑥。</div>
+  <div class="warnbox"><b>共同提醒：</b>機關的答案寫在程式裡，懂的人看原始碼就找得到。所以它適合課堂和校園活動，不適合高風險的測驗。也不要放學生的個資。</div>
+
+  <h3>常見問題</h3>
+  <details><summary><span class="ttl">上傳到 GitHub 後，網址顯示 404</span></summary><div class="body">
+    <ul class="plain"><li>檔名是不是 <code>index.html</code>（全小寫），而且放在倉庫最外層？</li><li>Settings → Pages，來源是不是 <code>main</code>、<code>/(root)</code>？</li><li>剛開啟要等 1–2 分鐘，先別急著重傳。</li></ul></div></details>
+  <details><summary><span class="ttl">我改了檔案，網址上還是舊的</span></summary><div class="body">
+    <p>多半是瀏覽器還在用舊的暫存。按 <code>Ctrl + Shift + R</code> 強制重新整理，或在網址後面加上 <code>?v=2</code>。</p></div></details>
+  <details><summary><span class="ttl">手機打開是空白或壞掉</span></summary><div class="body">
+    <p>先換一個瀏覽器、或開無痕視窗再試。要回報給 AI 時，附上「手機型號、瀏覽器、看到什麼畫面」，見 ⑤ 的回報句型。</p></div></details>
+  <details><summary><span class="ttl">麥克風或語音辨識的機關不能用</span></summary><div class="body">
+    <p>語音辨識要在 https 網址上、允許麥克風，且 Chrome 或 Edge 最穩。GitHub Pages 是 https，沒問題；很多預覽視窗不能用麥克風，要到實際的發佈網址測。</p></div></details>
+  <details><summary><span class="ttl">AI 只給了一半程式，或回答到一半停了</span></summary><div class="body">
+    <p>回它：「請給我完整的單一 HTML 檔，從 &lt;!DOCTYPE html&gt; 開始到 &lt;/html&gt; 結束。」不要自己拼接片段。</p></div></details>
+  <details><summary><span class="ttl">圖片沒有顯示</span></summary><div class="body">
+    <p>本機電腦裡的圖片路徑，發佈後別人看不到。要用公開的圖片網址，或請 AI 改成直接內嵌在檔案裡。</p></div></details>
+</section>
+
+<!-- ============ ④ 實作 ============ -->
+<section id="s4">
+  <h2><span class="n">④</span>專屬機關實作<span class="t">15:00–16:00　60 分</span></h2>
+  <p class="note">規則只有一條：每一輪只改一件事，改完一定實測一次。</p>
+
+  <div class="scroll"><table>
+    <thead><tr><th>時間</th><th>這一輪做什麼</th></tr></thead>
+    <tbody>
+      <tr><td class="time">15:00–15:10</td><td>把六格寫完，產生提示詞。</td></tr>
+      <tr><td class="time">15:10–15:20</td><td>貼給 AI，拿到第 1 版。不要急著改，先玩一遍。</td></tr>
+      <tr><td class="time">15:20–15:30</td><td>實測。用回報句型告訴 AI 一個具體問題，改第 1 次。</td></tr>
+      <tr><td class="time">15:30–15:45</td><td>改第 2、3 次。例如：加上答錯的回饋、限制嘗試次數。</td></tr>
+      <tr><td class="time">15:45–16:00</td><td>收尾：風格、文字，確認這一版穩定，存成檔案。</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>範例規格（卡住時用）</h3>
+  <p class="note">5 份都寫好六格，也都過了上面的三項檢查。點「帶入產生器」，再照你的情境改。卡住超過 5 分鐘就選一份。</p>
+  <div id="specs"></div>
+
+  <h3>規格 → 提示詞產生器</h3>
+  <p class="note">填完六格，技術要點建議全勾，按「產生提示詞」，複製後貼給你的 AI。</p>
+  <div class="card gen">
+    <label class="lbl" for="qCap">① 學生要做到什麼</label>
+    <textarea id="qCap" placeholder="例如：學生能依指示劑的變色，判斷 6 種日常溶液的酸鹼。"></textarea>
+    <label class="lbl" for="qPlay">② 玩法（玩家看到什麼、做什麼）</label>
+    <textarea id="qPlay" placeholder="例如：畫面有 6 瓶溶液和 4 滴指示劑，玩家滴進任一瓶看變色，再把每瓶拖進分類盤。"></textarea>
+    <label class="lbl" for="qWin">③ 怎樣算過關</label>
+    <textarea id="qWin" placeholder="例如：6 瓶全部放對才過關；放錯時只說還有幾瓶錯，不說是哪幾瓶。"></textarea>
+    <label class="lbl" for="qClue">④ 過關後給玩家的線索</label>
+    <textarea id="qClue" placeholder="例如：顯示一張紙條，寫出下一個地點。"></textarea>
+    <label class="lbl" for="qStyle">⑤ 風格與氛圍</label>
+    <textarea id="qStyle" placeholder="例如：理化實驗室，白色桌面，淺藍玻璃瓶，字體清楚。"></textarea>
+    <label class="lbl" for="qAdmin">⑥ 後台要能調整的東西（選用，可留空）</label>
+    <textarea id="qAdmin" placeholder="第一版可以先不要。之後想快速改：答案、題目、次數。"></textarea>
+
+    <label class="lbl" style="margin-top:20px">加強判定（建議勾）</label>
+    <div id="judge"></div>
+    <label class="lbl" style="margin-top:14px">技術要點（AI 常漏，建議全勾）</label>
+    <div id="checks"></div>
+
+    <div class="row">
+      <button class="btn primary" id="genBtn" type="button">產生提示詞</button>
+      <button class="btn ghost" id="copyBtn" type="button">複製</button>
+      <span class="copied" id="copied"></span>
+    </div>
+    <div class="out" id="out"></div>
+  </div>
+
+  <h3>卡關急救</h3>
+  <div class="grid3">
+    <div class="well"><b>沒有想法</b><p style="margin:6px 0 0;font-size:14px;color:var(--dim)">直接挑一份範例規格，先做出來，再換成自己的內容。</p></div>
+    <div class="well"><b>AI 越改越壞</b><p style="margin:6px 0 0;font-size:14px;color:var(--dim)">回到上一個好的版本，重新貼給它，這次只要求改一件事。</p></div>
+    <div class="well"><b>玩法太複雜</b><p style="margin:6px 0 0;font-size:14px;color:var(--dim)">換成簡單的玩法：配對、排序、密碼鎖。先能玩，再加花樣。</p></div>
+  </div>
+  <p class="note" style="margin-top:14px">想要現成的後台與「產生分享連結」，也可以從 <a class="gl" data-path="template/" target="_blank" rel="noopener">空白機關範本</a> 開始改。</p>
+</section>
+
+<!-- ============ ⑤ 驗收除錯 ============ -->
+<section id="s5">
+  <h2><span class="n">⑤</span>驗收與除錯<span class="t">實作時每一輪都做，16:00 做總檢核</span></h2>
+  <p class="note">AI 做出來「看起來會動」，不代表是對的。每一輪改完，自己玩一遍。</p>
+
+  <h3>驗收清單</h3>
+  <div class="card" id="qa">
+    <p class="prog" id="qaProg"></p>
+    <label class="chk"><input type="checkbox" data-k="qa1"><span><b>第一眼</b>：畫面完整，文字看得懂，把視窗縮到手機寬度也不爆版。</span></label>
+    <label class="chk"><input type="checkbox" data-k="qa2"><span><b>做對一次</b>：能過關，而且出現線索。</span></label>
+    <label class="chk"><input type="checkbox" data-k="qa3"><span><b>做錯一次</b>：有看得到的回饋，不是毫無反應。</span></label>
+    <label class="chk"><input type="checkbox" data-k="qa4"><span><b>亂點、連點、空白送出</b>：不會壞掉。</span></label>
+    <label class="chk"><input type="checkbox" data-k="qa5"><span><b>重新開始</b>：狀態真的歸零，計時、分數、已選的東西都清掉。</span></label>
+    <label class="chk"><input type="checkbox" data-k="qa6"><span><b>亂猜過得了嗎？</b>不看線索，連續亂點 20 秒。過得了就回去改規格第③格。</span></label>
+    <label class="chk"><input type="checkbox" data-k="qa7"><span><b>手機或平板</b>能操作（可以的話，請旁邊的人借你手機試）。</span></label>
+    <label class="chk"><input type="checkbox" data-k="qa8"><span><b>交給旁邊的人玩</b>：不用你解釋，他就知道怎麼玩。</span></label>
+  </div>
+
+  <h3>回報問題：說現象，不說感覺</h3>
+  <div class="grid2">
+    <div class="well"><b style="color:var(--bad)">較弱</b><p style="margin:6px 0 0;font-size:14px">「壞了。」「不能玩。」「怪怪的。」</p></div>
+    <div class="well"><b style="color:var(--ok)">較好</b><p style="margin:6px 0 0;font-size:14px">「我在第 3 瓶按『滴入』，預期變成紅色，結果畫面沒變，也沒有任何提示。」</p></div>
+  </div>
+  <div class="card gen">
+    <p class="note" style="margin-bottom:6px">用這個句型組一句，複製給 AI。</p>
+    <label class="lbl" for="rAct">我做了什麼（點了哪裡、輸入了什麼）</label>
+    <input type="text" id="rAct" autocomplete="off" placeholder="例如：在第 3 瓶按「滴入」">
+    <label class="lbl" for="rExp">我預期會怎樣</label>
+    <input type="text" id="rExp" autocomplete="off" placeholder="例如：瓶子變成紅色">
+    <label class="lbl" for="rAct2">結果卻怎樣</label>
+    <input type="text" id="rAct2" autocomplete="off" placeholder="例如：畫面沒變，也沒有提示">
+    <label class="lbl" for="rEnv">在什麼裝置、瀏覽器（選填）</label>
+    <input type="text" id="rEnv" autocomplete="off" placeholder="例如：筆電 Chrome">
+    <div class="row"><button class="btn primary" id="rBuild" type="button">組成一句話並複製</button><span class="copied" id="rMsg"></span></div>
+    <div class="out" id="rOut"></div>
+  </div>
+
+  <h3>一次只改一件事</h3>
+  <div class="grid2">
+    <div class="well"><b style="color:var(--bad)">較弱</b><p style="margin:6px 0 0;font-size:14px">「再好看一點，還要加音效，答錯也要有提示，順便加計時。」</p></div>
+    <div class="well"><b style="color:var(--ok)">較好</b><p style="margin:6px 0 0;font-size:14px">「答錯時，讓選項變紅並震動一下，其他都不要動。」改完測一次，再提下一件。</p></div>
+  </div>
+</section>
+
+<!-- ============ ⑥ 上架 ============ -->
+<section id="s6">
+  <h2><span class="n">⑥</span>驗收與上架<span class="t">16:00–16:30</span></h2>
+  <div class="scroll"><table>
+    <thead><tr><th>時間</th><th>做什麼</th></tr></thead>
+    <tbody>
+      <tr><td class="time">16:00–16:08</td><td>把 ⑤ 的驗收清單從頭走一遍。</td></tr>
+      <tr><td class="time">16:08–16:20</td><td>上架。先走 A，有 GitHub 帳號的再走 B。</td></tr>
+      <tr><td class="time">16:20–16:30</td><td>把網址貼到共用文件，互玩 2 款，每人用回報句型留下一個具體現象，最後總結。</td></tr>
+    </tbody>
+  </table></div>
+
+  <details open>
+    <summary><span class="ttl">A　AI 工具內發佈</span><span class="tag">保底</span></summary>
+    <div class="body">
+      <ol class="steps">
+        <li>在 AI 工具裡打開你的機關，確認是你要發佈的那一版。</li>
+        <li>用 Claude 的話：按「發佈」（舊版介面）或「分享」（新版介面），選「任何有連結的人」，複製連結。按鈕名稱隨版本不同，以畫面為準。</li>
+        <li>用手機或無痕視窗開那條連結，確認不登入也玩得到。</li>
+      </ol>
+      <p class="note" style="margin:10px 0 0">用 ChatGPT 或 Gemini 的學員，請先問講師這個工具有沒有同等功能；沒有的話走 B。</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="ttl">B　GitHub Pages</span><span class="tag lv">進階</span></summary>
+    <div class="body">
+      <ol class="steps">
+        <li>登入 GitHub，右上角 <b>＋</b> → <b>New repository</b>，名稱隨意（例如 <code>my-escape</code>），選 <b>Public</b>，建立。</li>
+        <li>在倉庫頁按 <b>Add file → Upload files</b>，把你的 HTML 檔改名成 <code>index.html</code> 再拖進去，按 <b>Commit changes</b>。</li>
+        <li>到 <b>Settings → Pages</b>，Source 選 <b>Deploy from a branch</b>，Branch 選 <code>main</code>、<code>/(root)</code>，按 Save。</li>
+        <li>等 1–2 分鐘，網址會是 <code>https://你的帳號.github.io/my-escape/</code>。</li>
+        <li>要更新時：回到倉庫，Add file → Upload files，用同樣的檔名上傳覆蓋，等 1–2 分鐘。</li>
+      </ol>
+      <p style="margin:10px 0 0"><a href="https://github.com/signup" target="_blank" rel="noopener">註冊 GitHub</a></p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="ttl">C　Google Apps Script</span><span class="tag lv">只示範</span></summary>
+    <div class="body">
+      <p>需要存分數、共享設定，或限定學校帳號才能玩時用。流程是：新增專案 → 寫 <code>doGet()</code> 回傳網頁 → 部署為網頁應用程式 → 取得網址。講師會用一個實際的校園活動示範，今天不要求實作。</p>
+      <p style="margin:0"><a href="https://script.google.com/" target="_blank" rel="noopener">開啟 Apps Script</a></p>
+    </div>
+  </details>
+
+  <div class="tip"><b>上架後最後檢查：</b>① 用另一個裝置或無痕視窗開網址。② 玩一遍過關。③ 想一下，答案寫在程式裡，這個機關適合拿來做什麼、不適合做什麼。</div>
+</section>
+
+<!-- ============ 課後 ============ -->
+<section id="after">
+  <h2><span class="n">+</span>課後資源</h2>
+  <ul class="plain">
+    <li><a class="gl" data-path="workbench/" target="_blank" rel="noopener">機關範例庫</a>：78 款，依六種玩法與 28 個形式分類，每款註明適合放什麼知識、要小心什麼。</li>
+    <li><a class="gl" data-path="teach/" target="_blank" rel="noopener">學生版教學頁</a>：給想自學的人，內容和今天相同但更精簡。</li>
+    <li><a class="gl" data-path="template/" target="_blank" rel="noopener">空白機關範本</a>：已備好後台、揭曉卡、音效與分享連結。</li>
+  </ul>
+  <p class="note" style="margin-top:14px">課後有問題，帶著「我做了什麼、預期什麼、結果什麼」來問，講師比較容易幫你。</p>
+</section>
+
+<footer>AI 協作設計研習　教師版教材<br><a href="#top">回到最上面</a></footer>
+</div>
+
+<button id="presentBtn" type="button">簡報模式</button>
+<div id="slideNav">
+  <button id="slidePrev" type="button" title="上一頁">◀</button>
+  <span class="count" id="slideCount"></span>
+  <button id="slideNext" type="button" title="下一頁">▶</button>
+  <button id="slideExit" type="button" title="離開">✕</button>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(id){return document.getElementById(id)};
+
+  /* ---------- 儲存（localStorage 可能不能用，所以都包 try/catch，退回記憶體）---------- */
+  var mem={};
+  function sget(k){ try{ var v=localStorage.getItem("ws_"+k); if(v!==null) return v; }catch(e){} return mem[k]==null?"":mem[k]; }
+  function sset(k,v){ mem[k]=v; try{ localStorage.setItem("ws_"+k,v); }catch(e){} }
+  function copyText(t,done,fail){
+    if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(t).then(done,fail); return; }
+    try{ var ta=document.createElement("textarea"); ta.value=t; document.body.appendChild(ta); ta.select(); document.execCommand("copy"); document.body.removeChild(ta); done(); }catch(e){ fail(); }
+  }
+  function flash(el,msg){ el.textContent=msg; setTimeout(function(){ el.textContent=""; },2500); }
+
+  /* ---------- 範例庫網址 ---------- */
+  var DEFAULT_BASE="https://chrischou0807.github.io/escape/";
+  var base=sget("base")||DEFAULT_BASE;
+  function applyLinks(){
+    Array.prototype.forEach.call(document.querySelectorAll("a.gl"),function(a){ a.href=base+a.getAttribute("data-path"); });
+  }
+  $("baseUrl").value=base; applyLinks();
+  $("baseSave").onclick=function(){
+    var v=$("baseUrl").value.trim(); if(!v) return; if(v.slice(-1)!=="/") v+="/";
+    base=v; $("baseUrl").value=v; sset("base",v); applyLinks(); flash($("baseMsg"),"已儲存，連結已更新");
+  };
+  $("baseReset").onclick=function(){ base=DEFAULT_BASE; $("baseUrl").value=base; sset("base",""); applyLinks(); flash($("baseMsg"),"已還原"); };
+
+  /* ---------- 勾選清單（課前準備、驗收）---------- */
+  function bindChecks(rootId,progId,total,label){
+    var root=$(rootId), boxes=root.querySelectorAll("input[type=checkbox]");
+    function upd(){ var n=0; Array.prototype.forEach.call(boxes,function(b){ if(b.checked) n++; }); $(progId).textContent=label+" "+n+" / "+total; }
+    Array.prototype.forEach.call(boxes,function(b){
+      b.checked=sget(b.getAttribute("data-k"))==="1";
+      b.addEventListener("change",function(){ sset(b.getAttribute("data-k"),b.checked?"1":"0"); upd(); });
+    });
+    upd();
+  }
+  bindChecks("prep","prepProg",4,"已準備");
+  bindChecks("qa","qaProg",8,"已通過");
+
+  /* ---------- 轉換筆記 ---------- */
+  ["n1","n2","n3"].forEach(function(id){
+    var el=$(id), k=el.getAttribute("data-k"); el.value=sget(k);
+    el.addEventListener("input",function(){ sset(k,el.value); });
+  });
+  $("noteCopy").onclick=function(){
+    var t="我熟悉的實體謎題或活動：\n"+$("n1").value+"\n\n它靠什麼動作成功：\n"+$("n2").value+"\n\n線上版怎麼做、失去什麼、多出什麼：\n"+$("n3").value;
+    copyText(t,function(){ flash($("noteMsg"),"已複製"); },function(){ flash($("noteMsg"),"請手動選取複製"); });
+  };
+
+  /* ---------- 5 份範例規格 ---------- */
+  var SPECS=[
+    { id:"acid", name:"酸鹼判斷", subj:"自然", play:"操作＋探索", lv:"入門", ref:["條件挑戰","workbench/ex/cond.html"],
+      cap:"學生能依指示劑的變色，判斷 6 種日常溶液（檸檬汁、醋、小蘇打水、肥皂水、清水、汽水）是酸性、鹼性還是中性。",
+      play_:"畫面上有 6 瓶溶液，玩家有 4 滴紫甘藍指示劑，可以滴進任一瓶看變色（滴數少於瓶數，所以不能每瓶都試）。接著把每瓶拖進「酸性」「鹼性」「中性」三個盤子。",
+      win:"6 瓶全部放對才過關。放錯時只顯示「還有 N 瓶放錯了」，不說是哪幾瓶；最多送出 3 次，用完就重新開始。",
+      clue:"過關後顯示一張紙條：「藥品櫃第 3 層，密碼 472。」",
+      style:"理化實驗室，白色桌面，淺藍色玻璃瓶，字體清楚，像課本插圖。",
+      admin:"可以改瓶子名稱、每瓶的正確分類、滴數上限、紙條文字。",
+      check:"3 個盤、6 瓶共 729 種放法，只能送出 3 次，亂猜過不了。" },
+    { id:"hunt", name:"校園尋寶（實景）", subj:"校園活動", play:"探索", lv:"中", ref:["實景尋物","workbench/ex/realfind.html"],
+      cap:"參加者必須走到現場、仔細觀察，才找得到 5 個地點的追蹤碼，並答得出只有現場看得到的問題。",
+      play_:"手機畫面列出 5 個地點的目擊情報（只講大概位置）。參加者到現場找到貼紙上的追蹤碼，輸入後回報。其中 2 個地點有安全鎖：要答對一題只有現場才看得到的問題（例如「旁邊的告示牌寫幾樓」）才算找到。",
+      win:"找到 4 個以上就過關。追蹤碼輸入錯誤 3 次，要等 30 秒才能再試；每個地點只算一次。",
+      clue:"過關後顯示集合地點和一句通關暗語。",
+      style:"偵探地圖，牛皮紙色，手寫字體，邊緣有咖啡漬。",
+      admin:"可以改地點、追蹤碼、安全鎖的問題與答案、過關所需數量。",
+      check:"需要現場貼好追蹤碼。沒有安全鎖的地點，追蹤碼傳給別人就能不到現場回報，所以至少一半要有安全鎖，題目要綁現場，不能上網查得到。" },
+    { id:"speak", name:"朗讀通關", subj:"英語、國語", play:"操作（口說）", lv:"進階", ref:["咒語","spell/"],
+      cap:"學生能清楚唸出一句目標英文句子，被語音辨識判斷為正確。",
+      play_:"畫面出現一句英文和一個麥克風按鈕。玩家按下去朗讀，系統顯示辨識到的文字，並和目標句子逐字比對，沒唸對的字用紅色標出來。",
+      win:"整句辨識結果與目標相符（大小寫與標點不計）。最多嘗試 5 次。瀏覽器不支援語音辨識時，提示改用 Chrome 或 Edge，不提供打字過關。",
+      clue:"過關後顯示下一關的提示。",
+      style:"舞台聚光燈，深色背景，金色字體，麥克風按鈕有呼吸燈效果。",
+      admin:"可以改句子、容許錯幾個字、嘗試次數。",
+      check:"要發佈到 https 網址、允許麥克風才測得到；很多預覽視窗不行。這份比較進階，建議排在最後。" },
+    { id:"dilute", name:"稀釋配製", subj:"理化、數學", play:"操作（技能）", lv:"中", ref:["稀釋配製","workbench/ex/dilute.html"],
+      cap:"學生能用 C₁V₁＝C₂V₂，算出要取多少原液、加多少水，才配得出指定濃度與體積。",
+      play_:"畫面有一瓶 10% 的糖水原液、量筒和水。每次題目不同，例如「配 200 mL、2.5% 的糖水」。玩家用滑桿設定「取原液 mL」與「加水 mL」，按「倒入」，量筒液面與顏色隨之改變。",
+      win:"原液量誤差在 ±2 mL、總量誤差在 ±3 mL 內才算一題成功；連續 3 題成功（每題數字都不同）才過關；每題最多嘗試 3 次。",
+      clue:"3 題全對後顯示一張實驗紀錄紙，上面有下一關的提示。",
+      style:"實驗報告風，格線紙背景，數字用等寬字體。",
+      admin:"可以改原液濃度、目標濃度範圍、容許誤差、題數。",
+      check:"每次數字隨機，背答案沒用。例：10% 配 200 mL、2.5%，原液 50 mL、水 150 mL。" },
+    { id:"dilemma", name:"水庫抉擇", subj:"公民、社會", play:"選擇", lv:"中", ref:["多重結局","workbench/ex/endings.html"],
+      cap:"學生能在沒有標準答案的情境中做出選擇，並說明自己的依據與代價。",
+      play_:"三回合的情境：小鎮的水庫水位下降。每回合有 3 個決策（限水、調高水價、開發新水源等），每個選項對「市民滿意」「環境」「財政」三個指標各有不同影響，畫面只用上升或下降的箭頭，不顯示數字。",
+      win:"沒有輸贏。每回合要寫下一句選擇的理由，才能進入下一回合；三回合後依選擇進入 4 種以上不同的結局。程式只檢查有沒有寫理由，不評分。",
+      clue:"結局頁顯示給老師帶討論的問題，並附上下一個線索。",
+      style:"舊報紙頭版，米色紙張，黑白照片感，標題粗黑字。",
+      admin:"可以改情境、選項、各指標的影響、結局文字、討論題。",
+      check:"沒有「正確結局」，所以不能給結局打好壞。理由的好壞由老師在課堂上帶討論。" }
+  ];
+  function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+  var specsEl=$("specs");
+  SPECS.forEach(function(s,i){
+    var d=document.createElement("details");
+    d.innerHTML='<summary><span class="ttl">'+esc(s.name)+'</span><span class="tag">'+esc(s.subj)+'</span><span class="tag">'+esc(s.play)+'</span><span class="tag lv">'+esc(s.lv)+'</span></summary>'+
+      '<div class="body"><dl class="f">'+
+      '<dt>① 學生要做到什麼</dt><dd>'+esc(s.cap)+'</dd>'+
+      '<dt>② 玩法</dt><dd>'+esc(s.play_)+'</dd>'+
+      '<dt>③ 怎樣算過關</dt><dd>'+esc(s.win)+'</dd>'+
+      '<dt>④ 過關後給什麼線索</dt><dd>'+esc(s.clue)+'</dd>'+
+      '<dt>⑤ 風格與氛圍</dt><dd>'+esc(s.style)+'</dd>'+
+      '<dt>⑥ 後台（選用）</dt><dd>'+esc(s.admin)+'</dd>'+
+      '<dt>檢查與注意</dt><dd>'+esc(s.check)+'</dd></dl>'+
+      '<div class="row"><button class="btn sm primary" type="button" data-i="'+i+'">帶入產生器</button>'+
+      '<a class="gl" data-path="'+esc(s.ref[1])+'" target="_blank" rel="noopener">參考範例庫：'+esc(s.ref[0])+'</a></div></div>';
+    specsEl.appendChild(d);
+  });
+  specsEl.addEventListener("click",function(e){
+    var b=e.target.closest("button[data-i]"); if(!b) return;
+    var s=SPECS[+b.getAttribute("data-i")];
+    $("qCap").value=s.cap; $("qPlay").value=s.play_; $("qWin").value=s.win; $("qClue").value=s.clue; $("qStyle").value=s.style; $("qAdmin").value=s.admin;
+    $("qCap").scrollIntoView({behavior:"smooth",block:"center"});
+    flash($("copied"),"已帶入「"+s.name+"」，可以直接改成自己的內容");
+  });
+  applyLinks();
+
+  /* ---------- 提示詞產生器 ---------- */
+  var JUDGE=[
+    { rule:"過關必須剛好對應上面「學生要做到什麼」：不懂的人不能靠亂猜、連續亂點或繞過就過關（例如限制嘗試次數，或答錯時只說錯了幾個、不說是哪一個）。", why:"沒寫 → AI 會做出一個點一點就過的版本，題目只是外殼。" }
+  ];
+  var TECH=[
+    { rule:"音效要等使用者第一次點擊之後才出聲。", why:"行動瀏覽器會擋自動播放，一載入就播會變靜音或報錯。" },
+    { rule:"觸控操作用 pointer 事件；可拖曳的元素加上 touch-action:none。", why:"平板上拖不動，或一拖就把整個畫面捲走。" },
+    { rule:"用 localStorage 存設定時用 try/catch 包起來，失敗就退回記憶體變數。", why:"在某些預覽環境會整支壞掉。" },
+    { rule:"答錯或失敗一定要有看得到的回饋（震動、變色或提示文字）。", why:"玩家不知道自己錯了，以為當機。" },
+    { rule:"玩家會看到的文字插進畫面前先做跳脫（escape），不要直接塞 innerHTML。", why:"內容含特殊符號時版面爆掉或被注入。" },
+    { rule:"「重新開始」之後狀態要真的歸零（計時、分數、已選取的東西全部清掉）。", why:"玩第二輪會殘留上一輪的狀態。" },
+    { rule:"隨機或打散後，要保證題目不會一開始就已完成，也保證一定解得開。", why:"偶爾一進去就過關，或根本無解。" },
+    { rule:"過關的判定條件要明確寫死，不要讓程式自己猜。", why:"AI 會自己猜一個鬆散條件，容易誤判。" },
+    { rule:"尊重系統的「減少動態效果」設定（prefers-reduced-motion）。", why:"對會暈動的使用者不友善。" },
+    { rule:"後台改完的設定要能存下來，重新整理後還在（只在你有填後台時才需要）。", why:"每次重整就回到預設。" }
+  ];
+  function mkChecks(host,list,prefix){
+    list.forEach(function(t,i){
+      var lab=document.createElement("label"); lab.className="chk";
+      lab.innerHTML='<input type="checkbox" checked data-'+prefix+'="'+i+'"><span>'+esc(t.rule)+'<span class="why"><b>沒寫會：</b>'+esc(t.why)+'</span></span>';
+      host.appendChild(lab);
+    });
+  }
+  mkChecks($("judge"),JUDGE,"j"); mkChecks($("checks"),TECH,"t");
+
+  var last="";
+  function val(id){ return $(id).value.trim(); }
+  function build(){
+    var p="我想做一個校園密室／闖關用的互動機關網頁。請用「單一 HTML 檔」（HTML、CSS、JavaScript 全部寫在同一個檔案）、繁體中文介面、手機與平板可直接觸控操作。\n\n";
+    p+="【學生要做到什麼】\n"+(val("qCap")||"（請寫玩的人要做到哪件事才算真的會）")+"\n\n";
+    p+="【玩法】\n"+(val("qPlay")||"（請描述玩家看到什麼、要做什麼動作）")+"\n\n";
+    p+="【怎樣算過關】\n"+(val("qWin")||"（請描述明確的成功條件）")+"\n\n";
+    p+="【過關後給玩家的線索】\n"+(val("qClue")||"（例如：顯示一段文字或一張圖）")+"\n\n";
+    p+="【風格與氛圍】\n"+(val("qStyle")||"（例如：美術風格、背景、配色、字體感覺）")+"\n\n";
+    if(val("qAdmin")) p+="【後台要能調整的東西（選用）】\n"+val("qAdmin")+"\n\n";
+    var j=[]; Array.prototype.forEach.call($("judge").querySelectorAll("input"),function(cb){ if(cb.checked) j.push(JUDGE[+cb.getAttribute("data-j")].rule); });
+    if(j.length){ p+="【判定要求】\n"+j.join("\n")+"\n\n"; }
+    var t=[]; Array.prototype.forEach.call($("checks").querySelectorAll("input"),function(cb){ if(cb.checked) t.push(TECH[+cb.getAttribute("data-t")].rule); });
+    if(t.length){ p+="請務必遵守以下技術要點：\n"; t.forEach(function(r,i){ p+=(i+1)+". "+r+"\n"; }); p+="\n"; }
+    p+="先用幾句話說明你打算怎麼做，再給我完整的單一 HTML 檔。";
+    last=p; var o=$("out"); o.textContent=p; o.classList.add("show");
+  }
+  $("genBtn").onclick=function(){ build(); $("copied").textContent=""; };
+  $("copyBtn").onclick=function(){ if(!last) build(); copyText(last,function(){ flash($("copied"),"已複製，貼給你的 AI"); },function(){ flash($("copied"),"請手動選取複製"); }); };
+
+  /* ---------- 回報句型 ---------- */
+  $("rBuild").onclick=function(){
+    var a=$("rAct").value.trim(), e=$("rExp").value.trim(), r=$("rAct2").value.trim(), env=$("rEnv").value.trim();
+    if(!a||!e||!r){ flash($("rMsg"),"前三格都要填"); return; }
+    var t="我在「"+a+"」時，預期「"+e+"」，結果卻「"+r+"」。"+(env?"（環境："+env+"）":"")+"請只修這一個問題，其他地方不要動。";
+    var o=$("rOut"); o.textContent=t; o.classList.add("show");
+    copyText(t,function(){ flash($("rMsg"),"已複製"); },function(){ flash($("rMsg"),"請手動選取複製"); });
+  };
+
+  /* ---------- 簡報模式 ---------- */
+  var slides=[document.getElementById("top")].concat(Array.prototype.slice.call(document.querySelectorAll(".wrap > section")));
+  var cur=0, on=false, countEl=$("slideCount");
+  function show(i){
+    cur=Math.max(0,Math.min(slides.length-1,i));
+    slides.forEach(function(s,idx){ s.classList.toggle("slide-active",idx===cur); });
+    countEl.textContent=(cur+1)+" / "+slides.length;
+    slides[cur].scrollTop=0;
+  }
+  function enter(){ on=true; document.body.classList.add("present"); show(0); }
+  function exit(){ on=false; document.body.classList.remove("present"); slides.forEach(function(s){ s.classList.remove("slide-active"); }); }
+  $("presentBtn").onclick=enter; $("slideNext").onclick=function(){ show(cur+1); }; $("slidePrev").onclick=function(){ show(cur-1); }; $("slideExit").onclick=exit;
+  document.addEventListener("keydown",function(e){
+    if(!on) return;
+    if(e.key==="Escape"){ exit(); return; }
+    var tag=((e.target&&e.target.tagName)||"").toUpperCase(); if(tag==="TEXTAREA"||tag==="INPUT") return;
+    if(e.key==="ArrowRight"||e.key==="PageDown"||e.key===" "){ e.preventDefault(); show(cur+1); }
+    else if(e.key==="ArrowLeft"||e.key==="PageUp"){ e.preventDefault(); show(cur-1); }
+  });
+})();
+</script>
+</body>
+</html>
