@@ -62,7 +62,7 @@ footer{margin-top:40px;color:var(--dim);font-size:12.5px;border-top:1px solid va
 <div class="wrap">
 <h1>機關設計工作台</h1>
 <p class="lede">把課程裡的一個知識點，拆解成好玩的闖關機關。你在這裡填拆解卡，網站幫你組成提示詞；提示詞複製到你自己的 AI，做好再貼回來檢查。網站不會把你的內容傳到任何地方。</p>
-<div class="tabs"><button id="tabWork" class="on">工作台</button><button id="tabEx">範例庫（77 款）</button></div>
+<div class="tabs"><button id="tabWork" class="on">工作台</button><button id="tabEx">範例庫（78 款）</button></div>
 <section id="exView" style="display:none">
 <h2 style="margin-top:20px">機關範例庫</h2>
 <p class="note">先玩，再看它是怎麼把一個知識變成機關的。每一款都是獨立的單檔 HTML，可以直接用在真實世界的活動。<b>多數現有機關的判定是「知道答案就過」</b>，本身不測能力；下面每一款都標出它適合承載什麼、哪裡要小心、怎麼升級。</p>
@@ -325,7 +325,8 @@ var EX=[
 {"id": "relay", "no": "74", "name": "互相解題接力", "play": "創造", "gate": "一般", "ok": 1, "what": "每個人出一題，複製文字交給老師；老師彙整後，全班貼進來依序解題。", "suit": "串接與創造的結合，不需要資料庫。", "care": "需要老師彙整文字；沒有審核，題目品質由老師把關。", "up": "由老師彙整成一個串接關卡，學生互相解。", "struct": "老師彙整的題目文字（問題、答案、出題人）。", "loc": 1},
 {"id": "mirror", "no": "75", "name": "鏡面文字", "play": "操作", "gate": "一般", "ok": 1, "what": "牆上的字是左右反的，選一個鏡子位置，從鏡中讀出原本的字。", "suit": "光學、鏡像、對稱。", "care": "只有四個位置，全部點一遍就能找到；沒有次數限制。", "up": "要先判斷怎麼放鏡子才讀得出來，並限制嘗試次數。", "struct": "牆上的字；答案；成功訊息。", "loc": 1},
 {"id": "acrostic", "no": "76", "name": "藏頭詩", "play": "解謎", "gate": "零門檻到一般", "ok": 1, "what": "詩句的第一個字連起來是答案；點選字元收集後確認。", "suit": "語文、詩詞結構與藏頭技巧。", "care": "規則一旦看出來就能解，不需要知識；可上網查。", "up": "把詩改成教材概念的描述，每句首字是術語的一部分。", "struct": "詩句；答案；問題；成功訊息。", "loc": 1},
-{"id": "crossword", "no": "77", "name": "小型填字", "play": "解謎", "gate": "需要知識", "ok": 1, "what": "依橫向與直向線索，把字填進共用的格子，交叉處的字要同時符合兩個詞。", "suit": "術語與詞彙的辨識、交叉驗證。", "care": "可上網查，答案容易被搜到。", "up": "題目改成教材內的概念描述，答案是術語；增加交叉的格子。", "struct": "詞語（方向、起點、答案、線索）；成功訊息。", "loc": 1}];
+{"id": "crossword", "no": "77", "name": "小型填字", "play": "解謎", "gate": "需要知識", "ok": 1, "what": "依橫向與直向線索，把字填進共用的格子，交叉處的字要同時符合兩個詞。", "suit": "術語與詞彙的辨識、交叉驗證。", "care": "可上網查，答案容易被搜到。", "up": "題目改成教材內的概念描述，答案是術語；增加交叉的格子。", "struct": "詞語（方向、起點、答案、線索）；成功訊息。", "loc": 1},
+{"id": "realfind", "no": "78", "name": "實景尋物（掃碼回報）", "play": "探索", "gate": "零門檻", "ok": 1, "what": "小人（或物品）藏在真實環境，旁邊貼追蹤碼；到場掃描回報，有安全鎖的要答對只有現場看得到的問題。這是用網頁模擬的精簡版；完整版用手機相機掃實體 QR，並有登記、排行榜、兌換獎品（參考案例：隱形小人搜查）。", "suit": "校園或展場的實景尋寶、社區踏查，讓學生真的走到現場觀察。", "care": "需要現場佈置與實體道具。沒有安全鎖的追蹤碼，網址傳給別人就能不到現場回報；安全鎖的題目若上網查得到（例如學校幾歲），也擋不住人。", "up": "每個鎖都出「只有站在現場才答得出」的題目（旁邊的顏色、標示、數量）；有排行榜或獎品時，所有地點都加安全鎖。", "struct": "地點（場景描述、追蹤碼）、小人（名字、顏色、介紹）、安全鎖（問題、答案）、過關數量、目擊情報。", "loc": 1}];
 var KEY="mech_workbench_v0";
 var S={base:"",line:"",pos:"",play:"",play2:"",gate:"",f:{},self:[],tech:null,step:0,seen:{}};
 var mem=null;
@@ -525,7 +526,7 @@ var FORMS=[
 {play:"創造",n:"建造",d:"在限制條件下組出結構。"},
 {play:"創造",n:"繪畫表達",d:"用畫面表達概念，讓別人猜。"},
 {play:"創造",n:"出題設計",d:"自己設計機關，給別人解。"}];
-var FORMOF={lock:"密碼鎖",morse:"密碼解碼",puzzle:"拼圖空間",cards:"記憶辨認",wires:"配對連線",uv:"影像圖層",bomb:"計時挑戰",lights:"感官記憶",cabinet:"配對連線",phone:"儀器與技能",radio:"儀器與技能",spell:"口說表達",switches:"儀器與技能",zoom:"圖像細節",titration:"儀器與技能",circuit:"機械互動",diff:"差異比對",range:"範圍與條件搜尋",cond:"範圍與條件搜尋",riddle:"文字謎題",caesar:"密碼解碼",table:"密碼解碼",strategy:"策略取捨",branch:"劇情分支",timer:"計時挑戰",score:"完成度排行",versus:"對戰",build:"建造",draw:"繪畫表達",design:"出題設計",dilute:"儀器與技能",scale:"儀器與技能",deduce:"邏輯推理",cpr:"儀器與技能",dilemma:"兩難抉擇",errorhunt:"範圍與條件搜尋",hotspot:"場景調查",drawers:"容器翻找",inventory:"道具與組合",slide:"拼圖空間",rotate:"拼圖空間",coord:"密碼解碼",binary:"密碼解碼",balance:"機械互動",sort:"排序與時間軸",sudoku4:"邏輯推理",maze:"拼圖空間",scratch:"影像圖層",overlay:"影像圖層",laser:"機械互動",soundorder:"感官記憶",pairdrag:"配對連線",flip:"記憶辨認",endings:"劇情分支",duel:"對戰",daynight:"圖像細節",jigsaw:"拼圖空間",dirlock:"密碼鎖",pigpen:"密碼解碼",wordchain:"文字謎題",colorseq:"邏輯推理",logicgrid:"邏輯推理",routemap:"邏輯推理",recipe:"道具與組合",timeline:"排序與時間軸",thermo:"影像圖層",gear:"機械互動",pipes:"機械互動",dodge:"機械互動",rhythm:"感官記憶",economy:"策略取捨",escape:"計時挑戰",bridge:"建造",relay:"出題設計",mirror:"影像圖層",acrostic:"文字謎題",crossword:"文字謎題"};
+var FORMOF={lock:"密碼鎖",morse:"密碼解碼",puzzle:"拼圖空間",cards:"記憶辨認",wires:"配對連線",uv:"影像圖層",bomb:"計時挑戰",lights:"感官記憶",cabinet:"配對連線",phone:"儀器與技能",radio:"儀器與技能",spell:"口說表達",switches:"儀器與技能",zoom:"圖像細節",titration:"儀器與技能",circuit:"機械互動",diff:"差異比對",range:"範圍與條件搜尋",cond:"範圍與條件搜尋",riddle:"文字謎題",caesar:"密碼解碼",table:"密碼解碼",strategy:"策略取捨",branch:"劇情分支",timer:"計時挑戰",score:"完成度排行",versus:"對戰",build:"建造",draw:"繪畫表達",design:"出題設計",dilute:"儀器與技能",scale:"儀器與技能",deduce:"邏輯推理",cpr:"儀器與技能",dilemma:"兩難抉擇",errorhunt:"範圍與條件搜尋",hotspot:"場景調查",drawers:"容器翻找",inventory:"道具與組合",slide:"拼圖空間",rotate:"拼圖空間",coord:"密碼解碼",binary:"密碼解碼",balance:"機械互動",sort:"排序與時間軸",sudoku4:"邏輯推理",maze:"拼圖空間",scratch:"影像圖層",overlay:"影像圖層",laser:"機械互動",soundorder:"感官記憶",pairdrag:"配對連線",flip:"記憶辨認",endings:"劇情分支",duel:"對戰",daynight:"圖像細節",jigsaw:"拼圖空間",dirlock:"密碼鎖",pigpen:"密碼解碼",wordchain:"文字謎題",colorseq:"邏輯推理",logicgrid:"邏輯推理",routemap:"邏輯推理",recipe:"道具與組合",timeline:"排序與時間軸",thermo:"影像圖層",gear:"機械互動",pipes:"機械互動",dodge:"機械互動",rhythm:"感官記憶",economy:"策略取捨",escape:"計時挑戰",bridge:"建造",relay:"出題設計",mirror:"影像圖層",acrostic:"文字謎題",crossword:"文字謎題",realfind:"場景調查"};
 EX.forEach(function(e){e.form=FORMOF[e.id]||""});
 var formFilter="";
 var exFilter="全部";
