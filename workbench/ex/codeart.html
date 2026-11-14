@@ -1,0 +1,81 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no"><title>指令畫圖</title>
+<style>
+:root{--bg:#14110f;--card:#1f1a16;--ink:#f1e8d8;--dim:#a99c86;--brass:#d9b878;--ok:#7fc79a;--bad:#e07b6a;--line:#3a3128}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 system-ui,"Noto Sans TC",sans-serif;-webkit-user-select:none;user-select:none;touch-action:manipulation}
+#app{max-width:760px;margin:0 auto;padding:18px 16px 60px}h1{font-size:21px;margin:6px 0 2px;color:var(--brass)}.sub{color:var(--dim);font-size:14px;margin:0 0 14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:12px 0}
+button,input,select,textarea{font:inherit;color:var(--ink)}button{background:#2c241d;border:1px solid var(--brass);border-radius:10px;padding:8px 16px;cursor:pointer}button:active{transform:scale(.97)}
+button.g{border-color:var(--line);color:var(--dim)}input[type=text],textarea{background:#120f0c;border:1px solid var(--line);border-radius:10px;padding:8px 12px;width:100%;-webkit-user-select:text;user-select:text}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.msg{min-height:24px;color:var(--dim);margin-top:8px}.msg.bad{color:var(--bad)}.msg.ok{color:var(--ok)}
+#win{position:fixed;inset:0;background:rgba(10,8,6,.88);display:none;align-items:center;justify-content:center;padding:20px;z-index:9}
+#win .box{background:var(--card);border:1px solid var(--brass);border-radius:16px;padding:22px;max-width:460px;text-align:center}#win h2{margin:0 0 8px;color:var(--brass)}
+#hintb{margin-top:18px}.tip{color:var(--dim);font-size:13px;margin-top:6px}
+
+body{background:radial-gradient(ellipse at 50% -10%,#3b2d1f 0,#1a140f 55%,#0f0b08 100%) fixed;background-color:#0f0b08}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(255,255,255,.012) 0 2px,transparent 2px 4px);z-index:0}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;box-shadow:inset 0 0 120px rgba(0,0,0,.7);z-index:0}
+#app{position:relative;z-index:1}
+.hero{display:flex;gap:14px;align-items:center;margin:4px 0 10px}.hero .ico{font-size:46px;filter:drop-shadow(0 4px 8px rgba(0,0,0,.6));animation:bob 3s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-5px)}}
+.story{background:#e9dcc0;color:#3a2c1e;font:15px/1.7 "Noto Serif TC",Georgia,serif;padding:12px 16px;border-radius:4px;box-shadow:0 8px 20px rgba(0,0,0,.5);transform:rotate(-.4deg);margin:0 0 16px;border-left:5px solid #b8935a}
+.story:empty{display:none}
+.card{background:linear-gradient(#271f18,#1a1511);border:1px solid #4a3b2b;box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 8px 22px rgba(0,0,0,.45)}
+button{background:linear-gradient(#52412d,#2f261d);border:1px solid #b8935a;box-shadow:0 3px 0 #120e0a;transition:transform .08s,box-shadow .08s}
+button:active{transform:translateY(3px) scale(.99);box-shadow:0 0 0 #120e0a}
+button.g{background:linear-gradient(#2c241d,#201a15);border-color:#4a3b2b}
+#stage{animation:rise .5s ease both}@keyframes rise{from{opacity:0;transform:translateY(12px)}}
+.shake{animation:shake .4s}@keyframes shake{20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(4px)}}
+#mute{position:fixed;top:10px;right:10px;z-index:5;padding:4px 10px;font-size:16px;background:rgba(0,0,0,.4);border:1px solid #4a3b2b;box-shadow:none}
+#win .box{animation:pop .5s cubic-bezier(.2,1.4,.4,1);position:relative;z-index:2}@keyframes pop{from{transform:scale(.6);opacity:0}}
+.stars{font-size:38px;letter-spacing:6px;margin:6px 0;color:#d9b878;text-shadow:0 0 14px rgba(217,184,120,.6)}.stars .off{opacity:.25;text-shadow:none}
+#conf{position:fixed;inset:0;z-index:1;pointer-events:none}
+
+
+canvas{background:#120f0c;border:1px solid var(--line);border-radius:12px;width:100%;max-width:300px;touch-action:none}.tk{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0}.prog{background:#120f0c;border:1px solid var(--line);border-radius:10px;padding:8px;min-height:40px}
+
+</style></head><body><div id="app"><button id="mute" title="音效">🔊</button><div class="hero"><div class="ico" id="ico"></div><div><h1 id="ttl"></h1><p class="sub" id="intro"></p></div></div><div class="story" id="story"></div><div id="stage"></div>
+<div class="row" id="hintb"><button class="g" id="hintBtn">💡 提示</button><button class="g" id="again">↺ 重來</button></div><div class="tip" id="hintTxt"></div></div>
+<div id="win"><div class="box"><h2>🎉 成功</h2><div id="revealTxt"></div><p><button onclick="location.reload()">再玩一次</button></p></div></div>
+<script>
+// ===== 老師改這裡 CONFIG =====
+const CFG={"title": "用指令畫出圖形", "intro": "小烏龜只聽得懂「前進」和「轉彎」。選最多 2 個指令當「一組」，再決定這一組要重複幾次，畫出右邊的目標圖形。共三個圖形。", "unit": 50, "goals": [{"n": "正方形", "body": ["F", "R90"], "times": 4}, {"n": "三角形", "body": ["F", "R120"], "times": 3}, {"n": "五邊形", "body": ["F", "R72"], "times": 5}], "tokens": [["F", "前進"], ["R90", "右轉 90°"], ["R120", "右轉 120°"], ["R72", "右轉 72°"], ["L90", "左轉 90°"]], "maxBody": 2, "reveal": "三個圖形都畫出來了。\\n重點是找規律：正多邊形每一步轉的角度，是 360° 除以邊數。\\n試試六邊形要轉幾度？", "hint": "正方形四個角都是 90°。三角形外角是 120°。外角 × 邊數 = 360°。"};
+// ===== 以下是機關程式 =====
+const $=id=>document.getElementById(id);const rnd=n=>Math.floor(Math.random()*n);
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]]}return a};
+const norm=s=>String(s||"").replace(/\s+/g,"").toLowerCase();
+const META={"icon": "🐢", "story": "電腦課的小烏龜只會前進和轉彎。老師說：想畫出圖形，先找出重複的規律。"};
+const FX=(()=>{let ctx=null,mute=false;try{mute=localStorage.getItem("fx_mute")==="1"}catch(e){}
+ function ac(){if(!ctx){try{ctx=new(window.AudioContext||window.webkitAudioContext)()}catch(e){}}if(ctx&&ctx.state==="suspended")ctx.resume();return ctx}
+ function tone(f,t0,d,type,v){const c=ac();if(!c||mute)return;const o=c.createOscillator(),g=c.createGain();o.type=type||"sine";o.frequency.value=f;g.gain.setValueAtTime(v||.08,c.currentTime+t0);g.gain.exponentialRampToValueAtTime(.0001,c.currentTime+t0+d);o.connect(g);g.connect(c.destination);o.start(c.currentTime+t0);o.stop(c.currentTime+t0+d+.02)}
+ const vib=p=>{try{navigator.vibrate&&navigator.vibrate(p)}catch(e){}};
+ return{tick(){tone(660,0,.05,"square",.035);vib(8)},ok(){[523,659,784].forEach((f,i)=>tone(f,i*.08,.18,"triangle",.1));vib([30,40,30])},bad(){tone(150,0,.25,"sawtooth",.09);vib(120);const s=document.getElementById("stage");s.classList.remove("shake");void s.offsetWidth;s.classList.add("shake")},win(){[523,659,784,1047,1319].forEach((f,i)=>tone(f,i*.1,.32,"triangle",.12));vib([50,50,50,50,200])},toggle(){mute=!mute;try{localStorage.setItem("fx_mute",mute?"1":"0")}catch(e){}return mute},muted:()=>mute}})();
+let BAD=0;const T0=Date.now();
+function say(t,c){const m=$("msg");if(m){m.textContent=t;m.className="msg "+(c||"")}if(c==="bad"){BAD++;FX.bad()}else if(c==="ok")FX.ok()}
+function confetti(){const c=document.createElement("canvas");c.id="conf";c.width=innerWidth;c.height=innerHeight;document.body.appendChild(c);const x=c.getContext("2d"),P=[];for(let i=0;i<110;i++)P.push({x:Math.random()*c.width,y:-20-Math.random()*c.height*.5,vx:(Math.random()-.5)*3,vy:2+Math.random()*4,r:4+Math.random()*5,col:["#d9b878","#7fc79a","#e07b6a","#8ab4e8","#f1e8d8"][rnd(5)],a:Math.random()*6});let f=0;(function L(){x.clearRect(0,0,c.width,c.height);P.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.a+=.15;x.fillStyle=p.col;x.save();x.translate(p.x,p.y);x.rotate(p.a);x.fillRect(-p.r,-p.r/2,p.r*2,p.r);x.restore()});if(++f<170)requestAnimationFrame(L);else c.remove()})()}
+function win(){const st=BAD===0?3:BAD<=2?2:1,sec=Math.round((Date.now()-T0)/1000);
+ $("revealTxt").innerHTML=(CFG.noScore?'<div class="tip">用時 '+sec+' 秒</div>':'<div class="stars">'+[0,1,2].map(i=>'<span class="'+(i<st?"":"off")+'">★</span>').join("")+'</div><div class="tip">用時 '+sec+' 秒・失誤 '+BAD+' 次'+(st<3?"（不失誤就是三星）":"")+'</div>')+'<p>'+(CFG.reveal||"").replace(/\\n/g,"<br>")+'</p>';
+ $("win").style.display="flex";FX.win();confetti()}
+$("ttl").textContent=CFG.title;$("intro").textContent=CFG.intro;$("ico").textContent=META.icon||"🔐";$("story").textContent=META.story||"";
+$("mute").textContent=FX.muted()?"🔇":"🔊";$("mute").onclick=()=>{$("mute").textContent=FX.toggle()?"🔇":"🔊"};
+document.addEventListener("pointerdown",e=>{if(e.target.closest&&e.target.closest("button,.sw>div,.ch>div,.sn,.gr.r>div,.t,#pad")&&!e.target.closest("#mute"))FX.tick()},true);
+$("hintBtn").onclick=()=>{$("hintTxt").textContent=CFG.hint||"（沒有提示）"};$("again").onclick=()=>location.reload();
+$("stage").innerHTML='<div class="card"><b id="gn"></b><div class="row"><canvas id="cv" width="300" height="300"></canvas></div></div><div class="card"><div class="tip">指令（點一下加入「一組」）</div><div class="tk" id="tk"></div><div class="tip">這一組：</div><div class="prog" id="pg"></div><p class="row">重複 <input type="range" id="rp" min="1" max="8" value="1" style="flex:1"><b id="rv">1</b> 次　<button id="run">畫畫看</button><button class="g" id="cl">清除</button></p></div><div class="msg" id="msg"></div>';
+const U=CFG.unit;let gi=0,body=[];
+function sim(b,t){let x=0,y=0,a=-90;const pts=[[0,0]];for(let k=0;k<t;k++)for(const c of b){if(c==="F"){x+=U*Math.cos(a*Math.PI/180);y+=U*Math.sin(a*Math.PI/180);pts.push([Math.round(x*10)/10,Math.round(y*10)/10])}else if(c[0]==="R")a+=+c.slice(1);else a-=+c.slice(1)}return pts}
+function draw(pts,col,fit){const cx=$("cv").getContext("2d");const xs=pts.map(p=>p[0]),ys=pts.map(p=>p[1]);return cx}
+function paint(user){const cx=$("cv").getContext("2d");cx.clearRect(0,0,300,300);const g=CFG.goals[gi],ref=sim(g.body,g.times);
+ const all=ref.concat(user||[]);const mnx=Math.min(...all.map(p=>p[0])),mxx=Math.max(...all.map(p=>p[0])),mny=Math.min(...all.map(p=>p[1])),mxy=Math.max(...all.map(p=>p[1]));
+ const s=Math.min(240/Math.max(mxx-mnx,1),240/Math.max(mxy-mny,1),2),ox=150-(mnx+mxx)/2*s,oy=150-(mny+mxy)/2*s;
+ const dr=(pts,col,w,dash)=>{if(pts.length<2)return;cx.beginPath();cx.setLineDash(dash||[]);pts.forEach((p,i)=>{const X=p[0]*s+ox,Y=p[1]*s+oy;i?cx.lineTo(X,Y):cx.moveTo(X,Y)});cx.strokeStyle=col;cx.lineWidth=w;cx.stroke();cx.setLineDash([])};
+ dr(ref,"#6b5a44",8,[6,6]);if(user)dr(user,"#d9b878",3)}
+function goal(){body=[];$("gn").textContent="目標 "+(gi+1)+" / "+CFG.goals.length+"：畫出「"+CFG.goals[gi].n+"」（虛線）";$("rp").value=1;$("rv").textContent=1;rd();paint()}
+function rd(){$("pg").textContent=body.length?body.map(c=>CFG.tokens.find(t=>t[0]===c)[1]).join(" → "):"（空的）"}
+CFG.tokens.forEach(t=>{const b=document.createElement("button");b.textContent=t[1];b.onclick=()=>{if(body.length>=CFG.maxBody)return say("一組最多 "+CFG.maxBody+" 個指令。","bad");body.push(t[0]);rd()};$("tk").appendChild(b)});
+$("rp").oninput=()=>$("rv").textContent=$("rp").value;
+$("cl").onclick=()=>{body=[];rd();paint()};
+$("run").onclick=()=>{if(!body.length)return say("先加入指令。","bad");const t=+$("rp").value,u=sim(body,t),g=CFG.goals[gi],ref=sim(g.body,g.times);paint(u);
+ const key=p=>p[0].toFixed(0)+","+p[1].toFixed(0);const A=new Set(u.map(key)),B=new Set(ref.map(key));const same=A.size===B.size&&[...A].every(k=>B.has(k))&&key(u[u.length-1])===key(u[0]);
+ if(!same)return say("圖形不一樣（金色是你畫的）。再想想轉的角度和次數。","bad");say("畫對了！","ok");setTimeout(()=>{gi++;if(gi<CFG.goals.length)goal();else win()},900)};
+goal();
+</script></body></html>

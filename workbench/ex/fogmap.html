@@ -1,0 +1,74 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no"><title>迷霧探索</title>
+<style>
+:root{--bg:#14110f;--card:#1f1a16;--ink:#f1e8d8;--dim:#a99c86;--brass:#d9b878;--ok:#7fc79a;--bad:#e07b6a;--line:#3a3128}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 system-ui,"Noto Sans TC",sans-serif;-webkit-user-select:none;user-select:none;touch-action:manipulation}
+#app{max-width:760px;margin:0 auto;padding:18px 16px 60px}h1{font-size:21px;margin:6px 0 2px;color:var(--brass)}.sub{color:var(--dim);font-size:14px;margin:0 0 14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:12px 0}
+button,input,select,textarea{font:inherit;color:var(--ink)}button{background:#2c241d;border:1px solid var(--brass);border-radius:10px;padding:8px 16px;cursor:pointer}button:active{transform:scale(.97)}
+button.g{border-color:var(--line);color:var(--dim)}input[type=text],textarea{background:#120f0c;border:1px solid var(--line);border-radius:10px;padding:8px 12px;width:100%;-webkit-user-select:text;user-select:text}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.msg{min-height:24px;color:var(--dim);margin-top:8px}.msg.bad{color:var(--bad)}.msg.ok{color:var(--ok)}
+#win{position:fixed;inset:0;background:rgba(10,8,6,.88);display:none;align-items:center;justify-content:center;padding:20px;z-index:9}
+#win .box{background:var(--card);border:1px solid var(--brass);border-radius:16px;padding:22px;max-width:460px;text-align:center}#win h2{margin:0 0 8px;color:var(--brass)}
+#hintb{margin-top:18px}.tip{color:var(--dim);font-size:13px;margin-top:6px}
+
+body{background:radial-gradient(ellipse at 50% -10%,#3b2d1f 0,#1a140f 55%,#0f0b08 100%) fixed;background-color:#0f0b08}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(255,255,255,.012) 0 2px,transparent 2px 4px);z-index:0}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;box-shadow:inset 0 0 120px rgba(0,0,0,.7);z-index:0}
+#app{position:relative;z-index:1}
+.hero{display:flex;gap:14px;align-items:center;margin:4px 0 10px}.hero .ico{font-size:46px;filter:drop-shadow(0 4px 8px rgba(0,0,0,.6));animation:bob 3s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-5px)}}
+.story{background:#e9dcc0;color:#3a2c1e;font:15px/1.7 "Noto Serif TC",Georgia,serif;padding:12px 16px;border-radius:4px;box-shadow:0 8px 20px rgba(0,0,0,.5);transform:rotate(-.4deg);margin:0 0 16px;border-left:5px solid #b8935a}
+.story:empty{display:none}
+.card{background:linear-gradient(#271f18,#1a1511);border:1px solid #4a3b2b;box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 8px 22px rgba(0,0,0,.45)}
+button{background:linear-gradient(#52412d,#2f261d);border:1px solid #b8935a;box-shadow:0 3px 0 #120e0a;transition:transform .08s,box-shadow .08s}
+button:active{transform:translateY(3px) scale(.99);box-shadow:0 0 0 #120e0a}
+button.g{background:linear-gradient(#2c241d,#201a15);border-color:#4a3b2b}
+#stage{animation:rise .5s ease both}@keyframes rise{from{opacity:0;transform:translateY(12px)}}
+.shake{animation:shake .4s}@keyframes shake{20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(4px)}}
+#mute{position:fixed;top:10px;right:10px;z-index:5;padding:4px 10px;font-size:16px;background:rgba(0,0,0,.4);border:1px solid #4a3b2b;box-shadow:none}
+#win .box{animation:pop .5s cubic-bezier(.2,1.4,.4,1);position:relative;z-index:2}@keyframes pop{from{transform:scale(.6);opacity:0}}
+.stars{font-size:38px;letter-spacing:6px;margin:6px 0;color:#d9b878;text-shadow:0 0 14px rgba(217,184,120,.6)}.stars .off{opacity:.25;text-shadow:none}
+#conf{position:fixed;inset:0;z-index:1;pointer-events:none}
+
+
+.fg{display:grid;gap:3px;max-width:380px;margin:8px 0}.fg div{aspect-ratio:1;border-radius:6px;background:#0b0907;border:1px solid #1d1812;display:flex;align-items:center;justify-content:center;font-size:20px;cursor:pointer}.fg .v{background:#2a3a2c;border-color:#3d5a42}.fg .r{background:#3a3128}.fg .me{background:#d9b878;border-color:var(--brass)}.fg .w{box-shadow:0 0 0 2px #d9b87888}
+
+</style></head><body><div id="app"><button id="mute" title="音效">🔊</button><div class="hero"><div class="ico" id="ico"></div><div><h1 id="ttl"></h1><p class="sub" id="intro"></p></div></div><div class="story" id="story"></div><div id="stage"></div>
+<div class="row" id="hintb"><button class="g" id="hintBtn">💡 提示</button><button class="g" id="again">↺ 重來</button></div><div class="tip" id="hintTxt"></div></div>
+<div id="win"><div class="box"><h2>🎉 成功</h2><div id="revealTxt"></div><p><button onclick="location.reload()">再玩一次</button></p></div></div>
+<script>
+// ===== 老師改這裡 CONFIG =====
+const CFG={"title": "迷霧小島：找出三個線索", "intro": "島上被濃霧蓋住。你一次走一格（上下左右），走到哪裡，周圍一圈才會看清楚。你只有 24 步，要找到 3 個線索，拼出通關密碼。", "n": 7, "start": [3, 3], "steps": 24, "rocks": [[1, 1], [2, 1], [4, 4], [5, 4], [1, 5], [5, 2], [0, 3], [6, 5]], "clues": [{"p": [0, 0], "t": "線索一：鐘響了 7 次。", "d": "7"}, {"p": [6, 1], "t": "線索二：石碑上刻著 1。", "d": "1"}, {"p": [3, 6], "t": "線索三：樹上掛著 4 個果子。", "d": "4"}], "code": "714", "q": "把三個線索的數字，依「線索一、二、三」的順序從左到右排好，輸入密碼。", "reveal": "密碼正確！\\n探索的重點是規劃路線：先確認哪邊可能有東西，再決定要走哪條路。步數有限時，每一步都要賺到資訊。", "hint": "線索都在邊緣。先走中間再往四周探，沿著一條邊走，不要來回走。"};
+// ===== 以下是機關程式 =====
+const $=id=>document.getElementById(id);const rnd=n=>Math.floor(Math.random()*n);
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]]}return a};
+const norm=s=>String(s||"").replace(/\s+/g,"").toLowerCase();
+const META={"icon": "🌫️", "story": "小島的霧一整天沒散。島主留下三張紙條，散落在島的各個角落。"};
+const FX=(()=>{let ctx=null,mute=false;try{mute=localStorage.getItem("fx_mute")==="1"}catch(e){}
+ function ac(){if(!ctx){try{ctx=new(window.AudioContext||window.webkitAudioContext)()}catch(e){}}if(ctx&&ctx.state==="suspended")ctx.resume();return ctx}
+ function tone(f,t0,d,type,v){const c=ac();if(!c||mute)return;const o=c.createOscillator(),g=c.createGain();o.type=type||"sine";o.frequency.value=f;g.gain.setValueAtTime(v||.08,c.currentTime+t0);g.gain.exponentialRampToValueAtTime(.0001,c.currentTime+t0+d);o.connect(g);g.connect(c.destination);o.start(c.currentTime+t0);o.stop(c.currentTime+t0+d+.02)}
+ const vib=p=>{try{navigator.vibrate&&navigator.vibrate(p)}catch(e){}};
+ return{tick(){tone(660,0,.05,"square",.035);vib(8)},ok(){[523,659,784].forEach((f,i)=>tone(f,i*.08,.18,"triangle",.1));vib([30,40,30])},bad(){tone(150,0,.25,"sawtooth",.09);vib(120);const s=document.getElementById("stage");s.classList.remove("shake");void s.offsetWidth;s.classList.add("shake")},win(){[523,659,784,1047,1319].forEach((f,i)=>tone(f,i*.1,.32,"triangle",.12));vib([50,50,50,50,200])},toggle(){mute=!mute;try{localStorage.setItem("fx_mute",mute?"1":"0")}catch(e){}return mute},muted:()=>mute}})();
+let BAD=0;const T0=Date.now();
+function say(t,c){const m=$("msg");if(m){m.textContent=t;m.className="msg "+(c||"")}if(c==="bad"){BAD++;FX.bad()}else if(c==="ok")FX.ok()}
+function confetti(){const c=document.createElement("canvas");c.id="conf";c.width=innerWidth;c.height=innerHeight;document.body.appendChild(c);const x=c.getContext("2d"),P=[];for(let i=0;i<110;i++)P.push({x:Math.random()*c.width,y:-20-Math.random()*c.height*.5,vx:(Math.random()-.5)*3,vy:2+Math.random()*4,r:4+Math.random()*5,col:["#d9b878","#7fc79a","#e07b6a","#8ab4e8","#f1e8d8"][rnd(5)],a:Math.random()*6});let f=0;(function L(){x.clearRect(0,0,c.width,c.height);P.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.a+=.15;x.fillStyle=p.col;x.save();x.translate(p.x,p.y);x.rotate(p.a);x.fillRect(-p.r,-p.r/2,p.r*2,p.r);x.restore()});if(++f<170)requestAnimationFrame(L);else c.remove()})()}
+function win(){const st=BAD===0?3:BAD<=2?2:1,sec=Math.round((Date.now()-T0)/1000);
+ $("revealTxt").innerHTML=(CFG.noScore?'<div class="tip">用時 '+sec+' 秒</div>':'<div class="stars">'+[0,1,2].map(i=>'<span class="'+(i<st?"":"off")+'">★</span>').join("")+'</div><div class="tip">用時 '+sec+' 秒・失誤 '+BAD+' 次'+(st<3?"（不失誤就是三星）":"")+'</div>')+'<p>'+(CFG.reveal||"").replace(/\\n/g,"<br>")+'</p>';
+ $("win").style.display="flex";FX.win();confetti()}
+$("ttl").textContent=CFG.title;$("intro").textContent=CFG.intro;$("ico").textContent=META.icon||"🔐";$("story").textContent=META.story||"";
+$("mute").textContent=FX.muted()?"🔇":"🔊";$("mute").onclick=()=>{$("mute").textContent=FX.toggle()?"🔇":"🔊"};
+document.addEventListener("pointerdown",e=>{if(e.target.closest&&e.target.closest("button,.sw>div,.ch>div,.sn,.gr.r>div,.t,#pad")&&!e.target.closest("#mute"))FX.tick()},true);
+$("hintBtn").onclick=()=>{$("hintTxt").textContent=CFG.hint||"（沒有提示）"};$("again").onclick=()=>location.reload();
+$("stage").innerHTML='<div class="card"><div class="tip">剩餘步數：<b id="sp"></b>　找到線索：<b id="fc">0</b> / '+CFG.clues.length+'</div><div class="fg" id="g"></div><div id="cl" class="tip"></div></div><div class="card"><div class="tip">'+CFG.q+'</div><div class="row"><input type="text" id="cd" placeholder="密碼" style="flex:1"><button id="ck">確認</button></div></div><div class="msg" id="msg"></div>';
+const n=CFG.n;let pos,left,vis,found;const rocks=new Set(CFG.rocks.map(r=>r.join(",")));
+function start(){pos=CFG.start.slice();left=CFG.steps;vis=new Set();found=[];see();draw();say("開始探索。")}
+function see(){for(let a=-1;a<=1;a++)for(let b=-1;b<=1;b++){const x=pos[0]+a,y=pos[1]+b;if(x>=0&&y>=0&&x<n&&y<n){vis.add(x+","+y);const c=CFG.clues.find(c=>c.p[0]===x&&c.p[1]===y);if(c&&!found.includes(c))found.push(c)}}}
+function draw(){$("sp").textContent=left;$("fc").textContent=found.length;$("cl").innerHTML=found.map(c=>c.t).join("<br>");const g=$("g");g.style.gridTemplateColumns="repeat("+n+",1fr)";g.innerHTML="";
+ for(let y=0;y<n;y++)for(let x=0;x<n;x++){const e=document.createElement("div"),k=x+","+y;if(x===pos[0]&&y===pos[1]){e.className="me";e.textContent="🧭"}else if(vis.has(k)){e.className=rocks.has(k)?"r":"v";if(rocks.has(k))e.textContent="🪨";else if(CFG.clues.some(c=>c.p[0]===x&&c.p[1]===y))e.textContent="📜"}else e.textContent="";
+  e.onclick=()=>mv(x,y);g.appendChild(e)}}
+function mv(x,y){if(left<=0)return;if(Math.abs(x-pos[0])+Math.abs(y-pos[1])!==1)return;if(rocks.has(x+","+y)){say("那裡是岩石，過不去。","bad");return}pos=[x,y];left--;see();draw();FX.tick();
+ if(left<=0&&found.length<CFG.clues.length){$("msg").innerHTML='步數用完了，線索沒找齊。<button id="re">重新出發</button>';$("re").onclick=start}}
+$("ck").onclick=()=>{if(norm($("cd").value)===CFG.code){say("密碼正確！","ok");setTimeout(win,400)}else say(found.length<CFG.clues.length?"線索還沒找齊。":"不對，再看看線索的順序。","bad")};
+start();
+</script></body></html>

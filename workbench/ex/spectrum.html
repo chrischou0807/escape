@@ -1,0 +1,76 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no"><title>站位光譜</title>
+<style>
+:root{--bg:#14110f;--card:#1f1a16;--ink:#f1e8d8;--dim:#a99c86;--brass:#d9b878;--ok:#7fc79a;--bad:#e07b6a;--line:#3a3128}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 system-ui,"Noto Sans TC",sans-serif;-webkit-user-select:none;user-select:none;touch-action:manipulation}
+#app{max-width:760px;margin:0 auto;padding:18px 16px 60px}h1{font-size:21px;margin:6px 0 2px;color:var(--brass)}.sub{color:var(--dim);font-size:14px;margin:0 0 14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin:12px 0}
+button,input,select,textarea{font:inherit;color:var(--ink)}button{background:#2c241d;border:1px solid var(--brass);border-radius:10px;padding:8px 16px;cursor:pointer}button:active{transform:scale(.97)}
+button.g{border-color:var(--line);color:var(--dim)}input[type=text],textarea{background:#120f0c;border:1px solid var(--line);border-radius:10px;padding:8px 12px;width:100%;-webkit-user-select:text;user-select:text}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.msg{min-height:24px;color:var(--dim);margin-top:8px}.msg.bad{color:var(--bad)}.msg.ok{color:var(--ok)}
+#win{position:fixed;inset:0;background:rgba(10,8,6,.88);display:none;align-items:center;justify-content:center;padding:20px;z-index:9}
+#win .box{background:var(--card);border:1px solid var(--brass);border-radius:16px;padding:22px;max-width:460px;text-align:center}#win h2{margin:0 0 8px;color:var(--brass)}
+#hintb{margin-top:18px}.tip{color:var(--dim);font-size:13px;margin-top:6px}
+
+body{background:radial-gradient(ellipse at 50% -10%,#3b2d1f 0,#1a140f 55%,#0f0b08 100%) fixed;background-color:#0f0b08}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(255,255,255,.012) 0 2px,transparent 2px 4px);z-index:0}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;box-shadow:inset 0 0 120px rgba(0,0,0,.7);z-index:0}
+#app{position:relative;z-index:1}
+.hero{display:flex;gap:14px;align-items:center;margin:4px 0 10px}.hero .ico{font-size:46px;filter:drop-shadow(0 4px 8px rgba(0,0,0,.6));animation:bob 3s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-5px)}}
+.story{background:#e9dcc0;color:#3a2c1e;font:15px/1.7 "Noto Serif TC",Georgia,serif;padding:12px 16px;border-radius:4px;box-shadow:0 8px 20px rgba(0,0,0,.5);transform:rotate(-.4deg);margin:0 0 16px;border-left:5px solid #b8935a}
+.story:empty{display:none}
+.card{background:linear-gradient(#271f18,#1a1511);border:1px solid #4a3b2b;box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 8px 22px rgba(0,0,0,.45)}
+button{background:linear-gradient(#52412d,#2f261d);border:1px solid #b8935a;box-shadow:0 3px 0 #120e0a;transition:transform .08s,box-shadow .08s}
+button:active{transform:translateY(3px) scale(.99);box-shadow:0 0 0 #120e0a}
+button.g{background:linear-gradient(#2c241d,#201a15);border-color:#4a3b2b}
+#stage{animation:rise .5s ease both}@keyframes rise{from{opacity:0;transform:translateY(12px)}}
+.shake{animation:shake .4s}@keyframes shake{20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(4px)}}
+#mute{position:fixed;top:10px;right:10px;z-index:5;padding:4px 10px;font-size:16px;background:rgba(0,0,0,.4);border:1px solid #4a3b2b;box-shadow:none}
+#win .box{animation:pop .5s cubic-bezier(.2,1.4,.4,1);position:relative;z-index:2}@keyframes pop{from{transform:scale(.6);opacity:0}}
+.stars{font-size:38px;letter-spacing:6px;margin:6px 0;color:#d9b878;text-shadow:0 0 14px rgba(217,184,120,.6)}.stars .off{opacity:.25;text-shadow:none}
+#conf{position:fixed;inset:0;z-index:1;pointer-events:none}
+
+
+.sl{width:100%;margin:14px 0 4px}.lab{display:flex;justify-content:space-between;color:var(--dim);font-size:13px}
+.rs button{display:block;width:100%;text-align:left;margin:6px 0}.rs button.on{background:var(--brass);color:#14110f}
+.dots{position:relative;height:46px;margin:14px 0;border-bottom:2px solid var(--line)}.dots i{position:absolute;bottom:0;width:8px;height:8px;border-radius:50%;background:var(--dim);transform:translateX(-4px)}.dots em{position:absolute;bottom:0;width:14px;height:14px;border-radius:50%;background:var(--brass);transform:translateX(-7px);box-shadow:0 0 0 3px #d9b87855}
+
+</style></head><body><div id="app"><button id="mute" title="音效">🔊</button><div class="hero"><div class="ico" id="ico"></div><div><h1 id="ttl"></h1><p class="sub" id="intro"></p></div></div><div class="story" id="story"></div><div id="stage"></div>
+<div class="row" id="hintb"><button class="g" id="hintBtn">💡 提示</button><button class="g" id="again">↺ 重來</button></div><div class="tip" id="hintTxt"></div></div>
+<div id="win"><div class="box"><h2>🎉 成功</h2><div id="revealTxt"></div><p><button onclick="location.reload()">再玩一次</button></p></div></div>
+<script>
+// ===== 老師改這裡 CONFIG =====
+const CFG={"title": "站位光譜", "intro": "每個議題都有人同意、也有人不同意。先用滑桿表達你的立場，再挑一個最能代表你的理由，然後看看和你立場相反的人可能怎麼想。", "items": [{"s": "上課時，手機應該全部收起來。", "L": "完全不同意", "R": "完全同意", "dist": [5, 10, 12, 18, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 82, 88, 92, 95, 98], "rs": [{"t": "手機會讓人分心，影響上課", "side": "R"}, {"t": "收起來才公平，大家都一樣", "side": "R"}, {"t": "手機也能查資料，是學習工具", "side": "L"}, {"t": "需要的時候能聯絡家人，比較安心", "side": "L"}]}, {"s": "校慶園遊會的收入，應該全部捐出去。", "L": "完全不同意", "R": "完全同意", "dist": [8, 12, 20, 25, 30, 35, 38, 42, 48, 50, 52, 58, 62, 66, 70, 75, 80, 85, 90, 95], "rs": [{"t": "賺的錢可以幫助更多人", "side": "R"}, {"t": "這樣才符合園遊會的精神", "side": "R"}, {"t": "辛苦的班級也該留一部分", "side": "L"}, {"t": "留一部分才能辦下一次活動", "side": "L"}]}, {"s": "學校午餐應該提供素食選項給所有人選。", "L": "完全不同意", "R": "完全同意", "dist": [10, 15, 20, 28, 35, 40, 45, 50, 55, 58, 62, 66, 70, 74, 78, 82, 86, 90, 94, 98], "rs": [{"t": "尊重不同信仰與飲食習慣", "side": "R"}, {"t": "對環境也比較好", "side": "R"}, {"t": "成長中的孩子需要多種營養", "side": "L"}, {"t": "增加選項會讓廚房負擔變重", "side": "L"}]}], "q": "請說出對立方可能的理由時，不是要你同意他，而是要你說得出來。", "reveal": "完成。重點是你說得出自己立場的理由，也看得到別人站在哪裡。\\n討論：你的立場和全班最遠的人，差在哪個假設不一樣？", "hint": "滑桿拉到中間也可以，但還是要選一個最接近你想法的理由。"};
+// ===== 以下是機關程式 =====
+const $=id=>document.getElementById(id);const rnd=n=>Math.floor(Math.random()*n);
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]]}return a};
+const norm=s=>String(s||"").replace(/\s+/g,"").toLowerCase();
+const META={"icon": "📍", "story": "教室中間貼了一條長長的膠帶。老師說：同意的站右邊，不同意的站左邊，站哪裡都可以，但要說得出為什麼。"};
+const FX=(()=>{let ctx=null,mute=false;try{mute=localStorage.getItem("fx_mute")==="1"}catch(e){}
+ function ac(){if(!ctx){try{ctx=new(window.AudioContext||window.webkitAudioContext)()}catch(e){}}if(ctx&&ctx.state==="suspended")ctx.resume();return ctx}
+ function tone(f,t0,d,type,v){const c=ac();if(!c||mute)return;const o=c.createOscillator(),g=c.createGain();o.type=type||"sine";o.frequency.value=f;g.gain.setValueAtTime(v||.08,c.currentTime+t0);g.gain.exponentialRampToValueAtTime(.0001,c.currentTime+t0+d);o.connect(g);g.connect(c.destination);o.start(c.currentTime+t0);o.stop(c.currentTime+t0+d+.02)}
+ const vib=p=>{try{navigator.vibrate&&navigator.vibrate(p)}catch(e){}};
+ return{tick(){tone(660,0,.05,"square",.035);vib(8)},ok(){[523,659,784].forEach((f,i)=>tone(f,i*.08,.18,"triangle",.1));vib([30,40,30])},bad(){tone(150,0,.25,"sawtooth",.09);vib(120);const s=document.getElementById("stage");s.classList.remove("shake");void s.offsetWidth;s.classList.add("shake")},win(){[523,659,784,1047,1319].forEach((f,i)=>tone(f,i*.1,.32,"triangle",.12));vib([50,50,50,50,200])},toggle(){mute=!mute;try{localStorage.setItem("fx_mute",mute?"1":"0")}catch(e){}return mute},muted:()=>mute}})();
+let BAD=0;const T0=Date.now();
+function say(t,c){const m=$("msg");if(m){m.textContent=t;m.className="msg "+(c||"")}if(c==="bad"){BAD++;FX.bad()}else if(c==="ok")FX.ok()}
+function confetti(){const c=document.createElement("canvas");c.id="conf";c.width=innerWidth;c.height=innerHeight;document.body.appendChild(c);const x=c.getContext("2d"),P=[];for(let i=0;i<110;i++)P.push({x:Math.random()*c.width,y:-20-Math.random()*c.height*.5,vx:(Math.random()-.5)*3,vy:2+Math.random()*4,r:4+Math.random()*5,col:["#d9b878","#7fc79a","#e07b6a","#8ab4e8","#f1e8d8"][rnd(5)],a:Math.random()*6});let f=0;(function L(){x.clearRect(0,0,c.width,c.height);P.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.a+=.15;x.fillStyle=p.col;x.save();x.translate(p.x,p.y);x.rotate(p.a);x.fillRect(-p.r,-p.r/2,p.r*2,p.r);x.restore()});if(++f<170)requestAnimationFrame(L);else c.remove()})()}
+function win(){const st=BAD===0?3:BAD<=2?2:1,sec=Math.round((Date.now()-T0)/1000);
+ $("revealTxt").innerHTML=(CFG.noScore?'<div class="tip">用時 '+sec+' 秒</div>':'<div class="stars">'+[0,1,2].map(i=>'<span class="'+(i<st?"":"off")+'">★</span>').join("")+'</div><div class="tip">用時 '+sec+' 秒・失誤 '+BAD+' 次'+(st<3?"（不失誤就是三星）":"")+'</div>')+'<p>'+(CFG.reveal||"").replace(/\\n/g,"<br>")+'</p>';
+ $("win").style.display="flex";FX.win();confetti()}
+$("ttl").textContent=CFG.title;$("intro").textContent=CFG.intro;$("ico").textContent=META.icon||"🔐";$("story").textContent=META.story||"";
+$("mute").textContent=FX.muted()?"🔇":"🔊";$("mute").onclick=()=>{$("mute").textContent=FX.toggle()?"🔇":"🔊"};
+document.addEventListener("pointerdown",e=>{if(e.target.closest&&e.target.closest("button,.sw>div,.ch>div,.sn,.gr.r>div,.t,#pad")&&!e.target.closest("#mute"))FX.tick()},true);
+$("hintBtn").onclick=()=>{$("hintTxt").textContent=CFG.hint||"（沒有提示）"};$("again").onclick=()=>location.reload();
+$("stage").innerHTML='<div class="card" id="c"></div><div class="msg" id="msg"></div>';
+let ix=0;
+function show(){const it=CFG.items[ix];let v=50,rs=-1;
+ $("c").innerHTML='<div class="tip">議題 '+(ix+1)+' / '+CFG.items.length+'</div><p><b>'+it.s+'</b></p><input class="sl" type="range" min="0" max="100" value="50"><div class="lab"><span>'+it.L+'</span><span>'+it.R+'</span></div><div class="tip" style="margin-top:12px">哪一個理由最接近你？</div><div class="rs"></div><p><button id="ok">送出</button></p><div id="out"></div>';
+ const sl=$("c").querySelector(".sl");sl.oninput=()=>v=+sl.value;
+ const box=$("c").querySelector(".rs");it.rs.forEach((r,i)=>{const b=document.createElement("button");b.textContent=r.t;b.onclick=()=>{rs=i;[...box.children].forEach((c,j)=>c.classList.toggle("on",j===i))};box.appendChild(b)});
+ $("ok").onclick=()=>{if(rs<0)return say("先選一個理由。","bad");const my=v<50?"L":v>50?"R":null;
+  const opp=my==="L"?"R":my==="R"?"L":null;const ot=opp?it.rs.filter(r=>r.side===opp).map(r=>"・"+r.t).join("<br>"):it.rs.map(r=>"・"+r.t).join("<br>");
+  $("out").innerHTML='<div class="dots">'+it.dist.map(d=>'<i style="left:'+d+'%"></i>').join("")+'<em style="left:'+v+'%"></em></div><div class="tip">灰點是 20 位同學的站位，金色是你。</div><p>'+(opp?"站在你對面的人，可能會這樣想：":"站在兩邊的人，可能這樣想：")+'<br>'+ot+'</p>';
+  $("ok").style.display="none";const n=document.createElement("button");n.textContent=ix+1<CFG.items.length?"下一個議題":"完成";n.onclick=()=>{ix++;if(ix<CFG.items.length)show();else{say("三個議題都表態了。","ok");setTimeout(win,300)}};$("out").appendChild(n);FX.ok()}}
+show();
+</script></body></html>
