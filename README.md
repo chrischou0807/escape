@@ -11,9 +11,10 @@
 - `index.html` — 首頁（範例庫）。長按右上角齒輪 → 進首頁後台，可新增／修改／刪除／排序機關、匯出入設定、設定程式碼分享。
 - `teach/index.html` — 教學頁：**用 AI 做出這些機關**（給學生自學，含「規格 → 提示詞產生器」與簡報模式）。
 - `template/index.html` — 空白機關起手骨架（共用外殼已備好，找 `✏️` 標記填入玩法）。
-- `workbench/index.html` — **機關設計工作台**：把知識點拆解成機關，產生給 AI 的提示詞，再貼回檢查與預覽；內含 100 款機關的範例庫（六玩法下再分形式）。
+- `workbench/index.html` — **機關設計工作台**：把知識點拆解成機關，產生給 AI 的提示詞，再貼回檢查與預覽；內含 139 款機關的範例庫（六玩法下再分形式）。
   - `workbench/engine.html` — 第二條線（3D 密室）的關卡引擎，工作台用它載入與試玩關卡 JSON。
-  - `workbench/ex/*.html` — 範例庫新增的 88 款精簡機關（No.13–100；含拖曳吸附拼圖 jigsaw.html）。
+  - `workbench/ex/*.html` — 範例庫新增的 127 款精簡機關（No.13–139；含拖曳吸附拼圖 jigsaw.html）。
+  - `workbench/ex-src/` — No.101–139 的原始檔：`shell.html` 是共用外殼，`games_*.js` 是各機關的玩法，`python3 build.py` 把兩者合成單檔（輸出到 `out/`，再複製到 `workbench/ex/`）。這 39 款的後台用一個 JSON 文字框編輯題目內容。
 
 ### 機關列表
 
@@ -49,6 +50,50 @@
 | 28 | 建造挑戰 | `workbench/ex/build.html` | 用積木蓋出符合條件的結構 |
 | 29 | 你畫我猜 | `workbench/ex/draw.html` | 一人畫、一人猜 |
 | 30 | 自己設計機關 | `workbench/ex/design.html` | 學生出題並產生連結給同學解 |
+
+No.31–100 請到工作台的範例庫查看。第十批新增的 No.101–139：
+
+| No. | 名稱 | 檔案 | 玩法 |
+|----|------|------|------|
+| 101 | 找字遊戲 | `workbench/ex/wordsearch.html` | 依定義在字母方陣裡找出英文單字，先點頭再點尾。 |
+| 102 | 門後偷聽 | `workbench/ex/eavesdrop.html` | 點四扇門聽裡面的對話，每扇只能聽兩次，再回答問題。 |
+| 103 | 移開物件找線索 | `workbench/ex/moveaside.html` | 把桌上的東西拖開看底下的數字，只有符合條件的才算密碼。 |
+| 104 | 圖層翻找 | `workbench/ex/layers.html` | 便條紙互相蓋住，點一張翻到最上面，湊齊線索回答問題。 |
+| 105 | 找共同項 | `workbench/ex/spotcommon.html` | 兩張卡各有六個數，只有一組數值相等，上下各點一個。 |
+| 106 | 快速找對應圖 | `workbench/ex/lynx.html` | 依名稱在板子上找到對應的符號，計時，點錯加秒。 |
+| 107 | 探測器 | `workbench/ex/detector.html` | 拖動探測器看訊號強弱，在正確位置挖出寶石，挖的次數有限。 |
+| 108 | 同心圓環拼圖 | `workbench/ex/rings.html` | 內側三圈被轉亂，點圓環一格一格轉，讓每條直線都是一句成語。 |
+| 109 | 依序連點 | `workbench/ex/connectdots.html` | 依發生先後一個一個點，點錯斷線重來，連完出現星形。 |
+| 110 | 條件塗格顯圖 | `workbench/ex/shadegrid.html` | 把符合條件的格子全塗黑，塗對會浮現圖案。 |
+| 111 | 答題上色像素畫 | `workbench/ex/pixelpaint.html` | 每格一道算式，把答案相同的格子塗上同一個顏色，拼出圖案。 |
+| 112 | 踩地雷 | `workbench/ex/minesweeper.html` | 數字代表周圍八格的地雷數，把安全的格子全部掀開。 |
+| 113 | 吊人猜字 | `workbench/ex/hangman.html` | 依中文提示猜英文單字，一次一個字母，猜錯熄一根蠟燭。 |
+| 114 | 字母藏數字 | `workbench/ex/letterdigits.html` | 解謎得到關鍵字，再依字母順序把字母卡上的數字排成密碼。 |
+| 115 | 湊數拖放 | `workbench/ex/makesum.html` | 點硬幣放上秤盤，金額和枚數都要剛好。 |
+| 116 | 逐步線索猜謎 | `workbench/ex/cluebyclue.html` | 線索由難到易一次給一條，用越少分數越高，每回合可猜三次。 |
+| 117 | 高低提示猜數字 | `workbench/ex/hilo.html` | 答案是數字，每次送出提示更高或更低；引信長度隨機，爆炸前答對越多越好。 |
+| 118 | 給答案找問題 | `workbench/ex/answerboard.html` | 選一格看到「答案」，從選項找出對應的「問題」，答錯扣分。 |
+| 119 | 軟木板推理 | `workbench/ex/corkboard.html` | 依板上的線索回答便利貼的問題，最後排出事件順序。 |
+| 120 | 鑰匙配保險箱 | `workbench/ex/safekey.html` | 把鑰匙拖到正確號碼的保險箱上，只能試三次。 |
+| 121 | 拖字母拼答案 | `workbench/ex/tilespell.html` | 依提示從字塊裡挑字，照順序放進格子，字塊裡混了用不到的字。 |
+| 122 | 一個輸入框多把鑰匙 | `workbench/ex/multikey.html` | 四個抽屜共用一個輸入框，輸入任一題的答案就開對應的抽屜。 |
+| 123 | 骨牌鏈 | `workbench/ex/dominochain.html` | 先回答鏈尾描述的是哪個過程，再選出能接上的骨牌，接完整條鏈。 |
+| 124 | 列舉搶答 | `workbench/ex/listthem.html` | 每題有多個正確答案，自己打字一次說一個，說錯三次失敗。 |
+| 125 | 滑軌機關 | `workbench/ex/sliderail.html` | 橫栓只能左右、直栓只能上下，把擋路的移開讓鑰匙栓滑出去。 |
+| 126 | 取色染色 | `workbench/ex/eyedropper.html` | 先點色卡吸取顏色，再點試管染成應該出現的顏色。 |
+| 127 | 畫線圈地分類 | `workbench/ex/lasso.html` | 用手指畫圈把屬於指定類別的東西圈起來，圈到不該圈的扣一條命。 |
+| 128 | 跨頁開關 | `workbench/ex/crossswitch.html` | 開關和燈在不同房間，依規則把開關扳成正確組合再回去推門。 |
+| 129 | 互斥切換 | `workbench/ex/eitheror.html` | 每句話裡有一塊二選一的牌子，點了翻面，讓每句都正確。 |
+| 130 | 記住擺放位置 | `workbench/ex/keepplace.html` | 先點卡片再點格子排出順序，擺放會自動儲存，重開網頁還在。 |
+| 131 | 押注答題 | `workbench/ex/betting.html` | 先看題目再決定押多少分，然後作答，對了加、錯了扣。 |
+| 132 | 百萬挑戰 | `workbench/ex/ladder.html` | 連續答題往上爬，有保底關、三個求救，可以帶分離開。 |
+| 133 | 轉盤集塊 | `workbench/ex/spinwheel.html` | 轉盤決定類別，答對拿到那一塊，四類都集滿過關。 |
+| 134 | 選角色 | `workbench/ex/roles.html` | 選一個角色，各自只看得到一位數的線索，和隊友拼出密碼。 |
+| 135 | 擲骰與抽牌 | `workbench/ex/dicefate.html` | 骰子決定帶哪樣道具，遇到不同難關、走到不同結局，都能過關。 |
+| 136 | 答題換兵守城 | `workbench/ex/castle.html` | 答對得能量，花能量射箭或修牆，撐到怪物全部倒下。 |
+| 137 | 答題跳台 | `workbench/ex/starjump.html` | 角色自動往上跳，用左右控制方向，踩到問號平台答題加時間。 |
+| 138 | 拉霸 | `workbench/ex/slots.html` | 轉出主詞、動詞、時態的組合，選出文法正確的英文句子。 |
+| 139 | 答題換道具的消除遊戲 | `workbench/ex/gemclear.html` | 先答題換步數，再點兩顆以上相連的同色寶石消除，達到目標分數。 |
 
 ---
 
