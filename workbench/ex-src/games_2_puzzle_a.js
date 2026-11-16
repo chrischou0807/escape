@@ -25,23 +25,29 @@ build:function(host,D,G){
 }}
 //==GAME==
 {no:'109',slug:'connectdots',title:'依序連點',brand:'CONNECT IN ORDER',type:'解謎',
-intro:'依照「發生的先後順序」，從最早的開始，一個一個點下去。\n點錯會斷線、從頭再來。全部連完會出現一個圖形。',
-data:{points:[{label:'造紙術',note:'105 年'},{label:'活字印刷',note:'約 1045 年'},{label:'望遠鏡',note:'1608 年'},{label:'瓦特蒸汽機',note:'1769 年'},{label:'電話',note:'1876 年'},
- {label:'飛機',note:'1903 年'},{label:'青黴素',note:'1928 年'},{label:'人造衛星',note:'1957 年'},{label:'全球資訊網',note:'1989 年'},{label:'智慧型手機',note:'2007 年'}]},
+intro:'依照「發生的先後順序」，從最早的開始，一個一個點下去。\n點錯會斷線、從頭再來。全部連完，線條畫出來的就是下一關的密碼。',
+data:{code:'25',points:[{label:'造紙術',note:'105 年'},{label:'活字印刷',note:'約 1045 年'},{label:'望遠鏡',note:'1608 年'},{label:'瓦特蒸汽機',note:'1769 年'},{label:'電話',note:'1876 年'},{label:'汽車',note:'1886 年'},
+ {label:'飛機',note:'1903 年'},{label:'青黴素',note:'1928 年'},{label:'電晶體',note:'1947 年'},{label:'人造衛星',note:'1957 年'},{label:'全球資訊網',note:'1989 年'},{label:'智慧型手機',note:'2007 年'}]},
 build:function(host,D,G){
   const n=D.points.length, gcd=(a,b)=>b?gcd(b,a%b):a; let s=Math.max(1,Math.floor(n/3)); while(s<n&&gcd(s,n)!==1)s++; if(s>=n)s=1;
-  const pos=D.points.map((p,k)=>{ const a=((k*s)%n)*2*Math.PI/n; return {x:50+37*Math.sin(a),y:50-37*Math.cos(a)}; });
+  let pos=D.points.map((p,k)=>{ const a=((k*s)%n)*2*Math.PI/n; return {x:50+37*Math.sin(a),y:50-37*Math.cos(a)}; });
+  /* 密碼模式：code 的每個字元是一條經過 2×3 節點的筆畫；節點總數等於點數時啟用，否則維持星形 */
+  const GL={'0':['TL','TR','MR','BR','BL','ML'],'1':['TR','MR','BR'],'2':['TL','TR','MR','ML','BL','BR'],'5':['TR','TL','ML','MR','BR','BL'],'7':['TL','TR','BL'],'L':['TL','ML','BL','BR'],'U':['TL','ML','BL','BR','MR','TR'],'Z':['TL','TR','BL','BR'],'N':['BL','TL','BR','TR']};
+  const raw=String(D.code||'').toUpperCase().split(''), code=raw.filter(c=>GL[c]), glyph=code.length>0&&code.length===raw.length&&code.reduce((a,c)=>a+GL[c].length,0)===n;
+  const prev=D.points.map((p,k)=>k-1), close=D.points.map(()=>-1); close[n-1]=0;
+  if(glyph){ pos=[]; close[n-1]=-1; const m=code.length, half=Math.min(15,30/m); code.forEach((c,g)=>{ const first=pos.length, cx=(g+0.5)*100/m;
+    GL[c].forEach((nd,j)=>{ prev[pos.length]=j?pos.length-1:-1; pos.push({x:cx+(nd.charAt(1)==='L'?-half:half),y:nd.charAt(0)==='T'?15:(nd.charAt(0)==='M'?50:85)}); }); if(c==='0')close[pos.length-1]=first; }); }
   const stat=G.el('div','stat','',host);
   const box=G.el('div',null,null,host); box.style.cssText='position:relative;width:100%;aspect-ratio:1';
   const NS='http://www.w3.org/2000/svg', svg=document.createElementNS(NS,'svg'); svg.setAttribute('viewBox','0 0 100 100'); svg.style.cssText='position:absolute;inset:0;width:100%;height:100%'; box.appendChild(svg);
   let k=0, miss=0; const btns=[];
   D.points.forEach((p,i)=>{ const b=G.el('button','opt',p.label,box); b.dataset.k=i; b.style.cssText='position:absolute;transform:translate(-50%,-50%);left:'+pos[i].x+'%;top:'+pos[i].y+'%;padding:7px 8px;font-size:12px;min-width:58px;z-index:2;white-space:nowrap';
     b.addEventListener('click',()=>tap(i)); btns.push(b); });
-  function line(a,b){ const l=document.createElementNS(NS,'line'); l.setAttribute('x1',pos[a].x); l.setAttribute('y1',pos[a].y); l.setAttribute('x2',pos[b].x); l.setAttribute('y2',pos[b].y); l.setAttribute('stroke','#ffce78'); l.setAttribute('stroke-width','0.9'); svg.appendChild(l); }
+  function line(a,b){ const l=document.createElementNS(NS,'line'); l.setAttribute('x1',pos[a].x); l.setAttribute('y1',pos[a].y); l.setAttribute('x2',pos[b].x); l.setAttribute('y2',pos[b].y); l.setAttribute('stroke','#ffce78'); l.setAttribute('stroke-width',glyph?'1.8':'0.9'); l.setAttribute('stroke-linecap','round'); svg.appendChild(l); }
   function draw(){ stat.textContent='已連 '+k+' / '+n+' · 斷線 '+miss+' 次'; }
   function tap(i){ if(G.solved()||btns[i].classList.contains('good'))return;
-    if(i===k){ btns[i].classList.add('good'); if(k>0)line(k-1,k); k++; G.tone(400+k*45,0.1,'sine',0.05); draw();
-      if(k===n){ line(n-1,0); btns.forEach((b,j)=>{b.textContent=D.points[j].label+' '+D.points[j].note; b.style.fontSize='10px';}); G.solve('順序完全正確，星形完成！'); } }
+    if(i===k){ btns[i].classList.add('good'); if(prev[k]>=0)line(prev[k],k); if(close[k]>=0)line(k,close[k]); k++; G.tone(400+k*45,0.1,'sine',0.05); draw();
+      if(k===n){ if(!glyph)btns.forEach((b,j)=>{b.textContent=D.points[j].label+' '+D.points[j].note; b.style.fontSize='10px';}); else G.hint(D.points.map(q=>q.label+' '+q.note).join('、')); G.solve(glyph?('順序完全正確！\n線條畫出來的是：'+code.join('')):'順序完全正確，星形完成！'); } }
     else { miss++; G.buzz(); G.shake(box); G.hint('順序不對，線斷了，從最早的那一個重新開始。'); k=0; svg.innerHTML=''; btns.forEach(b=>b.classList.remove('good')); draw(); } }
   G.t={n:n}; draw();
 }}
@@ -69,7 +75,7 @@ build:function(host,D,G){
 //==GAME==
 {no:'111',slug:'pixelpaint',title:'答題上色像素畫',brand:'COLOR BY ANSWER',type:'解謎',
 intro:'每一格是一道算式。先選顏色，再把答案相同的格子塗上那個顏色。\n全部塗對就會出現一幅圖。',
-data:{colors:[{name:'紅',hex:'#d9534f',value:12},{name:'黃',hex:'#f0c04a',value:18},{name:'藍',hex:'#4a8fd9',value:24}],
+data:{checks:3,colors:[{name:'紅',hex:'#d9534f',value:12},{name:'黃',hex:'#f0c04a',value:18},{name:'藍',hex:'#4a8fd9',value:24}],
  pattern:['200002','021120','011110','011110','021120','200002'],
  exprs:{'12':['3×4','2×6','20−8','48÷4','7+5','6+6','36÷3','15−3','60÷5','4+8'],'18':['3×6','2×9','9+9','36÷2','25−7','54÷3','11+7','20−2','72÷4','6+12'],'24':['4×6','3×8','12+12','48÷2','30−6','72÷3','19+5','96÷4','8+16','2×12']}},
 build:function(host,D,G){
@@ -78,9 +84,11 @@ build:function(host,D,G){
     b.addEventListener('click',()=>{cur=i;pbs.forEach((x,j)=>x.classList.toggle('on',j===i));G.tick();}); return b; }); pbs[0].classList.add('on');
   const grid=G.el('div',null,null,host); grid.style.cssText='display:grid;gap:3px;width:100%;grid-template-columns:repeat('+cols+',1fr)';
   want.forEach((w,i)=>{ const pool=D.exprs[String(D.colors[w].value)]; const c=G.el('div','cell',pool[G.rnd(pool.length)],grid); c.style.cssText='aspect-ratio:1;font-size:13px'; c.dataset.i=i;
-    c.addEventListener('click',()=>{ if(G.solved())return; got[i]=(got[i]===cur)?-1:cur; c.style.background=got[i]<0?'':D.colors[got[i]].hex; c.style.color=got[i]<0?'':'#14161a'; G.tick(); }); });
-  const go=G.el('button','go','檢查',host);
-  go.addEventListener('click',()=>{ let bad=0; want.forEach((w,i)=>{ if(got[i]!==w)bad++; }); if(!bad)G.solve('上色完成，圖案出現了！'); else{ G.buzz(); G.hint('還有 '+bad+' 格不對或沒塗。'); } });
+    c.addEventListener('click',()=>{ if(G.solved()||dead)return; got[i]=(got[i]===cur)?-1:cur; c.style.background=got[i]<0?'':D.colors[got[i]].hex; c.style.color=got[i]<0?'':'#14161a'; G.tick(); }); });
+  let left=D.checks>0?D.checks:0, dead=false; const go=G.el('button','go',left?('檢查（剩 '+left+' 次）'):'檢查',host);
+  go.addEventListener('click',()=>{ if(dead||G.solved())return; let bad=0; want.forEach((w,i)=>{ if(got[i]!==w)bad++; }); if(!bad){ G.solve('上色完成，圖案出現了！'); return; }
+    G.buzz(); if(!D.checks){ G.hint('還有 '+bad+' 格不對或沒塗。'); return; }
+    left--; go.textContent='檢查（剩 '+left+' 次）'; if(left<=0){ dead=true; G.hint('還有 '+bad+' 格不對或沒塗。檢查次數用完，算式重新出題。'); G.later(()=>G.restart(),2400); } else G.hint('還有 '+bad+' 格不對或沒塗。'); });
   G.t={want:want};
 }}
 //==GAME==

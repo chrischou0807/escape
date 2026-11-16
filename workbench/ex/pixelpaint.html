@@ -156,7 +156,7 @@
 "use strict";
 var GAME={no:'111',slug:'pixelpaint',title:'答題上色像素畫',brand:'COLOR BY ANSWER',type:'解謎',
 intro:'每一格是一道算式。先選顏色，再把答案相同的格子塗上那個顏色。\n全部塗對就會出現一幅圖。',
-data:{colors:[{name:'紅',hex:'#d9534f',value:12},{name:'黃',hex:'#f0c04a',value:18},{name:'藍',hex:'#4a8fd9',value:24}],
+data:{checks:3,colors:[{name:'紅',hex:'#d9534f',value:12},{name:'黃',hex:'#f0c04a',value:18},{name:'藍',hex:'#4a8fd9',value:24}],
  pattern:['200002','021120','011110','011110','021120','200002'],
  exprs:{'12':['3×4','2×6','20−8','48÷4','7+5','6+6','36÷3','15−3','60÷5','4+8'],'18':['3×6','2×9','9+9','36÷2','25−7','54÷3','11+7','20−2','72÷4','6+12'],'24':['4×6','3×8','12+12','48÷2','30−6','72÷3','19+5','96÷4','8+16','2×12']}},
 build:function(host,D,G){
@@ -165,9 +165,11 @@ build:function(host,D,G){
     b.addEventListener('click',()=>{cur=i;pbs.forEach((x,j)=>x.classList.toggle('on',j===i));G.tick();}); return b; }); pbs[0].classList.add('on');
   const grid=G.el('div',null,null,host); grid.style.cssText='display:grid;gap:3px;width:100%;grid-template-columns:repeat('+cols+',1fr)';
   want.forEach((w,i)=>{ const pool=D.exprs[String(D.colors[w].value)]; const c=G.el('div','cell',pool[G.rnd(pool.length)],grid); c.style.cssText='aspect-ratio:1;font-size:13px'; c.dataset.i=i;
-    c.addEventListener('click',()=>{ if(G.solved())return; got[i]=(got[i]===cur)?-1:cur; c.style.background=got[i]<0?'':D.colors[got[i]].hex; c.style.color=got[i]<0?'':'#14161a'; G.tick(); }); });
-  const go=G.el('button','go','檢查',host);
-  go.addEventListener('click',()=>{ let bad=0; want.forEach((w,i)=>{ if(got[i]!==w)bad++; }); if(!bad)G.solve('上色完成，圖案出現了！'); else{ G.buzz(); G.hint('還有 '+bad+' 格不對或沒塗。'); } });
+    c.addEventListener('click',()=>{ if(G.solved()||dead)return; got[i]=(got[i]===cur)?-1:cur; c.style.background=got[i]<0?'':D.colors[got[i]].hex; c.style.color=got[i]<0?'':'#14161a'; G.tick(); }); });
+  let left=D.checks>0?D.checks:0, dead=false; const go=G.el('button','go',left?('檢查（剩 '+left+' 次）'):'檢查',host);
+  go.addEventListener('click',()=>{ if(dead||G.solved())return; let bad=0; want.forEach((w,i)=>{ if(got[i]!==w)bad++; }); if(!bad){ G.solve('上色完成，圖案出現了！'); return; }
+    G.buzz(); if(!D.checks){ G.hint('還有 '+bad+' 格不對或沒塗。'); return; }
+    left--; go.textContent='檢查（剩 '+left+' 次）'; if(left<=0){ dead=true; G.hint('還有 '+bad+' 格不對或沒塗。檢查次數用完，算式重新出題。'); G.later(()=>G.restart(),2400); } else G.hint('還有 '+bad+' 格不對或沒塗。'); });
   G.t={want:want};
 }};
 var $=function(id){return document.getElementById(id);};

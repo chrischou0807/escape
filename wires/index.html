@@ -202,6 +202,12 @@
     </div>
 
     <div class="field">
+      <label>可嘗試次數</label>
+      <input class="url-input" id="triesInput" type="number" min="0" max="20" inputmode="numeric">
+      <div class="desc">全部接好算試一次；接錯不會說是哪一條，次數用完會重新洗牌。填 0 表示不限次數。</div>
+    </div>
+
+    <div class="field">
       <label>音效</label>
       <div class="toggle"><div class="switch" id="soundSwitch"><i></i></div><span style="color:var(--txt-dim);font-size:14px">連線與完成音效</span></div>
     </div>
@@ -252,7 +258,7 @@
   }
   function shareURL(){ return location.origin+location.pathname+"?c="+encodeURIComponent(encodeCfg(cfg)); }
 
-  var cfg = getSharedCfg() || load() || { pairs:DEFAULT_PAIRS.map(function(p){return {left:p.left,right:p.right};}), caption:"", clueImage:"", sound:true, adminPass:"9633" };
+  var cfg = getSharedCfg() || load() || { pairs:DEFAULT_PAIRS.map(function(p){return {left:p.left,right:p.right};}), caption:"", clueImage:"", sound:true, adminPass:"9633", tries:3 };
   function cleanPairs(arr){
     if(!Array.isArray(arr))return [];
     var out=[]; arr.forEach(function(p){ if(!p)return; var l=(p.left==null?"":String(p.left)).trim(), r=(p.right==null?"":String(p.right)).trim(); if(l&&r)out.push({left:l,right:r}); });
@@ -262,6 +268,7 @@
     c.pairs=cleanPairs(c.pairs);
     if(c.pairs.length<2) c.pairs=DEFAULT_PAIRS.map(function(p){return {left:p.left,right:p.right};});
     c.caption=c.caption||""; c.clueImage=c.clueImage||""; c.sound=c.sound!==false;
+    c.tries=(typeof c.tries==="number"&&c.tries>0)?Math.min(20,Math.floor(c.tries)):0;
     if(typeof c.adminPass!=="string"||c.adminPass==="")c.adminPass="9633";
   }
   normalize(cfg);
@@ -275,10 +282,10 @@
 
   /* 連線板 */
   var boardHost=document.getElementById("boardHost"), hintEl=document.getElementById("hint");
-  var board=null, svg=null, leftNodes=[], rightNodes=[], rightPerm=[], conn={}, solved=false, n=0;
+  var board=null, svg=null, leftNodes=[], rightNodes=[], rightPerm=[], conn={}, solved=false, n=0, triesLeft=0, locked=false;
 
   function build(){
-    boardHost.innerHTML=""; conn={}; solved=false; leftNodes=[]; rightNodes=[];
+    boardHost.innerHTML=""; conn={}; solved=false; leftNodes=[]; rightNodes=[]; triesLeft=cfg.tries; locked=false;
     document.getElementById("reveal").classList.remove("show");
     n=cfg.pairs.length;
     board=document.createElement("div"); board.className="board";
@@ -339,6 +346,7 @@
   }
 
   function setConn(L,R){
+    if(locked)return;
     Object.keys(conn).forEach(function(k){ if(conn[k]==R) delete conn[k]; });
     conn[L]=R; clickSnd(); redraw(); evaluate();
   }
@@ -350,7 +358,10 @@
     if(Object.keys(conn).length<n)return;
     var allRight=true; for(var L=0;L<n;L++){ if(rightPerm[conn[L]]!==L){ allRight=false; break; } }
     if(allRight){ solved=true; board.classList.add("solved"); hintEl.textContent="全部接對！"; winSnd(); setTimeout(showReveal,650); }
-    else { hintEl.textContent="有線接錯了，再檢查看看"; }
+    else if(!cfg.tries){ hintEl.textContent="有線接錯了，再檢查看看"; }
+    else { triesLeft--; tone(150,0.18,"sawtooth",0.05);
+      if(triesLeft<=0){ locked=true; hintEl.textContent="有線接錯了。次數用完，重新洗牌再來。"; setTimeout(build,1800); }
+      else { hintEl.textContent="有線接錯了，不告訴你是哪一條。還能試 "+triesLeft+" 次"; } }
   }
 
   /* 拖曳連線 */
@@ -441,14 +452,14 @@
   var soundSwitch=document.getElementById("soundSwitch"), adminPassInput=document.getElementById("adminPassInput");
   var draft=null;
 
-  function openAdmin(){ draft={ pairs:cfg.pairs.map(function(p){return {left:p.left,right:p.right};}), caption:cfg.caption, clueImage:cfg.clueImage, sound:cfg.sound, adminPass:cfg.adminPass, hint:(cfg.hint||"") }; renderAdmin(); admin.classList.add("show"); }
+  function openAdmin(){ draft={ pairs:cfg.pairs.map(function(p){return {left:p.left,right:p.right};}), caption:cfg.caption, clueImage:cfg.clueImage, sound:cfg.sound, adminPass:cfg.adminPass, hint:(cfg.hint||""), tries:cfg.tries }; renderAdmin(); admin.classList.add("show"); }
   function renderAdmin(){
     pairEditor.innerHTML="";
     draft.pairs.forEach(function(p,i){ pairEditor.appendChild(mkPairRow(p,i)); });
     capInput.value=draft.caption||"";
     if(draft.clueImage){ clueImg.src=draft.clueImage; cluePreview.classList.add("show"); clueUrl.value=(draft.clueImage.indexOf("data:")!==0)?draft.clueImage:""; } else { cluePreview.classList.remove("show"); clueUrl.value=""; }
     soundSwitch.classList.toggle("on",!!draft.sound);
-    adminPassInput.value=draft.adminPass||""; var __hi2=document.getElementById("hintInput"); if(__hi2)__hi2.value=draft.hint||"";
+    adminPassInput.value=draft.adminPass||""; document.getElementById("triesInput").value=draft.tries||0; var __hi2=document.getElementById("hintInput"); if(__hi2)__hi2.value=draft.hint||"";
   }
   function mkPairRow(p,i){
     var row=document.createElement("div"); row.className="prow";
@@ -466,10 +477,11 @@
   clueUrl.addEventListener("input",function(){ var v=clueUrl.value.trim(); if(v){ draft.clueImage=v; clueImg.src=v; cluePreview.classList.add("show"); } else if(!clueFile.files.length){ draft.clueImage=""; cluePreview.classList.remove("show"); } });
   soundSwitch.addEventListener("click",function(){ draft.sound=!draft.sound; soundSwitch.classList.toggle("on",draft.sound); });
   adminPassInput.addEventListener("input",function(){ draft.adminPass=adminPassInput.value; });
+  document.getElementById("triesInput").addEventListener("input",function(){ var v=parseInt(this.value,10); draft.tries=isNaN(v)?0:v; });
 
   function commit(){
     cfg.pairs=cleanPairs(draft.pairs); if(cfg.pairs.length<2) cfg.pairs=DEFAULT_PAIRS.map(function(p){return {left:p.left,right:p.right};});
-    cfg.caption=draft.caption; cfg.clueImage=draft.clueImage; cfg.sound=draft.sound;
+    cfg.caption=draft.caption; cfg.clueImage=draft.clueImage; cfg.sound=draft.sound; cfg.tries=draft.tries;
     cfg.adminPass=(draft.adminPass&&draft.adminPass.length)?draft.adminPass:"9633"; cfg.hint=(draft.hint||"");
     normalize(cfg); save(cfg); build();
   }

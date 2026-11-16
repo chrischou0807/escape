@@ -37,7 +37,7 @@ button.g{background:linear-gradient(#2c241d,#201a15);border-color:#4a3b2b}
 <div id="win"><div class="box"><h2>🎉 成功</h2><div id="revealTxt"></div><p><button onclick="location.reload()">再玩一次</button></p></div></div>
 <script>
 // ===== 老師改這裡 CONFIG =====
-const CFG={"title": "凱撒密碼", "intro": "密文是把每個字母往後移了幾格。用轉盤找出位移量，解出原文。", "plain": "HELLO", "shift": 3, "hint": "提示：英文中最常見的字母是 E，密文裡最常出現的字母可能就是它。", "reveal": "解出來了！原文是 HELLO。\\n金庫密碼：3 位移。"};
+const CFG={"tries": 3, "title": "凱撒密碼", "intro": "密文是把每個字母往後移了幾格。用轉盤找出位移量，解出原文。", "plain": "HELLO", "shift": 3, "hint": "提示：英文中最常見的字母是 E，密文裡最常出現的字母可能就是它。", "reveal": "解出來了！原文是 HELLO。\\n金庫密碼：3 位移。"};
 // ===== 以下是機關程式 =====
 const $=id=>document.getElementById(id);const rnd=n=>Math.floor(Math.random()*n);
 const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]]}return a};
@@ -48,13 +48,13 @@ const FX=(()=>{let ctx=null,mute=false;try{mute=localStorage.getItem("fx_mute")=
  function tone(f,t0,d,type,v){const c=ac();if(!c||mute)return;const o=c.createOscillator(),g=c.createGain();o.type=type||"sine";o.frequency.value=f;g.gain.setValueAtTime(v||.08,c.currentTime+t0);g.gain.exponentialRampToValueAtTime(.0001,c.currentTime+t0+d);o.connect(g);g.connect(c.destination);o.start(c.currentTime+t0);o.stop(c.currentTime+t0+d+.02)}
  const vib=p=>{try{navigator.vibrate&&navigator.vibrate(p)}catch(e){}};
  return{tick(){tone(660,0,.05,"square",.035);vib(8)},ok(){[523,659,784].forEach((f,i)=>tone(f,i*.08,.18,"triangle",.1));vib([30,40,30])},bad(){tone(150,0,.25,"sawtooth",.09);vib(120);const s=document.getElementById("stage");s.classList.remove("shake");void s.offsetWidth;s.classList.add("shake")},win(){[523,659,784,1047,1319].forEach((f,i)=>tone(f,i*.1,.32,"triangle",.12));vib([50,50,50,50,200])},toggle(){mute=!mute;try{localStorage.setItem("fx_mute",mute?"1":"0")}catch(e){}return mute},muted:()=>mute}})();
-let BAD=0;const T0=Date.now();
+let BAD=0;const T0=Date.now();let LEFT=CFG.tries||0,DEAD=false;function miss(t){if(!CFG.tries){say(t,"bad");return}LEFT--;if(LEFT<=0){DEAD=true;say(t+" 次數用完了，重新來過。","bad");setTimeout(()=>location.reload(),2400)}else say(t+"（還能試 "+LEFT+" 次）","bad")}
 function say(t,c){const m=$("msg");if(m){m.textContent=t;m.className="msg "+(c||"")}if(c==="bad"){BAD++;FX.bad()}else if(c==="ok")FX.ok()}
 function confetti(){const c=document.createElement("canvas");c.id="conf";c.width=innerWidth;c.height=innerHeight;document.body.appendChild(c);const x=c.getContext("2d"),P=[];for(let i=0;i<110;i++)P.push({x:Math.random()*c.width,y:-20-Math.random()*c.height*.5,vx:(Math.random()-.5)*3,vy:2+Math.random()*4,r:4+Math.random()*5,col:["#d9b878","#7fc79a","#e07b6a","#8ab4e8","#f1e8d8"][rnd(5)],a:Math.random()*6});let f=0;(function L(){x.clearRect(0,0,c.width,c.height);P.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.a+=.15;x.fillStyle=p.col;x.save();x.translate(p.x,p.y);x.rotate(p.a);x.fillRect(-p.r,-p.r/2,p.r*2,p.r);x.restore()});if(++f<170)requestAnimationFrame(L);else c.remove()})()}
-function win(){const st=BAD===0?3:BAD<=2?2:1,sec=Math.round((Date.now()-T0)/1000);
+function win(){if(DEAD)return;const st=BAD===0?3:BAD<=2?2:1,sec=Math.round((Date.now()-T0)/1000);
  $("revealTxt").innerHTML=(CFG.noScore?'<div class="tip">用時 '+sec+' 秒</div>':'<div class="stars">'+[0,1,2].map(i=>'<span class="'+(i<st?"":"off")+'">★</span>').join("")+'</div><div class="tip">用時 '+sec+' 秒・失誤 '+BAD+' 次'+(st<3?"（不失誤就是三星）":"")+'</div>')+'<p>'+(CFG.reveal||"").replace(/\\n/g,"<br>")+'</p>';
  $("win").style.display="flex";FX.win();confetti()}
-$("ttl").textContent=CFG.title;$("intro").textContent=CFG.intro;$("ico").textContent=META.icon||"🔐";$("story").textContent=META.story||"";
+$("ttl").textContent=CFG.title;$("intro").textContent=CFG.intro+(CFG.tries?"（只能試 "+CFG.tries+" 次）":"");$("ico").textContent=META.icon||"🔐";$("story").textContent=META.story||"";
 $("mute").textContent=FX.muted()?"🔇":"🔊";$("mute").onclick=()=>{$("mute").textContent=FX.toggle()?"🔇":"🔊"};
 document.addEventListener("pointerdown",e=>{if(e.target.closest&&e.target.closest("button,.sw>div,.ch>div,.sn,.gr.r>div,.t,#pad")&&!e.target.closest("#mute"))FX.tick()},true);
 $("hintBtn").onclick=()=>{$("hintTxt").textContent=CFG.hint||"（沒有提示）"};$("again").onclick=()=>location.reload();
@@ -62,5 +62,5 @@ $("stage").innerHTML='<div class="card"><div class="tip">密文</div><div id="ct
 const A="ABCDEFGHIJKLMNOPQRSTUVWXYZ";const enc=CFG.plain.toUpperCase().split("").map(c=>A.includes(c)?A[(A.indexOf(c)+CFG.shift)%26]:c).join("");$("ct").textContent=enc;
 function wh(){const s=+$("rg").value;$("sv").textContent=s;let top="",bot="";for(let i=0;i<26;i++){top+=A[i];bot+=A[(i+s)%26]}$("wh").innerHTML=top+"<br><b>"+bot+"</b>"}
 $("rg").oninput=wh;wh();
-$("ok").onclick=()=>{if(norm($("in").value)===norm(CFG.plain)){say("正確","ok");setTimeout(win,500)}else say("不對。轉動轉盤，看看密文字母對到哪些原文字母。","bad")};
+$("ok").onclick=()=>{if(DEAD)return;if(norm($("in").value)===norm(CFG.plain)){say("正確","ok");setTimeout(win,500)}else miss("不對。轉動轉盤，看看密文字母對到哪些原文字母。")};
 </script></body></html>
