@@ -40,7 +40,7 @@ button.g{background:linear-gradient(#2c241d,#201a15);border-color:#4a3b2b}
 <div id="win"><div class="box"><h2>🎉 成功</h2><div id="revealTxt"></div><p><button onclick="location.reload()">再玩一次</button></p></div></div>
 <script>
 // ===== 老師改這裡 CONFIG =====
-const CFG={"title": "座標戰艦：你 vs 小艦", "intro": "6×6 的海面，雙方各有三艘船（長度 3、2、2）。輪流喊出一個座標（例如 C4）發射，先把對方船全部擊沉的人贏。", "n": 6, "ships": [3, 2, 2], "reveal": "你贏了！\\n座標戰艦的重點是用資訊縮小範圍：打中之後，下一發要往上下左右找，而不是亂打。", "hint": "命中之後，船只可能在上下或左右相鄰的格子。沒有命中的地方，隔一格再打。"};
+const CFG={"title": "座標戰艦：你 vs 小艦", "intro": "6×6 的海面，雙方各有三艘船（長度 3、2、2）。輪流喊出一個座標（例如 C4）發射，先把對方船全部擊沉的人贏。\n每次開火前要先答對一題，答錯這一回合就不能開火。", "n": 6, "ships": [3, 2, 2], "quiz": true, "questions": [{"q": "水在一大氣壓下的沸點是幾度 C？", "opts": ["100", "90", "0"], "a": 0}, {"q": "地球繞太陽一圈大約要多久？", "opts": ["一年", "一個月", "一天"], "a": 0}, {"q": "下列哪一種是哺乳類？", "opts": ["鯨魚", "鯊魚", "企鵝"], "a": 0}, {"q": "植物行光合作用需要吸收哪一種氣體？", "opts": ["二氧化碳", "氧氣", "氮氣"], "a": 0}, {"q": "3 × 7 等於多少？", "opts": ["21", "24", "17"], "a": 0}, {"q": "月亮為什麼看起來會發光？", "opts": ["反射太陽光", "自己會發光", "反射地球的燈光"], "a": 0}, {"q": "臺灣最高的山是哪一座？", "opts": ["玉山", "雪山", "合歡山"], "a": 0}, {"q": "直角是幾度？", "opts": ["90 度", "180 度", "45 度"], "a": 0}], "reveal": "你贏了！\\n座標戰艦的重點是用資訊縮小範圍：打中之後，下一發要往上下左右找，而不是亂打。", "hint": "命中之後，船只可能在上下或左右相鄰的格子。沒有命中的地方，隔一格再打。"};
 // ===== 以下是機關程式 =====
 const $=id=>document.getElementById(id);const rnd=n=>Math.floor(Math.random()*n);
 const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]]}return a};
@@ -61,11 +61,11 @@ $("ttl").textContent=CFG.title;$("intro").textContent=CFG.intro;$("ico").textCon
 $("mute").textContent=FX.muted()?"🔇":"🔊";$("mute").onclick=()=>{$("mute").textContent=FX.toggle()?"🔇":"🔊"};
 document.addEventListener("pointerdown",e=>{if(e.target.closest&&e.target.closest("button,.sw>div,.ch>div,.sn,.gr.r>div,.t,#pad")&&!e.target.closest("#mute"))FX.tick()},true);
 $("hintBtn").onclick=()=>{$("hintTxt").textContent=CFG.hint||"（沒有提示）"};$("again").onclick=()=>location.reload();
-$("stage").innerHTML='<div class="two"><div><div class="tip">敵方海域（點一格發射）</div><div class="sb" id="e"></div></div><div><div class="tip">我方海域</div><div class="sb" id="m"></div></div></div><div class="tip" id="lg"></div><div class="msg" id="msg"></div>';
+$("stage").innerHTML='<div class="two"><div><div class="tip">敵方海域（點一格發射）</div><div class="sb" id="e"></div></div><div><div class="tip">我方海域</div><div class="sb" id="m"></div></div></div><div class="card" id="qz" style="display:none"></div><div class="tip" id="lg"></div><div class="msg" id="msg"></div>';
 const n=CFG.n,L="ABCDEFGHIJ";
 function place(){const g=Array(n*n).fill(-1);CFG.ships.forEach((len,id)=>{for(;;){const h=Math.random()<.5,r=rnd(n),c=rnd(n);const cs=[];let ok=true;for(let k=0;k<len;k++){const rr=h?r:r+k,cc=h?c+k:c;if(rr>=n||cc>=n||g[rr*n+cc]>=0){ok=false;break}cs.push(rr*n+cc)}if(ok){cs.forEach(x=>g[x]=id);break}}});return g}
 let eg,mg,es,ms,over,busy,tg;
-function start(){eg=place();mg=place();es=Array(n*n).fill(0);ms=Array(n*n).fill(0);over=false;busy=false;tg=[];draw();say("輪到你發射。")}
+function start(){eg=place();mg=place();es=Array(n*n).fill(0);ms=Array(n*n).fill(0);over=false;busy=false;tg=[];if($("qz")){$("qz").style.display="none";$("qz").innerHTML=""}draw();say(CFG.quiz?"輪到你。點一格瞄準，答對題目才會開火。":"輪到你發射。")}
 const nm=i=>L[i%n]+(Math.floor(i/n)+1);
 function cell(st,sh,show){return st===2?"h":st===1?"x":(show&&sh>=0?"s":"")}
 function drawB(el,g,s,show,click){el.style.gridTemplateColumns="repeat("+(n+1)+",1fr)";el.innerHTML="";const t=document.createElement("div");t.className="lb";el.appendChild(t);for(let c=0;c<n;c++){const d=document.createElement("div");d.className="lb";d.textContent=L[c];el.appendChild(d)}
@@ -73,7 +73,9 @@ function drawB(el,g,s,show,click){el.style.gridTemplateColumns="repeat("+(n+1)+"
 function draw(){drawB($("e"),eg,es,false,fire);drawB($("m"),mg,ms,true,null)}
 function sunk(g,s,id){return g.every((v,i)=>v!==id||s[i]===2)}
 function all(g,s){return g.every((v,i)=>v<0||s[i]===2)}
-function fire(i){if(over||busy||es[i])return;busy=true;const hit=eg[i]>=0;es[i]=hit?2:1;let t="你發射 "+nm(i)+"："+(hit?"命中！":"落空。");if(hit&&sunk(eg,es,eg[i]))t+="擊沉一艘！";$("lg").textContent=t;draw();hit?FX.ok():FX.tick();if(all(eg,es))return end(true);setTimeout(aiTurn,800)}
+document.head.insertAdjacentHTML("beforeend","<style>.opt{display:block;width:100%;text-align:left;margin:6px 0}.opt:disabled{opacity:.4}.lk{opacity:.9;border-left:3px solid var(--line);padding-left:8px;margin:8px 0}</style>");let QS=[],qk=0;function ask(i){if(!QS.length||qk>=QS.length){QS=shuffle(CFG.questions||[]);qk=0}const Q=QS[qk++];busy=true;const z=$("qz");z.style.display="block";z.innerHTML="<b>開火前先答題（瞄準 "+nm(i)+"）：</b><p>"+Q.q+"</p>";
+ shuffle(Q.opts.map((_,k)=>k)).forEach(k=>{const b=document.createElement("button");b.className="opt";b.textContent=Q.opts[k];b.onclick=()=>{z.style.display="none";z.innerHTML="";if(k===Q.a){busy=false;fire(i,true)}else{FX.bad();BAD++;$("lg").textContent="答錯了，這一回合不能開火。正確答案是「"+Q.opts[Q.a]+"」。";setTimeout(aiTurn,900)}};z.appendChild(b)})}
+function fire(i,ok){if(over||busy||es[i])return;if(CFG.quiz&&CFG.questions&&CFG.questions.length&&!ok)return ask(i);busy=true;const hit=eg[i]>=0;es[i]=hit?2:1;let t="你發射 "+nm(i)+"："+(hit?"命中！":"落空。");if(hit&&sunk(eg,es,eg[i]))t+="擊沉一艘！";$("lg").textContent=t;draw();hit?FX.ok():FX.tick();if(all(eg,es))return end(true);setTimeout(aiTurn,800)}
 function aiTurn(){let i;const un=ms.map((v,k)=>v===0?k:-1).filter(k=>k>=0);tg=tg.filter(k=>ms[k]===0);
  if(tg.length)i=tg.shift();else{const pr=un.filter(k=>((k%n)+Math.floor(k/n))%2===0);const p=pr.length?pr:un;i=p[rnd(p.length)]}
  const hit=mg[i]>=0;ms[i]=hit?2:1;if(hit){const r=Math.floor(i/n),c=i%n;[[1,0],[-1,0],[0,1],[0,-1]].forEach(([a,b])=>{const rr=r+a,cc=c+b;if(rr>=0&&cc>=0&&rr<n&&cc<n&&ms[rr*n+cc]===0&&!tg.includes(rr*n+cc))tg.push(rr*n+cc)})}

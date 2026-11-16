@@ -137,7 +137,8 @@ build:function(host,D,G){
 //==GAME==
 {no:'114',slug:'letterdigits',title:'字母藏數字',brand:'LETTER KEY',type:'解謎',
 intro:'房間三個地方散落著字母卡，每張卡的角落都有一個小數字。\n先解開謎題得到關鍵字，再依關鍵字的字母順序，把對應的數字排成密碼。',
-data:{riddle:'地球上絕大部分能量的來源是什麼？（英文，三個字母）',keyword:'SUN',places:['書架','桌面','牆上'],
+data:{riddle:'地球上絕大部分能量的來源是什麼？（英文，三個字母）',keyword:'SUN',places:['書架','桌面','牆上'],tries:3,
+ decoy:{place:2,word:'STAR',text:'牆上有人用鉛筆寫：「答案一定是 STAR，太陽就是一顆恆星啊！」'},
  letters:{S:4,U:7,N:2,A:9,M:1,O:5,R:3,E:8,T:6}},
 build:function(host,D,G){
   const kw=String(D.keyword).toUpperCase(); const answer=kw.split('').map(ch=>{ if(D.letters[ch]==null)throw new Error('keyword letter missing'); return D.letters[ch]; }).join(''); G.t={answer:answer};
@@ -146,11 +147,17 @@ build:function(host,D,G){
   const keys=G.shuffle(Object.keys(D.letters)), by=D.places.map(()=>[]); keys.forEach((k,i)=>by[i%D.places.length].push(k));
   const tb=D.places.map((p,i)=>{ const b=G.el('button','opt',p,tabs); b.dataset.place=i; b.addEventListener('click',()=>show(i)); return b; });
   function show(i){ tb.forEach((b,j)=>b.classList.toggle('on',j===i)); room.innerHTML=''; G.tick();
+    if(D.decoy&&D.decoy.place===i){ const dn=G.el('div',null,D.decoy.text,room); dn.style.cssText='grid-column:1/-1;font-size:13px;line-height:1.5;color:#e7dcc6;font-style:italic;border:1px dashed #8a6d3f;border-radius:8px;padding:6px 8px'; }
     by[i].forEach(ch=>{ const c=G.el('div','note',null,room); c.style.cssText+=';position:relative;min-width:0;height:84px;padding:0;display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:32px;font-weight:700;transform:rotate('+(G.rnd(7)-3)+'deg)'; c.textContent=ch;
       const d=G.el('span',null,String(D.letters[ch]),c); d.style.cssText='position:absolute;right:6px;top:3px;font-size:13px;color:#8a6d3f'; }); }
   show(0);
   const row=G.el('div','row',null,host), inp=G.el('input','inp',null,row); inp.inputMode='numeric'; inp.placeholder='密碼'; const go=G.el('button','go','確認',row);
-  go.addEventListener('click',()=>{ if(inp.value.trim()===answer)G.solve('密碼正確！關鍵字是 '+kw+'。'); else{ G.buzz(); G.shake(inp); G.hint('密碼不對。關鍵字有 '+kw.length+' 個字母，密碼就有 '+kw.length+' 位。'); } });
+  let wrong=0, dead=false; const dw=D.decoy?String(D.decoy.word||'').toUpperCase():'', dAns=dw?dw.split('').map(ch=>D.letters[ch]).join(''):null;
+  go.addEventListener('click',()=>{ if(dead||G.solved())return; const v=inp.value.trim(); if(v===answer){ G.solve('密碼正確！關鍵字是 '+kw+'。'); return; }
+    wrong++; G.buzz(); G.shake(inp); const left=D.tries?D.tries-wrong:0;
+    const why=(dAns&&v===dAns)?'這是 '+dw+' 的數字。牆上那句話有道理嗎？再讀一次題目要幾個字母。':'密碼不對。關鍵字有 '+kw.length+' 個字母，密碼就有 '+kw.length+' 位。';
+    if(D.tries&&left<=0){ dead=true; G.hint(why+' 次數用完，重新來過。'); G.later(()=>G.restart(),2600); return; }
+    G.hint(why+(D.tries?' 還能試 '+left+' 次。':'')); });
 }}
 //==GAME==
 {no:'115',slug:'makesum',title:'湊數拖放',brand:'EXACT CHANGE',type:'解謎',

@@ -156,9 +156,9 @@
 "use strict";
 var GAME={no:'103',slug:'moveaside',title:'移開物件找線索',brand:'MOVE ASIDE',type:'探索',
 intro:'桌上每樣東西底下都壓著一個數字。把東西拖開就看得到。',
-data:{prompt:'哪些東西會導電？\n把「會導電」的東西底下的數字，依位置編號由小到大排起來，就是密碼。',
- items:[{label:'銅鑰匙',icon:'🔑',digit:3,key:true},{label:'木尺',icon:'📏',digit:8,key:false},{label:'鐵釘',icon:'🔩',digit:1,key:true},
-        {label:'橡皮擦',icon:'🧽',digit:5,key:false},{label:'鋁罐',icon:'🥫',digit:6,key:true},{label:'玻璃杯',icon:'🥛',digit:9,key:false}]},
+data:{tries:3,prompt:'哪些東西會導電？\n把「會導電」的東西底下的數字，依位置編號由小到大排起來，就是密碼。\n有些東西看起來很像，別被外表騙了。',
+ items:[{label:'銅鑰匙',icon:'🔑',digit:3,key:true},{label:'金色塑膠尺',icon:'📏',digit:8,key:false,note:'表面亮亮的，很像金屬'},{label:'鐵釘',icon:'🔩',digit:1,key:true},
+        {label:'橡皮擦',icon:'🧽',digit:5,key:false},{label:'鋁罐',icon:'🥫',digit:6,key:true},{label:'鉛筆芯',icon:'✏️',digit:9,key:true,note:'黑黑的，不像金屬'}]},
 build:function(host,D,G){
   const answer=D.items.filter(x=>x.key).map(x=>x.digit).join(''); G.t={answer:answer};
   G.el('div','q',D.prompt,G.el('div','panel',null,host));
@@ -167,13 +167,18 @@ build:function(host,D,G){
     const d=G.el('div',null,String(it.digit),spot); d.style.cssText='font-family:var(--display);font-size:34px;font-weight:700;color:var(--amber)';
     const tag=G.el('div',null,String(i+1),spot); tag.style.cssText='position:absolute;left:6px;top:4px;font-size:11px;color:var(--txt-dim)';
     const card=G.el('div',null,null,spot); card.style.cssText='position:absolute;inset:0;border-radius:10px;background:linear-gradient(180deg,#d9c9a8,#bfa97f);color:#2b2115;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:13px;font-weight:600;box-shadow:0 6px 12px -4px rgba(0,0,0,.6);cursor:grab;z-index:2';
-    card.dataset.item=i; const ic=G.el('div',null,it.icon,card); ic.style.fontSize='30px'; G.el('div',null,it.label,card);
+    card.dataset.item=i; const ic=G.el('div',null,it.icon,card); ic.style.fontSize='30px'; G.el('div',null,it.label,card); if(it.note){ const nt=G.el('div',null,it.note,card); nt.style.cssText='font-size:10px;font-weight:400;opacity:.75;padding:0 4px;text-align:center;line-height:1.2'; }
     let ox=0,oy=0,cx=0,cy=0;
     G.drag(card,{start:()=>{card.style.zIndex=5;},move:(dx,dy)=>{cx=ox+dx;cy=oy+dy;card.style.transform='translate('+cx+'px,'+cy+'px)';},end:()=>{ox=cx;oy=cy;card.style.zIndex=3;G.tick();}});
   });
   const row=G.el('div','row',null,host); const inp=G.el('input','inp',null,row); inp.inputMode='numeric'; inp.placeholder='密碼'; inp.maxLength=8;
-  const go=G.el('button','go','確認',row); let wrong=0;
-  go.addEventListener('click',()=>{ if(inp.value.trim()===answer){ G.solve('密碼正確！'); } else { wrong++; G.buzz(); G.shake(inp); G.hint('密碼不對（第 '+wrong+' 次）。想想哪些材質會導電。'); } });
+  const go=G.el('button','go','確認',row); let wrong=0, dead=false;
+  const decoys=D.items.filter(x=>x.note), noteAns=(want)=>D.items.filter(x=>x.note?!x.key:x.key).map(x=>x.digit).join('');
+  go.addEventListener('click',()=>{ if(dead||G.solved())return; if(inp.value.trim()===answer){ G.solve('密碼正確！\n外表像金屬的不一定導電，石墨看起來不像金屬卻會導電。'); return; }
+    wrong++; G.buzz(); G.shake(inp); const left=D.tries?D.tries-wrong:0;
+    const why=(decoys.length&&inp.value.trim()===noteAns())?'你是看外表判斷的嗎？「看起來像不像金屬」不等於「會不會導電」。':'想想每一樣東西是什麼材質做的。';
+    if(D.tries&&left<=0){ dead=true; G.hint('密碼不對。'+why+'次數用完，重新來過。'); G.later(()=>G.restart(),2600); return; }
+    G.hint('密碼不對。'+why+(D.tries?'還能試 '+left+' 次。':'')); });
 }};
 var $=function(id){return document.getElementById(id);};
 var KEY="escape.ex"+GAME.no+".v1", mem=null;
