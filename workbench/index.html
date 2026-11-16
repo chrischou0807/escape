@@ -572,29 +572,35 @@ $("rsBtn").onclick=function(){if(confirm("確定清空所有欄位？建議先�
 var FORMS=[
 {play:"探索",n:"場景調查",d:"點擊房間裡的物件取得線索，包含看不見的隱藏熱點。"},
 {play:"探索",n:"容器翻找",d:"開抽屜、櫃子、盒子，一層一層往裡面找。"},
-{play:"探索",n:"圖像細節",d:"放大檢查圖片或文件細節，或切換圖片的正反面、前後狀態。"},
+{play:"探索",n:"圖像細節",d:"放大檢查圖片或文件細節，切換前後狀態，或換一種看法（倒轉、退遠、合起）才看得出來。"},
 {play:"探索",n:"差異比對",d:"比較兩張圖找出不同。"},
 {play:"探索",n:"範圍與條件搜尋",d:"在限定範圍或符合某條件的東西裡找出目標。"},
 {play:"探索",n:"記憶辨認",d:"翻牌、記住位置與內容。"},
 {play:"解謎",n:"密碼鎖",d:"數字、字母、圖形、方向、轉盤等『輸入答案』的鎖。"},
-{play:"解謎",n:"密碼解碼",d:"摩斯、凱撒、對照表、座標、二進位等『要先翻譯』的密碼。"},
+{play:"解謎",n:"密碼解碼",d:"摩斯、凱撒、對照表、座標、二進位、遮罩取字等『要先翻譯』的密碼。"},
 {play:"解謎",n:"文字謎題",d:"燈謎、字謎、語文類的謎。"},
-{play:"解謎",n:"邏輯推理",d:"依線索排除、交叉比對，推出唯一答案（數獨、色彩序列、路線推理）。"},
+{play:"解謎",n:"邏輯推理",d:"依線索排除、交叉比對，推出唯一答案（數獨、色彩序列、路線推理、只答是否的提問、分油問題）。"},
 {play:"解謎",n:"配對連線",d:"把兩邊的資訊正確連起來，或把物品放到對應位置。"},
 {play:"解謎",n:"道具與組合",d:"收集道具、組合新道具、用在正確的地方。"},
 {play:"解謎",n:"排序與時間軸",d:"依時間、流程、順序排列選項。"},
 {play:"操作",n:"拼圖空間",d:"拼圖、滑塊、旋轉、迷宮路徑。"},
 {play:"操作",n:"影像圖層",d:"透明片疊合、顯影、刮刮、日夜切換、鏡面文字。"},
 {play:"操作",n:"機械互動",d:"電路、天平、齒輪、管線、雷射反射等有物理規則的機關。"},
-{play:"操作",n:"儀器與技能",d:"滴定、稀釋、讀刻度、按壓節奏等『動手做對才過』的操作。"},
+{play:"操作",n:"儀器與技能",d:"滴定、稀釋、讀刻度、比例尺量測、按壓節奏等『動手做對才過』的操作。"},
 {play:"操作",n:"感官記憶",d:"聽音排序、節奏模仿、多階段記憶。"},
 {play:"操作",n:"口說表達",d:"用語音說出答案，由語音辨識判定。"},
+{play:"操作",n:"圖像細節",d:"用放大鏡等工具檢查圖片或文件的細節。"},
 {play:"選擇",n:"劇情分支",d:"依選擇走向不同的故事線與結局。"},
 {play:"選擇",n:"策略取捨",d:"在資源有限下做決定，看結果的變化。"},
 {play:"選擇",n:"兩難抉擇",d:"沒有對錯、要說明理由的取捨。"},
+{play:"選擇",n:"權衡矩陣",d:"調整各項標準的權重，看方案排名怎麼改變。"},
+{play:"選擇",n:"情境取捨",d:"在情境中選擇處理方式，看多個指標此消彼長。"},
+{play:"選擇",n:"表態與換位",d:"表達立場、扮演角色，再看別人的位置與想法。"},
 {play:"競爭",n:"計時挑戰",d:"限時完成，與時間賽跑。"},
 {play:"競爭",n:"對戰",d:"與電腦或同學較量。"},
 {play:"競爭",n:"完成度排行",d:"以完成度或成績和自己、和他人比較。"},
+{play:"競爭",n:"記憶辨認",d:"與對手輪流翻牌，比誰記得多。"},
+{play:"競爭",n:"策略取捨",d:"輪流出手的對局，靠推論與找規律取勝。"},
 {play:"創造",n:"建造",d:"在限制條件下組出結構。"},
 {play:"創造",n:"繪畫表達",d:"用畫面表達概念，讓別人猜。"},
 {play:"創造",n:"出題設計",d:"自己設計機關，給別人解。"}];
@@ -608,7 +614,7 @@ document.addEventListener("click",function(e){var a=e.target.closest&&e.target.c
 function renderEx(){var plays=["全部","操作","探索","解謎","競爭","選擇","創造"];
  $("exChips").innerHTML="";plays.forEach(function(p){var b=document.createElement("button");b.textContent=p+" "+(p==="全部"?EX.length:EX.filter(function(x){return x.play.indexOf(p)>=0}).length);if(p===exFilter)b.className="on";b.onclick=function(){exFilter=p;formFilter="";renderEx()};$("exChips").appendChild(b)});
  $("exForms").innerHTML="";if(exFilter!=="全部"){var fs=FORMS.filter(function(f){return f.play===exFilter});var ab=document.createElement("button");ab.textContent="全部形式 "+EX.filter(function(x){return x.play.indexOf(exFilter)>=0}).length;if(!formFilter)ab.className="on";ab.onclick=function(){formFilter="";renderEx()};$("exForms").appendChild(ab);
-  fs.forEach(function(f){var n=EX.filter(function(x){return x.form===f.n}).length;var b2=document.createElement("button");b2.textContent=f.n+" "+(n?n:"（尚無）");b2.title=f.d;if(f.n===formFilter)b2.className="on";if(!n)b2.style.opacity=".55";b2.onclick=function(){formFilter=f.n;renderEx()};$("exForms").appendChild(b2)})}
+  fs.forEach(function(f){var n=EX.filter(function(x){return x.form===f.n&&x.play.indexOf(exFilter)>=0}).length;var b2=document.createElement("button");b2.textContent=f.n+" "+(n?n:"（尚無）");b2.title=f.d;if(f.n===formFilter)b2.className="on";if(!n)b2.style.opacity=".55";b2.onclick=function(){formFilter=f.n;renderEx()};$("exForms").appendChild(b2)})}
  var h="";EX.forEach(function(x){if(exFilter!=="全部"&&x.play.indexOf(exFilter)<0)return;if(formFilter&&x.form!==formFilter)return;
   var q=x.ok===1?"":"";
   h+='<div class="card ex" id="ex_'+x.id+'"><h3>'+x.no+' '+esc(x.name)+'<span class="tag">'+esc(x.play)+'</span><span class="tag">'+esc(x.form||"")+'</span><span class="tag">門檻：'+esc(x.gate)+'</span>'+(x.loc?'<span class="tag">新增</span>':(x.ok?'':'<span class="tag">依說明整理</span>'))+'</h3>'
