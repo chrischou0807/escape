@@ -155,23 +155,29 @@
 (function(){
 "use strict";
 var GAME={no:'109',slug:'connectdots',title:'依序連點',brand:'CONNECT IN ORDER',type:'解謎',
-intro:'依照「發生的先後順序」，從最早的開始，一個一個點下去。\n點錯會斷線、從頭再來。全部連完會出現一個圖形。',
-data:{points:[{label:'造紙術',note:'105 年'},{label:'活字印刷',note:'約 1045 年'},{label:'望遠鏡',note:'1608 年'},{label:'瓦特蒸汽機',note:'1769 年'},{label:'電話',note:'1876 年'},
- {label:'飛機',note:'1903 年'},{label:'青黴素',note:'1928 年'},{label:'人造衛星',note:'1957 年'},{label:'全球資訊網',note:'1989 年'},{label:'智慧型手機',note:'2007 年'}]},
+intro:'依照「發生的先後順序」，從最早的開始，一個一個點下去。\n點錯會斷線、從頭再來。全部連完，線條畫出來的就是下一關的密碼。',
+data:{code:'25',points:[{label:'造紙術',note:'105 年'},{label:'活字印刷',note:'約 1045 年'},{label:'望遠鏡',note:'1608 年'},{label:'瓦特蒸汽機',note:'1769 年'},{label:'電話',note:'1876 年'},{label:'汽車',note:'1886 年'},
+ {label:'飛機',note:'1903 年'},{label:'青黴素',note:'1928 年'},{label:'電晶體',note:'1947 年'},{label:'人造衛星',note:'1957 年'},{label:'全球資訊網',note:'1989 年'},{label:'智慧型手機',note:'2007 年'}]},
 build:function(host,D,G){
   const n=D.points.length, gcd=(a,b)=>b?gcd(b,a%b):a; let s=Math.max(1,Math.floor(n/3)); while(s<n&&gcd(s,n)!==1)s++; if(s>=n)s=1;
-  const pos=D.points.map((p,k)=>{ const a=((k*s)%n)*2*Math.PI/n; return {x:50+37*Math.sin(a),y:50-37*Math.cos(a)}; });
+  let pos=D.points.map((p,k)=>{ const a=((k*s)%n)*2*Math.PI/n; return {x:50+37*Math.sin(a),y:50-37*Math.cos(a)}; });
+  /* 密碼模式：code 的每個字元是一條經過 2×3 節點的筆畫；節點總數等於點數時啟用，否則維持星形 */
+  const GL={'0':['TL','TR','MR','BR','BL','ML'],'1':['TR','MR','BR'],'2':['TL','TR','MR','ML','BL','BR'],'5':['TR','TL','ML','MR','BR','BL'],'7':['TL','TR','BL'],'L':['TL','ML','BL','BR'],'U':['TL','ML','BL','BR','MR','TR'],'Z':['TL','TR','BL','BR'],'N':['BL','TL','BR','TR']};
+  const raw=String(D.code||'').toUpperCase().split(''), code=raw.filter(c=>GL[c]), glyph=code.length>0&&code.length===raw.length&&code.reduce((a,c)=>a+GL[c].length,0)===n;
+  const prev=D.points.map((p,k)=>k-1), close=D.points.map(()=>-1); close[n-1]=0;
+  if(glyph){ pos=[]; close[n-1]=-1; const m=code.length, half=Math.min(15,30/m); code.forEach((c,g)=>{ const first=pos.length, cx=(g+0.5)*100/m;
+    GL[c].forEach((nd,j)=>{ prev[pos.length]=j?pos.length-1:-1; pos.push({x:cx+(nd.charAt(1)==='L'?-half:half),y:nd.charAt(0)==='T'?15:(nd.charAt(0)==='M'?50:85)}); }); if(c==='0')close[pos.length-1]=first; }); }
   const stat=G.el('div','stat','',host);
   const box=G.el('div',null,null,host); box.style.cssText='position:relative;width:100%;aspect-ratio:1';
   const NS='http://www.w3.org/2000/svg', svg=document.createElementNS(NS,'svg'); svg.setAttribute('viewBox','0 0 100 100'); svg.style.cssText='position:absolute;inset:0;width:100%;height:100%'; box.appendChild(svg);
   let k=0, miss=0; const btns=[];
   D.points.forEach((p,i)=>{ const b=G.el('button','opt',p.label,box); b.dataset.k=i; b.style.cssText='position:absolute;transform:translate(-50%,-50%);left:'+pos[i].x+'%;top:'+pos[i].y+'%;padding:7px 8px;font-size:12px;min-width:58px;z-index:2;white-space:nowrap';
     b.addEventListener('click',()=>tap(i)); btns.push(b); });
-  function line(a,b){ const l=document.createElementNS(NS,'line'); l.setAttribute('x1',pos[a].x); l.setAttribute('y1',pos[a].y); l.setAttribute('x2',pos[b].x); l.setAttribute('y2',pos[b].y); l.setAttribute('stroke','#ffce78'); l.setAttribute('stroke-width','0.9'); svg.appendChild(l); }
+  function line(a,b){ const l=document.createElementNS(NS,'line'); l.setAttribute('x1',pos[a].x); l.setAttribute('y1',pos[a].y); l.setAttribute('x2',pos[b].x); l.setAttribute('y2',pos[b].y); l.setAttribute('stroke','#ffce78'); l.setAttribute('stroke-width',glyph?'1.8':'0.9'); l.setAttribute('stroke-linecap','round'); svg.appendChild(l); }
   function draw(){ stat.textContent='已連 '+k+' / '+n+' · 斷線 '+miss+' 次'; }
   function tap(i){ if(G.solved()||btns[i].classList.contains('good'))return;
-    if(i===k){ btns[i].classList.add('good'); if(k>0)line(k-1,k); k++; G.tone(400+k*45,0.1,'sine',0.05); draw();
-      if(k===n){ line(n-1,0); btns.forEach((b,j)=>{b.textContent=D.points[j].label+' '+D.points[j].note; b.style.fontSize='10px';}); G.solve('順序完全正確，星形完成！'); } }
+    if(i===k){ btns[i].classList.add('good'); if(prev[k]>=0)line(prev[k],k); if(close[k]>=0)line(k,close[k]); k++; G.tone(400+k*45,0.1,'sine',0.05); draw();
+      if(k===n){ if(!glyph)btns.forEach((b,j)=>{b.textContent=D.points[j].label+' '+D.points[j].note; b.style.fontSize='10px';}); else G.hint(D.points.map(q=>q.label+' '+q.note).join('、')); G.solve(glyph?('順序完全正確！\n線條畫出來的是：'+code.join('')):'順序完全正確，星形完成！'); } }
     else { miss++; G.buzz(); G.shake(box); G.hint('順序不對，線斷了，從最早的那一個重新開始。'); k=0; svg.innerHTML=''; btns.forEach(b=>b.classList.remove('good')); draw(); } }
   G.t={n:n}; draw();
 }};

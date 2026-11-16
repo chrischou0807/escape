@@ -32,7 +32,7 @@
 | 10 | 電話撥號 | `phone/` | 撥對號碼自動播放語音 |
 | 11 | 密室收音機 | `radio/` | 轉旋鈕調到正確頻率聽見廣播 |
 | 12 | 咒語 | `spell/` | 對神像喊出通關口號（語音辨識） |
-| 13 | 開關面板 | `workbench/ex/switches.html` | 按定義打開對的開關 |
+| 13 | 開關面板 | `workbench/ex/switches.html` | 按定義打開對的開關，只能確認 3 次 |
 | 14 | 放大鏡 | `workbench/ex/zoom.html` | 拖動放大鏡找出藏得很小的字 |
 | 15 | 滴定 | `workbench/ex/titration.html` | 滴到持續淡粉紅色就停並讀數 |
 | 16 | 接電路 | `workbench/ex/circuit.html` | 拉線連成完整迴路讓燈泡亮 |
@@ -41,7 +41,7 @@
 | 19 | 條件挑戰 | `workbench/ex/cond.html` | 找出所有符合條件的物品 |
 | 20 | 燈謎 | `workbench/ex/riddle.html` | 猜對燈謎湊成通關詞 |
 | 21 | 凱撒密碼 | `workbench/ex/caesar.html` | 用轉盤找出位移量解出原文 |
-| 22 | 對照表解碼 | `workbench/ex/table.html` | 查符號對照表翻譯密文 |
+| 22 | 對照表解碼 | `workbench/ex/table.html` | 從翻譯好的範例推出對照關係，再翻譯密文 |
 | 23 | 策略選擇 | `workbench/ex/strategy.html` | 每回合取捨，資源決定結局 |
 | 24 | 劇情分支 | `workbench/ex/branch.html` | 依選擇走不同故事線 |
 | 25 | 計時賽 | `workbench/ex/timer.html` | 限時答題，答錯罰時 |
@@ -63,7 +63,7 @@ No.31–100 請到工作台的範例庫查看。第十批新增的 No.101–139�
 | 106 | 快速找對應圖 | `workbench/ex/lynx.html` | 依名稱在板子上找到對應的符號，計時，點錯加秒。 |
 | 107 | 探測器 | `workbench/ex/detector.html` | 拖動探測器看訊號強弱，在正確位置挖出寶石，挖的次數有限。 |
 | 108 | 同心圓環拼圖 | `workbench/ex/rings.html` | 內側三圈被轉亂，點圓環一格一格轉，讓每條直線都是一句成語。 |
-| 109 | 依序連點 | `workbench/ex/connectdots.html` | 依發生先後一個一個點，點錯斷線重來，連完出現星形。 |
+| 109 | 依序連點 | `workbench/ex/connectdots.html` | 依發生先後一個一個點，點錯斷線重來；連完的線條畫出數字，就是下一關的密碼。 |
 | 110 | 條件塗格顯圖 | `workbench/ex/shadegrid.html` | 把符合條件的格子全塗黑，塗對會浮現圖案。 |
 | 111 | 答題上色像素畫 | `workbench/ex/pixelpaint.html` | 每格一道算式，把答案相同的格子塗上同一個顏色，拼出圖案。 |
 | 112 | 踩地雷 | `workbench/ex/minesweeper.html` | 數字代表周圍八格的地雷數，把安全的格子全部掀開。 |
@@ -124,6 +124,7 @@ No.31–100 請到工作台的範例庫查看。第十批新增的 No.101–139�
 - **揭曉卡**：過關後顯示線索文字／圖片（圖片可點擊放大）。
 - **音效**：Web Audio，可在後台關閉。
 - **記憶**：設定存在該裝置的瀏覽器（localStorage）。
+- **可嘗試次數**：No.05、13、21、22、58、66、67、75、111 有次數限制，用完會重來，避免靠亂試過關。05 在後台設定，111 改 JSON 裡的 `checks`，其餘改檔案開頭 `CFG` 的 `tries`（75 是 `moves`）。
 - **產生分享連結**：後台可把「目前設定」編碼成一條獨立網址（`?c=...`）。同一個機關可重複用於不同遊戲——各自產生一條連結即可，不需後端。
   - 注意：分享連結內含設定（含答案），適合課堂使用；要隱藏答案才需要後端。
   - 上傳的圖片會讓網址過長，分享時請改用「圖片網址」。
