@@ -37,7 +37,7 @@ button.g{background:linear-gradient(#2c241d,#201a15);border-color:#4a3b2b}
 <div id="win"><div class="box"><h2>🎉 成功</h2><div id="revealTxt"></div><p><button onclick="location.reload()">再玩一次</button></p></div></div>
 <script>
 // ===== 老師改這裡 CONFIG =====
-const CFG={"title": "拖曳配對", "intro": "把左邊的名詞，拖到右邊正確的說明上。放對會吸住，放錯會彈回去。", "pairs": [{"a": "粒線體", "b": "細胞的能量工廠，進行有氧呼吸"}, {"a": "葉綠體", "b": "進行光合作用的胞器"}, {"a": "細胞核", "b": "儲存遺傳物質（DNA）"}, {"a": "核糖體", "b": "合成蛋白質的場所"}, {"a": "細胞膜", "b": "控制物質進出細胞"}], "reveal": "全部配對成功！\\n第六個密碼是 8。", "hint": "先從你最確定的一組開始。"};
+const CFG={"title": "拖曳配對", "intro": "把左邊的名詞，拖到右邊正確的說明上。放對會吸住；放錯會彈回去，並給你一句想一想的提示。", "pairs": [{"a": "粒線體", "b": "細胞的能量工廠，進行有氧呼吸", "tip": "想想細胞需要能量時，養分是在哪裡被分解的。"}, {"a": "葉綠體", "b": "進行光合作用的胞器", "tip": "只有植物細胞有它，它是綠色的，和陽光有關。"}, {"a": "細胞核", "b": "儲存遺傳物質（DNA）", "tip": "它像細胞的控制中心，裡面放著「指令」。"}, {"a": "核糖體", "b": "合成蛋白質的場所", "tip": "它很小，負責把胺基酸一個個接起來。"}, {"a": "細胞膜", "b": "控制物質進出細胞", "tip": "它包在細胞的最外面，像一道會挑選的門。"}], "reveal": "全部配對成功！\\n第六個密碼是 8。", "hint": "先從你最確定的一組開始。"};
 // ===== 以下是機關程式 =====
 const $=id=>document.getElementById(id);const rnd=n=>Math.floor(Math.random()*n);
 const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]]}return a};
@@ -69,6 +69,6 @@ function bind(d){let st=null;
   d.classList.remove("drag");d.style.left=d.style.top=d.style.width="";
   if(!slot||slot.classList.contains("full"))return;
   if(slot.dataset.i===d.dataset.i){slot.classList.add("full");slot.querySelector(".slot").appendChild(d);d.classList.add("ok");done++;say("配對正確（"+done+" / "+P.length+"）","ok");if(done===P.length)setTimeout(win,500)}
-  else say("這個名詞不是這個說明。","bad")};
+  else{FX.bad();BAD++;const tp=P[+d.dataset.i].tip;say("「"+P[+d.dataset.i].a+"」不是這個說明。"+(tp?"想一想："+tp:""),"bad")}};
  d.addEventListener("pointerup",end);d.addEventListener("pointercancel",e=>{st=null;d.classList.remove("drag");d.style.left=d.style.top=d.style.width=""})}
 </script></body></html>
