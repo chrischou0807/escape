@@ -66,6 +66,7 @@ footer{margin-top:40px;color:var(--dim);font-size:12.5px;border-top:1px solid va
 <section id="exView" style="display:none">
 <h2 style="margin-top:20px">機關範例庫</h2>
 <p class="note">先玩，再看它是怎麼把一個知識變成機關的。每一款都是獨立的單檔 HTML，可以直接用在真實世界的活動。<b>多數現有機關的判定是「知道答案就過」</b>，本身不測能力；下面每一款都標出它適合承載什麼、哪裡要小心、怎麼升級。</p>
+<div class="card" id="exQuick" style="margin:0 0 12px"><div class="row" style="align-items:center;gap:8px;flex-wrap:wrap"><input type="text" id="exQ" placeholder="我想讓玩家……（例如：排順序、找錯、拖曳、聲音、手機）" style="flex:1;min-width:220px"><button class="btn g" id="exPickBtn">先看這 10 款</button></div><div class="note" id="exQN" style="margin:6px 0 0"></div></div>
 <div class="chips" id="exChips"></div><div class="chips" id="exForms" style="margin-top:-4px"></div>
 <div class="card" id="exDef" style="margin:0 0 14px"></div>
 <div id="exList"></div>
@@ -85,9 +86,9 @@ footer{margin-top:40px;color:var(--dim);font-size:12.5px;border-top:1px solid va
 <section class="panel" data-p="1">
 <h2>② 基本資料</h2>
 <div id="baseChip" style="display:none"></div>
-<p class="note">只有三件事必填：知識點、教學定位、玩家要做到什麼。其他都可以留空，AI 會幫你想。</p>
-<label class="f">知識點<span class="req">必填</span></label>
-<p class="hint">這個機關要涉及哪個知識？寫得越具體越好。</p>
+<p class="note">只有三件事必填：知識點／議題、教學定位、玩家得到的改變。其他都可以留空，AI 會幫你想。</p>
+<label class="f">知識點／議題<span class="req">必填</span></label>
+<p class="hint">這個機關要涉及哪個知識或議題？寫得越具體越好。（對應規劃書「議題調查」）</p>
 <input type="text" id="f_topic" placeholder="例如：用酸鹼指示劑判斷溶液的酸鹼性">
 <h3>教學定位<span class="req" style="color:var(--bad);font-size:12px;margin-left:6px">必填</span></h3>
 <div class="opts" id="posOpts"></div>
@@ -95,8 +96,8 @@ footer{margin-top:40px;color:var(--dim);font-size:12.5px;border-top:1px solid va
 <label class="f">先備知識<span class="opt-t">選填</span></label>
 <p class="hint">玩家進來時已經會什麼？不會的由誰補？（教新知：遊戲內要先示範、再引導、再自己做）</p>
 <textarea id="f_prior" placeholder="例如：上過指示劑單元，知道石蕊遇酸變紅。不會的在機關裡有一張示範。"></textarea>
-<label class="f">能力<span class="req">必填</span></label>
-<p class="hint">玩家要「做到什麼」才算會？用動詞寫，不要寫「理解」。</p>
+<label class="f">玩家得到的改變<span class="req">必填</span></label>
+<p class="hint">玩完這一關，玩家要「做到什麼」？用動詞寫，不要寫「理解」。（對應規劃書「玩完遊戲後，玩家得到的改變」）</p>
 <textarea id="f_skill" placeholder="例如：能根據顏色變化，把未知溶液分成酸性與鹼性。"></textarea>
 </section>
 
@@ -122,26 +123,26 @@ footer{margin-top:40px;color:var(--dim);font-size:12.5px;border-top:1px solid va
 <section class="panel" data-p="2">
 <h2 style="margin-top:28px">想自己決定的細節</h2>
 <p class="note">這些都是選填。填得越多，AI 越照你的想法做；留空就由 AI 建議。</p>
-<label class="f">判定<span class="opt-t">選填</span></label>
-<p class="hint">什麼狀態算成功？而且剛好要展現上面寫的能力。不懂的人不能靠猜、抄、繞過就成功。</p>
+<label class="f">謎題內容與解法<span class="opt-t">選填</span></label>
+<p class="hint">玩家要解什麼、怎樣算答對？答對的過程要剛好展現上面寫的改變，不懂的人不能靠猜、抄、繞過就成功。（對應規劃書「關卡謎題內容」「謎題正確答案」「謎題解法詳細說明」）</p>
 <textarea id="f_judge" placeholder="例如：玩家要把三杯未知溶液各滴上指示劑，依顏色把它們放到「酸」或「鹼」的架上，三杯全部放對才算成功。"></textarea>
-<label class="f">回饋<span class="opt-t">選填</span></label>
-<p class="hint">做對、做錯，畫面各怎麼回應？要讓人靠回饋發現規則，不是只有「對／錯」。</p>
+<label class="f">答對時的內文／答錯時的回應<span class="opt-t">選填</span></label>
+<p class="hint">答對時畫面說什麼？答錯時又怎麼回應？要讓人靠回饋發現規則，不是只有「對／錯」。（規劃書只有「答對時的內文」，答錯時請一起寫）</p>
 <textarea id="f_fb" placeholder="例如：滴下後溶液立刻變色，放錯架子時燈號閃紅並說「顏色和這一排不一樣」，可以重放。"></textarea>
-<label class="f">玩家的意外操作<span class="opt-t">選填</span></label>
+<label class="f">玩家的意外操作<span class="opt-t">選填</span></label><p class="hint" style="margin:0 0 2px;color:var(--brass)">規劃書沒有這一欄，是這次新增的重點。</p>
 <p class="hint">玩家不會照你想的玩。你預想他會怎麼亂來？例如重複感應、做到一半離開、全部都試一遍。一行寫一種，用三句話寫：「假設玩家現在……，當玩家做了……，那麼機關應該……」。系統已經內建了 11 類常見情境，這裡寫你特別擔心的。</p>
 <textarea id="f_edge" placeholder="例如：玩家把三杯溶液都放在同一個架子上就按送出，要告訴他哪裡不對，但不能直接說答案。"></textarea>
-<label class="f">輸出訊息<span class="opt-t">選填</span></label>
-<p class="hint">成功後玩家拿到什麼？字母、方向、數字、圖像、下一個線索。</p>
+<label class="f">解開後給玩家的線索<span class="opt-t">選填</span></label>
+<p class="hint">解開後玩家拿到什麼？字母、方向、數字、圖像、下一個線索。（對應規劃書「後續故事」帶出的下一步）</p>
 <textarea id="f_out" placeholder="例如：三杯放對後，架子後面顯示數字 4、7、2。"></textarea>
-<label class="f" id="updownL">上下游<span class="opt-t">選填</span></label>
-<p class="hint">玩家從哪裡得到進入這個機關的理由？成功後的訊息接到哪裡？第一條線寫「接現實活動的哪一步」。</p>
+<label class="f" id="updownL">前言故事與關卡串接<span class="opt-t">選填</span></label>
+<p class="hint">玩家為什麼來到這一關？解開後接到哪裡？（對應規劃書「前言故事」「後續故事」）</p>
 <textarea id="f_updown" placeholder="例如：老師在教室牆上貼了一張實驗桌的照片，答案數字要輸入保險箱。"></textarea>
-<label class="f">風格與氛圍<span class="opt-t">選填</span></label>
+<label class="f">風格與氛圍<span class="opt-t">選填</span></label><p class="hint">（對應規劃書「謎題封面照」與美術設計）</p>
 <textarea id="f_style" placeholder="例如：像實驗室的暗色面板，字體清楚，色彩對比大。"></textarea>
-<details class="card"><summary><b>更多選填欄位</b>（證據、提示、回顧）</summary>
-<label class="f">提示<span class="opt-t">選填</span></label>
-<p class="hint">卡關時怎麼給？分幾層？</p>
+<details class="card"><summary><b>更多選填欄位</b>（提示、證據、回顧）</summary>
+<label class="f">謎題提示內容<span class="opt-t">選填</span></label>
+<p class="hint">卡關時怎麼給？分幾層？（對應規劃書同名欄位，請不要寫「無」）</p>
 <textarea id="f_hint"></textarea>
 <label class="f">證據<span class="opt-t">選填</span></label>
 <p class="hint">看玩家的哪些行為，可以判斷他會？</p>
@@ -161,7 +162,7 @@ footer{margin-top:40px;color:var(--dim);font-size:12.5px;border-top:1px solid va
 <p class="note">複製下面的提示詞，貼到你自己用的 AI。拿到程式後，到下一步貼回來檢查。</p>
 <div class="msg warn" id="genWarn" style="display:none"></div>
 <details class="card"><summary><b>想檢查自己的設計？</b><span class="tag">選用</span></summary>
-<p class="hint" style="margin-top:8px">只有填了判定的人需要。逐題確認；沒把握的，回上一步改判定。</p>
+<p class="hint" style="margin-top:8px">只有填了「謎題內容與解法」的人需要。逐題確認；沒把握的，回上一步改。</p>
 <div id="selfChk"></div>
 <div class="msg" id="selfRes" style="display:none"></div>
 </details>
@@ -464,7 +465,7 @@ function renderTech(){var c=$("techChk");if(c.dataset.done)return;c.dataset.done
  if(!S.tech)S.tech=TECH.map(function(){return true});
  TECH.forEach(function(t,i){var d=document.createElement("div");d.className="chk";var cb=document.createElement("input");cb.type="checkbox";cb.checked=S.tech[i]!==false;cb.id="tc"+i;cb.onchange=function(){S.tech[i]=cb.checked;save()};
  var l=document.createElement("label");l.htmlFor="tc"+i;l.innerHTML=esc(t[0])+"<small>沒寫會：「"+esc(t[1])+"」</small>";d.appendChild(cb);d.appendChild(l);c.appendChild(d)})}
-function missing(){var m=[],f=S.f;if(!f.topic)m.push("知識點");if(!S.pos)m.push("教學定位");if(!f.skill)m.push("玩家要做到什麼（能力）");return m}
+function missing(){var m=[],f=S.f;if(!f.topic)m.push("知識點");if(!S.pos)m.push("教學定位");if(!f.skill)m.push("玩家得到的改變");return m}
 function checkGen(){renderTech();pmUI();$("techCard").style.display=S.line==="1"?"block":"none";var m=missing(),w=$("genWarn");
  if(!S.line){w.style.display="block";w.textContent="還沒選線。請回到第一步。";return}
  var L=LINES.filter(function(x){return x.id===S.line})[0];
@@ -477,19 +478,19 @@ function buildPrompt(){var f=S.f,P=POS.filter(function(x){return x.id===S.pos})[
  p+="這個機關的設計重點是：玩家必須真的做到某個能力才會成功，不懂的人不能靠猜、連點、抄答案過關。請特別注意【判定】。\n\n";
 var BX=EX.filter(function(e){return e.id===S.base})[0];
  if(BX)p+="【參考的既有機關】\n請以「"+BX.name+"」的玩法與結構為基礎（"+BX.what+"）。它原本有的設定項目："+BX.struct+"\n注意：原本的判定只檢查玩家有沒有做到，不保證測到能力；請依下面的拆解卡，把判定改成「玩家必須真的做到那個能力才會成功」。可以保留它的後台設定與分享連結的概念，但答案要集中在 CONFIG。\n\n";
- p+="【知識點】\n"+v(f.topic,"（老師沒填，請你依知識點與能力提出建議）")+"\n\n";
+ p+="【知識點／議題】\n"+v(f.topic,"（老師沒填，請你依知識點與能力提出建議）")+"\n\n";
  p+="【教學定位】\n"+(P?P.name+"：":"")+(P?P.d:"（老師沒填，請你依知識點與能力提出建議）")+"\n";
  if(P&&P.id==="new")p+="因為玩家還不會，機關內要先示範，再引導，再讓玩家自己做；錯誤可重來，回饋要說明哪裡不對。\n";
  if(P&&P.id==="apply")p+="玩家已經學過，機關內不要重複講解知識，直接讓玩家運用。\n";
  p+="\n【先備知識】\n"+v(f.prior,"（老師沒填，請你依知識點與能力提出建議）")+"\n\n";
- p+="【玩家要做到的能力】\n"+v(f.skill,"（老師沒填，請你依知識點與能力提出建議）")+"\n\n";
+ p+="【玩家得到的改變（要做到的能力）】\n"+v(f.skill,"（老師沒填，請你依知識點與能力提出建議）")+"\n\n";
  p+="【玩法】\n主玩法：「"+(PL?PL.name+"」（"+PL.d+"成功的判定是「"+PL.j+"」）":"（老師沒填，請你依知識點與能力提出建議）")+"\n"+(PL2?"輔玩法：「"+PL2.name+"」\n":"")+"能力門檻："+(G?G.name+"，"+G.d:"（老師沒填，請你依知識點與能力提出建議）")+"\n\n";
- p+="【判定：怎樣算成功】\n"+v(f.judge,"（老師沒填，請你依知識點與能力提出建議）")+"\n\n";
- p+="【回饋：做對、做錯畫面怎麼回應】\n"+v(f.fb,"（老師沒填，請你依知識點與能力提出建議）")+"\n\n";
- p+="【輸出訊息：成功後玩家拿到的東西】\n"+v(f.out,"（老師沒填，請你依知識點與能力提出建議）")+"\n\n";
- p+="【接到現實活動的哪一步】\n"+v(f.updown,"（老師沒填，請你依知識點與能力提出建議）")+"\n\n";
+ p+="【謎題內容與解法：怎樣算答對】\n"+v(f.judge,"（老師沒填，請你依知識點與能力提出建議）")+"\n\n";
+ p+="【答對時的內文／答錯時的回應】\n"+v(f.fb,"（老師沒填，請你依知識點與能力提出建議）")+"\n\n";
+ p+="【解開後給玩家的線索】\n"+v(f.out,"（老師沒填，請你依知識點與能力提出建議）")+"\n\n";
+ p+="【前言故事與關卡串接】\n"+v(f.updown,"（老師沒填，請你依知識點與能力提出建議）")+"\n\n";
  if(f.style)p+="【風格與氛圍】\n"+f.style+"\n\n";
- if(f.hint)p+="【提示設計】\n"+f.hint+"\n\n";
+ if(f.hint)p+="【謎題提示內容】\n"+f.hint+"\n\n";
  var picked=[];TECH.forEach(function(t,i){if(S.tech[i]!==false)picked.push(t[0])});
  if(picked.length){p+="請務必遵守以下技術要點：\n";picked.forEach(function(r,i){p+=(i+1)+". "+r+"\n"});p+="\n"}
  p+=open_?"老師還沒決定玩法與判定。請先不要寫程式，先提出 2～3 個不同的設計方案，每個方案用幾句話寫清楚：玩法是什麼、玩家要怎麼做、怎樣算成功（為什麼只有會這個知識的人能過）、成功後給什麼訊息。讓我挑一個，我選了再給完整的單一 HTML 檔。":"開始寫程式之前，請先用三到五句話說明：（1）玩家會看到什麼、做什麼；（2）為什麼只有會這個知識的人能成功；（3）你打算怎麼避免亂猜過關。我確認後，再給我完整的單一 HTML 檔。";
@@ -500,7 +501,7 @@ function bddScen(){var f=S.f,N=0,s="";
  var sc=function(type,t,g,w,th){N++;var L=function(arr,k){return arr.map(function(x,i){return "  "+(i?"而且（And）":k)+x}).join("\n")};
   s+="情境 "+N+"【"+type+"】"+t+"\n"+L(g,"假設（Given）")+"\n"+L(w,"當（When）")+"\n"+L(th,"那麼（Then）")+"\n\n"};
  var skill=f.skill||"這個能力";
- sc("正常","玩家做到了，成功",["玩家在這個機關的畫面上","這個機關還沒完成"],[f.judge?"玩家完成規格表裡的「成功條件」":"玩家真的做到「"+skill+"」（具體做法請你依知識點設計）"],["畫面給出成功的回應"+(f.fb?"（照規格表的「畫面回饋」）":""),"畫面顯示成功後的訊息"+(f.out?"（照規格表）":"（請你依知識點建議）"),"這個機關標示為「已完成」"]);
+ sc("正常","玩家做到了，成功",["玩家在這個機關的畫面上","這個機關還沒完成"],[f.judge?"玩家完成規格表裡的「謎題內容與解法」":"玩家真的做到「"+skill+"」（具體做法請你依知識點設計）"],["畫面給出成功的回應"+(f.fb?"（照規格表的「答對時的內文」）":""),"畫面顯示成功後的訊息"+(f.out?"（照規格表）":"（請你依知識點建議）"),"這個機關標示為「已完成」"]);
  sc("錯誤","做錯一次",["這個機關還沒完成"],["玩家做出不符合判定的操作（請列出這個機關最可能的 2～3 種錯法，各寫成一個子情境）"],["畫面指出「哪裡和規則不一樣」，不只說錯，也不直接公布答案","玩家可以重做","已做對的部分保留或清除，請寫清楚"]);
  sc("邊界","差一點就對",["這個機關還沒完成"],["玩家的操作和正確答案很接近（例如差一個字、順序顛倒、多了空白、大小寫或全形半形不同、多按了一下）"],["請你列出 3～5 個這種「差一點」的輸入，逐一寫明算對或算錯、以及畫面怎麼回應（格式問題，例如空白和大小寫，不該讓玩家被判錯）"]);
  sc("邊界","不具備能力的人想靠猜過關",["玩家不具備這個能力"],["玩家連續亂試，或把每個選項輪流點過一遍"],["不能靠這樣成功：失敗要有代價或限制（例如次數、冷卻，或要先觀察才有資料）","畫面不會洩漏答案"]);
@@ -519,14 +520,14 @@ function buildPromptBDD(){var f=S.f,P=POS.filter(function(x){return x.id===S.pos
  p+="這份提示詞用「規格→情境→測試→程式」的方式寫：先把規格表、玩家行為情境（BDD）、自動測試表談清楚，再寫程式。設計重點是：玩家必須真的做到某個能力才會成功，不懂的人不能靠猜、連點、抄答案過關。\n\n";
  var BX=EX.filter(function(e){return e.id===S.base})[0];
  if(BX)p+="【參考的既有機關】\n請以「"+BX.name+"」的玩法與結構為基礎（"+BX.what+"）。它原本有的設定項目："+BX.struct+"\n注意：原本的判定只檢查玩家有沒有做到，不保證測到能力；請依下面的情境，把判定改成「玩家必須真的做到那個能力才會成功」。\n\n";
- p+="【背景】\n知識點："+v(f.topic)+"\n教學定位："+(P?P.name+"：":"")+(P?P.d:NF)+"\n";
+ p+="【背景】\n知識點／議題："+v(f.topic)+"\n教學定位："+(P?P.name+"：":"")+(P?P.d:NF)+"\n";
  if(P&&P.id==="new")p+="因為玩家還不會，機關內要先示範，再引導，再讓玩家自己做；錯誤可重來，回饋要說明哪裡不對。\n";
  if(P&&P.id==="apply")p+="玩家已經學過，機關內不要重複講解知識，直接讓玩家運用。\n";
  p+="先備知識："+v(f.prior)+"\n主玩法：「"+(PL?PL.name+"」（"+PL.d+"成功的判定是「"+PL.j+"」）":NF)+(PL2?"\n輔玩法：「"+PL2.name+"」":"")+"\n能力門檻："+(G?G.name+"，"+G.d:NF)+"\n";
  p+="接到現實活動的哪一步："+v(f.updown)+"\n";
  if(f.style)p+="風格與氛圍："+f.style+"\n";
- p+="\n【功能（Feature）】\n玩家必須真的做到「"+(f.skill||"（能力：請你依知識點建議）")+"」，才能得到："+(f.out||"（成功後的訊息：請你依知識點建議）")+"。\n\n";
- p+="【規格表：機關要做成什麼樣子】\n玩家輸入："+(PL?"主玩法是「"+PL.name+"」，":"")+"請你依判定決定輸入方式（點擊、拖曳、輸入文字等）\n成功條件："+v(f.judge)+"\n失敗條件：任何不符合成功條件的操作（請你依判定列出細節）\n畫面回饋（做對、做錯）："+v(f.fb)+"\n成功後給玩家的訊息："+v(f.out)+"\n重試機制：做錯後可否重來、哪些進度保留或清掉，請你寫清楚\n關卡連動："+v(f.updown)+"\n\n";
+ p+="\n【功能（Feature）】\n玩家得到的改變：必須真的做到「"+(f.skill||"（能力：請你依知識點建議）")+"」，才能得到："+(f.out||"（成功後的訊息：請你依知識點建議）")+"。\n\n";
+ p+="【規格表：機關要做成什麼樣子】\n玩家輸入："+(PL?"主玩法是「"+PL.name+"」，":"")+"請你依解法決定輸入方式（點擊、拖曳、輸入文字等）\n謎題內容與解法（成功條件）："+v(f.judge)+"\n失敗條件：任何不符合成功條件的操作（請你依解法列出細節）\n答對時的內文／答錯時的回應："+v(f.fb)+"\n解開後給玩家的線索："+v(f.out)+"\n重試機制：做錯後可否重來、哪些進度保留或清掉，請你寫清楚\n前言故事與關卡串接："+v(f.updown)+(f.hint?"\n謎題提示內容："+f.hint:"")+"\n\n";
  p+="【設定（CONFIG）】\n所有答案、題目、數字、訊息都集中放在檔案最上方的 CONFIG，老師改 CONFIG 就能換內容，不用動程式。\n\n";
  p+="【寫情境的規則】\n1. 一個情境只測一件事。\n2. 「假設」寫開始前的狀態；「當」寫玩家做的一個動作（一連串動作用「而且」接）；「那麼」寫玩家在畫面上看得到、聽得到的結果，不要寫程式怎麼做。\n3. 用具體的值：哪個按鈕、哪個數字、按幾次，不要寫「某個」「適當的」。\n4. 我沒寫清楚的地方，請標「❓」問我，不要自己猜。\n5. 每個情境標註怎麼驗證：自動測試、或人工試玩。\n\n";
  p+="【行為情境（假設／當／那麼）】\n規格表只說「應該長什麼樣」，下面的情境要說「玩家這樣做時，機關怎麼反應」。以下是最基本的 "+11+" 類情境，缺一類都不行；每一類請你依這個機關的實際內容，寫成具體的情境（需要的話一類拆成好幾個）：\n\n"+bddScen();
@@ -542,13 +543,13 @@ function buildPrompt2(){var f=S.f,P=POS.filter(function(x){return x.id===S.pos})
  var v=function(x){return x||"（老師沒填，請你依知識點與能力提出建議）"};var open_=!S.play||!f.judge;
  var p="我是老師，想為課程設計一間 3D 密室關卡。這間密室跑在一個既有的引擎上，你要輸出的是引擎讀得懂的「關卡 JSON」。下面先給【拆解卡】，再給【引擎手冊】。請嚴格依手冊，只使用手冊列出的零件。\n\n";
  p+="這個關卡的設計重點是：玩家必須真的做到某個能力才會成功，不懂的人不能靠猜、抄答案或繞過就過關。承載知識的機關要成為逃出的必經之路。\n\n";
- p+="===== 拆解卡 =====\n【知識點】"+v(f.topic)+"\n【教學定位】"+(P?P.name+"：":"")+(P?P.d:"（老師沒填，請你依知識點與能力提出建議）")+"\n";
+ p+="===== 拆解卡 =====\n【知識點／議題】"+v(f.topic)+"\n【教學定位】"+(P?P.name+"：":"")+(P?P.d:"（老師沒填，請你依知識點與能力提出建議）")+"\n";
  if(P&&P.id==="new")p+="玩家還不會：關卡內要先示範，再引導，再自己做；錯誤可重來，回饋要說明哪裡不對；提示分層給。\n";
  if(P&&P.id==="apply")p+="玩家已學過：關卡內不要重複講解知識，直接讓玩家運用。\n";
- p+="【先備知識】"+v(f.prior)+"\n【玩家要做到的能力】"+v(f.skill)+"\n【主玩法】"+(PL?PL.name+"（判定："+PL.j+"）":"（老師沒填，請你依知識點與能力提出建議）")+(PL2?"；輔玩法："+PL2.name:"")+"\n【能力門檻】"+(G?G.name+"，"+G.d:"（老師沒填，請你依知識點與能力提出建議）")+"\n";
- p+="【判定：怎樣算成功】"+v(f.judge)+"\n【回饋】"+v(f.fb)+"\n【輸出訊息】"+v(f.out)+"\n【上下游與故事背景】"+v(f.updown)+"\n";
+ p+="【先備知識】"+v(f.prior)+"\n【玩家得到的改變】"+v(f.skill)+"\n【主玩法】"+(PL?PL.name+"（判定："+PL.j+"）":"（老師沒填，請你依知識點與能力提出建議）")+(PL2?"；輔玩法："+PL2.name:"")+"\n【能力門檻】"+(G?G.name+"，"+G.d:"（老師沒填，請你依知識點與能力提出建議）")+"\n";
+ p+="【謎題內容與解法】"+v(f.judge)+"\n【答對時的內文／答錯時的回應】"+v(f.fb)+"\n【解開後給玩家的線索】"+v(f.out)+"\n【前言故事與關卡串接】"+v(f.updown)+"\n";
  if(f.style)p+="【風格與氛圍】"+f.style+"\n";
- if(f.hint)p+="【提示設計】"+f.hint+"\n";
+ if(f.hint)p+="【謎題提示內容】"+f.hint+"\n";
  if(S.pmode!=="spec")p+="\n===== 玩家行為情境（BDD：假設／當／那麼）=====\n以下是這個關卡必須做到的行為。請在輸出 JSON 前，逐一確認手冊裡的哪個機關與規則可以做到；手冊做不到的情境，請明說，不要硬湊。\n\n"+bddScen();
  p+="\n===== 引擎手冊 =====\n"+ENGMAN+"\n\n";
  p+=open_?"老師還沒決定玩法與判定。請先不要輸出 JSON，先提出 2～3 個不同的設計方案，每個方案用幾句話寫清楚：用手冊裡的哪個機關承載知識、玩家要怎麼做、怎樣算成功（為什麼只有會的人能通過）、線索鏈怎麼串。讓我挑一個，我選了再輸出完整的 JSON。若手冊裡沒有適合承載這個知識的機關，請直接告訴我，不要硬湊。":"開始輸出之前，請先用五句話以內說明：（1）哪個機關承載知識、為什麼只有會的人能通過；（2）線索鏈怎麼串；（3）你選了哪些道具與機關。我確認後，再輸出完整的 JSON。若手冊裡沒有適合承載這個知識的機關，請直接告訴我，不要硬湊。";
@@ -669,19 +670,32 @@ var FORMS=[
 var FORMOF={lock:"密碼鎖",morse:"密碼解碼",puzzle:"拼圖空間",cards:"記憶辨認",wires:"配對連線",uv:"影像圖層",bomb:"計時挑戰",lights:"感官記憶",cabinet:"配對連線",phone:"儀器與技能",radio:"儀器與技能",spell:"口說表達",switches:"儀器與技能",zoom:"圖像細節",titration:"儀器與技能",circuit:"機械互動",diff:"差異比對",range:"範圍與條件搜尋",cond:"範圍與條件搜尋",riddle:"文字謎題",caesar:"密碼解碼",table:"密碼解碼",strategy:"策略取捨",branch:"劇情分支",timer:"計時挑戰",score:"完成度排行",versus:"對戰",build:"建造",draw:"繪畫表達",design:"出題設計",dilute:"儀器與技能",scale:"儀器與技能",deduce:"邏輯推理",cpr:"儀器與技能",dilemma:"兩難抉擇",errorhunt:"範圍與條件搜尋",hotspot:"場景調查",drawers:"容器翻找",inventory:"道具與組合",slide:"拼圖空間",rotate:"拼圖空間",coord:"密碼解碼",binary:"密碼解碼",balance:"機械互動",sort:"排序與時間軸",sudoku4:"邏輯推理",maze:"拼圖空間",scratch:"影像圖層",overlay:"影像圖層",laser:"機械互動",soundorder:"感官記憶",pairdrag:"配對連線",flip:"記憶辨認",endings:"劇情分支",duel:"對戰",daynight:"圖像細節",jigsaw:"拼圖空間",dirlock:"密碼鎖",pigpen:"密碼解碼",wordchain:"文字謎題",colorseq:"邏輯推理",logicgrid:"邏輯推理",routemap:"邏輯推理",recipe:"道具與組合",timeline:"排序與時間軸",thermo:"影像圖層",gear:"機械互動",pipes:"機械互動",dodge:"機械互動",rhythm:"感官記憶",economy:"策略取捨",escape:"計時挑戰",bridge:"建造",relay:"出題設計",mirror:"影像圖層",acrostic:"文字謎題",crossword:"文字謎題",realfind:"場景調查",tradeoff:"權衡矩陣",sharechoice:"情境取捨",spectrum:"表態與換位",bargain:"策略取捨",slogan:"出題設計",melody:"出題設計",mazemaker:"建造",pixel:"建造",race:"計時挑戰",memduel:"記憶辨認",sea:"策略取捨",combo:"計時挑戰",witness:"場景調查",search:"場景調查",budget:"策略取捨",timebudget:"策略取捨",storyboard:"出題設計",codeart:"建造",nim:"策略取捨",estimate:"計時挑戰",fogmap:"場景調查",filtertable:"場景調查",wordsearch:"範圍與條件搜尋",eavesdrop:"場景調查",moveaside:"容器翻找",layers:"容器翻找",spotcommon:"差異比對",lynx:"範圍與條件搜尋",detector:"場景調查",rings:"配對連線",connectdots:"排序與時間軸",shadegrid:"密碼解碼",pixelpaint:"配對連線",minesweeper:"邏輯推理",hangman:"文字謎題",letterdigits:"密碼解碼",makesum:"邏輯推理",cluebyclue:"邏輯推理",hilo:"邏輯推理",answerboard:"配對連線",corkboard:"邏輯推理",safekey:"密碼鎖",tilespell:"文字謎題",multikey:"密碼鎖",dominochain:"排序與時間軸",listthem:"文字謎題",sliderail:"拼圖空間",eyedropper:"儀器與技能",lasso:"機械互動",crossswitch:"機械互動",eitheror:"儀器與技能",keepplace:"拼圖空間",betting:"策略取捨",ladder:"策略取捨",spinwheel:"策略取捨",roles:"表態與換位",dicefate:"劇情分支",castle:"計時挑戰",starjump:"計時挑戰",slots:"完成度排行",gemclear:"完成度排行",mirrorcut:"影像圖層",radicals:"文字謎題",elementcode:"密碼解碼",rulemachine:"邏輯推理",compasswalk:"場景調查",labelcheck:"差異比對",yesno:"邏輯推理",mapscale:"儀器與技能",grille:"密碼解碼",viewshift:"圖像細節",jugs:"邏輯推理",lightsout:"邏輯推理",tilt:"儀器與技能",blow:"儀器與技能",frames:"圖像細節",sketch:"繪畫表達",metaui:"文字謎題"};
 EX.forEach(function(e){e.form=FORMOF[e.id]||""});
 var formFilter="";
-var exFilter="全部";
+var exFilter="全部",exQ="",exPick=false;
+var PICKS=["lock","riddle","uv","hotspot","pairdrag","titration","tilt","branch","race","sketch"];
+function exMatch(x){if(exPick)return PICKS.indexOf(x.id)>=0;if(!exQ)return true;var t=[x.name,x.what,x.suit,x.kw||"",x.form||"",x.play].join(" ");return exQ.split(/\s+/).filter(Boolean).every(function(w){return t.indexOf(w)>=0})}
 function exChips(t){var par=(t.match(/（[^）]*）/)||[""])[0];var ks=t.replace(/（[^）]*）/,"").split("、");
  return ks.map(function(k){var e=EX.filter(function(x){return x.kw===k})[0];return e?'<a href="#ex_'+e.id+'" data-jump="'+e.id+'" style="color:var(--brass)">'+esc(k)+' →</a>':'<span>'+esc(k)+'（尚無）</span>'}).join('　')+(par?' <span class="tip">'+esc(par)+'</span>':'')}
 document.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("[data-jump]");if(a){e.preventDefault();var el=$("ex_"+a.dataset.jump);if(el){el.scrollIntoView({behavior:"smooth",block:"center"});el.style.outline="2px solid var(--brass2)";setTimeout(function(){el.style.outline=""},1800)}}});
+function exPrompt(x){var picked=[];TECH.forEach(function(t){picked.push(t[0])});
+ var p="我是老師，想做一個互動機關，用在真實世界的闖關活動或課堂。請用「單一 HTML 檔」（HTML、CSS、JavaScript 全部寫在同一個檔案，不載入任何外部資源）、繁體中文介面、手機與平板可直接觸控操作。\n\n";
+ p+="【想做的機關】\n請做一個「"+x.name+"」型的機關（玩法："+x.play+(x.form?"／"+x.form:"")+"）。\n它的玩法是："+x.what+"\n\n";
+ p+="【我要換成自己的內容】（請老師先填；沒填的部分，AI 先用示範內容並標註「請替換」）\n知識點／議題：\n謎題內容與解法（怎樣算答對）：\n答對時的內文：\n答錯時的回應：\n解開後給玩家的線索：\n謎題提示內容（分幾層）：\n\n";
+ p+="【設定（CONFIG）】\n需要的設定項目："+(x.struct||"題目、答案、成功訊息").replace(/。$/,"")+"。全部集中放在檔案最上方的 CONFIG，老師改 CONFIG 就能換內容，不用動程式。\n\n";
+ p+="【這款機關要小心的地方】\n"+x.care+"\n想讓它更能測出能力，可以這樣升級（選用）："+x.up+"\n\n";
+ p+="【行為情境（假設／當／那麼）】\n請至少做到這四個情境：\n1. 假設玩家還沒完成，當玩家做對，那麼畫面顯示答對時的內文與解開後的線索，而且不會被後面的操作蓋掉。\n2. 假設玩家還沒完成，當玩家做錯，那麼畫面指出哪裡和規則不一樣，不直接公布答案，玩家可以重做。\n3. 假設玩家不會，當他連續亂試或把選項輪流點一遍，那麼不能靠這樣過關（失敗要有代價或限制），也不洩漏答案。\n4. 假設玩家已經成功，當他再操作或重複送出，那麼不會重複觸發成功，也不會變成錯誤畫面。\n\n";
+ p+="請務必遵守以下技術要點：\n";picked.forEach(function(r,i){p+=(i+1)+". "+r+"\n"});
+ p+="\n開始寫程式之前，請先用三到五句話說明：玩家會看到什麼、做什麼，以及上面四個情境你打算怎麼處理。我確認後，再給我完整的單一 HTML 檔。";
+ return p}
 function renderEx(){var plays=["全部","操作","探索","解謎","競爭","選擇","創造"];
  $("exChips").innerHTML="";plays.forEach(function(p){var b=document.createElement("button");b.textContent=p+" "+(p==="全部"?EX.length:EX.filter(function(x){return x.play.indexOf(p)>=0}).length);if(p===exFilter)b.className="on";b.onclick=function(){exFilter=p;formFilter="";renderEx()};$("exChips").appendChild(b)});
  $("exForms").innerHTML="";if(exFilter!=="全部"){var fs=FORMS.filter(function(f){return f.play===exFilter});var ab=document.createElement("button");ab.textContent="全部形式 "+EX.filter(function(x){return x.play.indexOf(exFilter)>=0}).length;if(!formFilter)ab.className="on";ab.onclick=function(){formFilter="";renderEx()};$("exForms").appendChild(ab);
   fs.forEach(function(f){var n=EX.filter(function(x){return x.form===f.n&&x.play.indexOf(exFilter)>=0}).length;var b2=document.createElement("button");b2.textContent=f.n+" "+(n?n:"（尚無）");b2.title=f.d;if(f.n===formFilter)b2.className="on";if(!n)b2.style.opacity=".55";b2.onclick=function(){formFilter=f.n;renderEx()};$("exForms").appendChild(b2)})}
- var h="";EX.forEach(function(x){if(exFilter!=="全部"&&x.play.indexOf(exFilter)<0)return;if(formFilter&&x.form!==formFilter)return;
+ var h="",cnt=0;var list=exPick?PICKS.map(function(id){return EX.filter(function(e){return e.id===id})[0]}).filter(Boolean):EX;list.forEach(function(x){if(!exMatch(x))return;if(!exPick&&exFilter!=="全部"&&x.play.indexOf(exFilter)<0)return;if(!exPick&&formFilter&&x.form!==formFilter)return;cnt++;
   var q=x.ok===1?"":"";
   h+='<div class="card ex" id="ex_'+x.id+'"><h3>'+x.no+' '+esc(x.name)+'<span class="tag">'+esc(x.play)+'</span><span class="tag">'+esc(x.form||"")+'</span><span class="tag">門檻：'+esc(x.gate)+'</span>'+(x.loc?'<span class="tag">新增</span>':(x.ok?'':'<span class="tag">依說明整理</span>'))+'</h3>'
    +'<p class="note" style="margin:4px 0 0">'+esc(x.what)+'</p><dl><dt>適合承載什麼</dt><dd>'+esc(x.suit)+'</dd><dt>要小心</dt><dd>'+esc(x.care)+'</dd><dt>怎麼升級成「判定等於能力」</dt><dd>'+esc(x.up)+'</dd></dl>'
-   +'<div class="acts"><button class="btn" data-play="'+x.id+'">▶ 在這裡試玩</button><button class="btn g" data-new="'+x.id+'">新分頁開啟 ↗</button><button class="btn" data-base="'+x.id+'">用它當基礎</button></div></div>'});
+   +'<div class="acts"><button class="btn" data-play="'+x.id+'">▶ 在這裡試玩</button><button class="btn g" data-new="'+x.id+'">新分頁開啟 ↗</button><button class="btn" data-copy="'+x.id+'">複製提示詞</button><button class="btn g" data-base="'+x.id+'">用它當基礎</button><span class="note cpmsg" style="align-self:center;margin:0"></span></div></div>'});
+ $("exQN").textContent=exPick?"精選 10 款：涵蓋六大玩法，研習時先看這些。再按一次回到全部。":(exQ?"找到 "+cnt+" 款。":"共 "+EX.length+" 款。不知道從哪開始，就按「先看這 10 款」。");$("exPickBtn").className=exPick?"btn":"btn g";
  var pd=PLAY.filter(function(q){return q.name===exFilter})[0];
  $("exDef").innerHTML=pd?'<b>'+esc(pd.name)+'</b>：'+esc(pd.d)+'<div class="note" style="margin:6px 0 0">判定：'+esc(pd.j)+'</div><div class="note" style="margin:6px 0 0">例：'+exChips(pd.ex)+'</div>':'<b>全部</b>：六種玩法由「玩家要做什麼」區分。點上面任一種，看它的定義與判定。一款機關可以同時是兩種玩法（例如拆炸彈＝競爭＋解謎）。';
  var fd=FORMS.filter(function(f){return f.n===formFilter})[0];if(fd){$("exDef").innerHTML+='<div class="note" style="margin:8px 0 0;border-top:1px solid var(--line);padding-top:8px"><b>形式：'+esc(fd.n)+'</b>　'+esc(fd.d)+'</div>'}
@@ -693,11 +707,16 @@ function renderEx(){var plays=["全部","操作","探索","解謎","競爭","選
   var w=window.open("","_blank");fetch("ex/"+x.id+".html").then(function(r){return r.text()}).then(function(t){var u=URL.createObjectURL(new Blob([t],{type:"text/html"}));if(w)w.location.href=u;else window.open(u,"_blank")}).catch(function(){if(w)w.close();alert("無法開啟，請改用「在這裡試玩」")})}});
  Array.prototype.forEach.call($("exList").querySelectorAll("[data-play]"),function(b){b.onclick=function(){var x=EX.filter(function(e){return e.id===b.dataset.play})[0],card=$("ex_"+x.id),old=card.querySelector("iframe");if(old){old.parentNode.remove();b.textContent="▶ 在這裡試玩";return}
   var w=document.createElement("div");w.style.cssText="margin-top:12px";var f=document.createElement("iframe");f.src=x.loc?"ex/"+x.id+".html":U+x.id+"/";f.style.cssText="width:100%;height:580px;border:1px solid var(--line);border-radius:12px;background:#14110f";f.setAttribute("sandbox","allow-scripts allow-same-origin allow-popups");w.appendChild(f);card.appendChild(w);b.textContent="✕ 收起試玩"}});
+ Array.prototype.forEach.call($("exList").querySelectorAll("[data-copy]"),function(b){b.onclick=function(){var x=EX.filter(function(e){return e.id===b.dataset.copy})[0],t=exPrompt(x),m=b.parentNode.querySelector(".cpmsg");
+  var show=function(){var card=$("ex_"+x.id),old=card.querySelector("textarea.cp");if(!old){old=document.createElement("textarea");old.className="cp";old.style.cssText="width:100%;height:220px;margin-top:10px";old.readOnly=true;card.appendChild(old)}old.value=t;old.focus();old.select()};
+  var ok=function(){m.textContent="已複製。貼到你的 AI，再把【我要換成自己的內容】填好"};
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(ok,function(){show();m.textContent="請手動複製下面的文字"});else{show();m.textContent="請手動複製下面的文字"}}});
  Array.prototype.forEach.call($("exList").querySelectorAll("[data-base]"),function(b){b.onclick=function(){S.base=b.dataset.base;if(!S.line)S.line="1";save();showView("work");go(1)}})}
 function renderBase(){var c=$("baseChip"),x=EX.filter(function(e){return e.id===S.base})[0];
  if(!x||S.line==="2"||S.line==="3"){c.style.display="none";return}c.style.display="block";
  c.innerHTML='<span class="basechip">以「'+esc(x.name)+'」為基礎 <a href="#" id="baseX">✕ 取消</a></span>';$("baseX").onclick=function(e){e.preventDefault();S.base="";save();renderBase()}}
-function showView(v){$("exView").style.display=v==="ex"?"block":"none";$("wizard").style.display=v==="ex"?"none":"block";$("tabEx").className=v==="ex"?"on":"";$("tabWork").className=v==="ex"?"":"on";if(v==="ex")renderEx();window.scrollTo(0,0)}
+function exBind(){if(exBind.done)return;exBind.done=1;$("exQ").oninput=function(){exQ=this.value.trim();exPick=false;renderEx()};$("exPickBtn").onclick=function(){exPick=!exPick;if(exPick){exQ="";$("exQ").value="";exFilter="全部";formFilter=""}renderEx()}}
+function showView(v){$("exView").style.display=v==="ex"?"block":"none";$("wizard").style.display=v==="ex"?"none":"block";$("tabEx").className=v==="ex"?"on":"";$("tabWork").className=v==="ex"?"":"on";if(v==="ex"){exBind();renderEx()}window.scrollTo(0,0)}
 $("tabWork").onclick=function(){showView("work")};$("tabEx").onclick=function(){showView("ex")};
 function init(){renderBase();S.step=Math.min(+S.step||0,4);bind();renderLines();renderPos();renderPlay();renderSelf();show()}
 load();init();
