@@ -88,7 +88,7 @@ footer{margin-top:40px;color:var(--dim);font-size:12.5px;border-top:1px solid va
 <div id="baseChip" style="display:none"></div>
 <p class="note">只有三件事必填：知識點／議題、教學定位、玩家得到的改變。其他都可以留空，AI 會幫你想。</p>
 <label class="f">知識點／議題<span class="req">必填</span></label>
-<p class="hint">這個機關要涉及哪個知識或議題？寫得越具體越好。（對應規劃書「議題調查」）</p>
+<p class="hint">這個機關要涉及哪個知識或議題？寫得越具體越好。</p>
 <input type="text" id="f_topic" placeholder="例如：用酸鹼指示劑判斷溶液的酸鹼性">
 <h3>教學定位<span class="req" style="color:var(--bad);font-size:12px;margin-left:6px">必填</span></h3>
 <div class="opts" id="posOpts"></div>
@@ -97,7 +97,7 @@ footer{margin-top:40px;color:var(--dim);font-size:12.5px;border-top:1px solid va
 <p class="hint">玩家進來時已經會什麼？不會的由誰補？（教新知：遊戲內要先示範、再引導、再自己做）</p>
 <textarea id="f_prior" placeholder="例如：上過指示劑單元，知道石蕊遇酸變紅。不會的在機關裡有一張示範。"></textarea>
 <label class="f">玩家得到的改變<span class="req">必填</span></label>
-<p class="hint">玩完這一關，玩家要「做到什麼」？用動詞寫，不要寫「理解」。（對應規劃書「玩完遊戲後，玩家得到的改變」）</p>
+<p class="hint">玩完這一關，玩家要「做到什麼」？用動詞寫，不要寫「理解」。</p>
 <textarea id="f_skill" placeholder="例如：能根據顏色變化，把未知溶液分成酸性與鹼性。"></textarea>
 </section>
 
@@ -124,26 +124,26 @@ footer{margin-top:40px;color:var(--dim);font-size:12.5px;border-top:1px solid va
 <h2 style="margin-top:28px">想自己決定的細節</h2>
 <p class="note">這些都是選填。填得越多，AI 越照你的想法做；留空就由 AI 建議。</p>
 <label class="f">謎題內容與解法<span class="opt-t">選填</span></label>
-<p class="hint">玩家要解什麼、怎樣算答對？答對的過程要剛好展現上面寫的改變，不懂的人不能靠猜、抄、繞過就成功。（對應規劃書「關卡謎題內容」「謎題正確答案」「謎題解法詳細說明」）</p>
+<p class="hint">玩家要解什麼、怎樣算答對？答對的過程要剛好展現上面寫的改變，不懂的人不能靠猜、抄、繞過就成功。</p>
 <textarea id="f_judge" placeholder="例如：玩家要把三杯未知溶液各滴上指示劑，依顏色把它們放到「酸」或「鹼」的架上，三杯全部放對才算成功。"></textarea>
 <label class="f">答對／答錯時，機關發生什麼<span class="opt-t">選填</span></label>
-<p class="hint">機關本身怎麼動？例如答對時鎖打開、燈亮起、門滑開；答錯時鎖晃一下、燈閃紅、說明哪裡不對。要讓人靠回饋發現規則，不是只有「對／錯」。故事文字（規劃書的「答對時的內文」）請寫在下面的「故事包裝與關卡串接」（選用）。</p>
+<p class="hint">機關本身怎麼動？例如答對時鎖打開、燈亮起、門滑開；答錯時鎖晃一下、燈閃紅、說明哪裡不對。要讓人靠回饋發現規則，不是只有「對／錯」。故事文字請寫在下面的「故事包裝與關卡串接」（選用）。</p>
 <textarea id="f_fb" placeholder="例如：三杯都放對時，櫃門的鎖「喀」一聲打開；放錯架子時燈號閃紅並說「顏色和這一排不一樣」，可以重放。"></textarea>
-<label class="f">玩家的意外操作<span class="opt-t">選填</span></label><p class="hint" style="margin:0 0 2px;color:var(--brass)">規劃書沒有這一欄，是這次新增的重點。</p>
+<label class="f">玩家的意外操作<span class="opt-t">選填</span></label>
 <p class="hint">玩家不會照你想的玩。你預想他會怎麼亂來？例如重複感應、做到一半離開、全部都試一遍。一行寫一種，用三句話寫：「假設玩家現在……，當玩家做了……，那麼機關應該……」。系統已經內建了 11 類常見情境，這裡寫你特別擔心的。</p>
 <textarea id="f_edge" placeholder="例如：玩家把三杯溶液都放在同一個架子上就按送出，要告訴他哪裡不對，但不能直接說答案。"></textarea>
 <label class="f">解開後給玩家的線索<span class="opt-t">選填</span></label>
-<p class="hint">解開後玩家拿到什麼？字母、方向、數字、圖像、下一個線索。（對應規劃書「後續故事」帶出的下一步）</p>
+<p class="hint">解開後玩家拿到什麼？字母、方向、數字、圖像、下一個線索。</p>
 <textarea id="f_out" placeholder="例如：三杯放對後，架子後面顯示數字 4、7、2。"></textarea>
 <label class="f" id="updownL">故事包裝與關卡串接<span class="opt-t">選填</span></label>
-<p class="hint">故事是選用的。操作類的機關，故事和題目常常在機關外（現場佈置、紙本、其他平台），玩家只是來操作機關；解謎類比較常把故事直接融入機關。但這不是絕對，依你的活動決定。（對應規劃書「前言故事」「答對時的內文」「後續故事」）</p>
+<p class="hint">故事是選用的。操作類的機關，故事和題目常常在機關外（現場佈置、紙本、其他平台），玩家只是來操作機關；解謎類比較常把故事直接融入機關。但這不是絕對，依你的活動決定。</p>
 <select id="f_story" style="margin-bottom:8px"><option value="">還沒決定，讓 AI 依玩法建議</option><option value="out">故事在機關外，機關只負責操作</option><option value="in">故事融入機關畫面</option></select>
 <textarea id="f_updown" placeholder="例如：玩家在教室牆上找到實驗桌的照片，解開後的數字要拿去開保險箱。故事融入機關的話，也可以寫前言、答對時的故事文字、後續故事。"></textarea>
-<label class="f">風格與氛圍<span class="opt-t">選填</span></label><p class="hint">（對應規劃書「謎題封面照」與美術設計）</p>
+<label class="f">風格與氛圍<span class="opt-t">選填</span></label>
 <textarea id="f_style" placeholder="例如：像實驗室的暗色面板，字體清楚，色彩對比大。"></textarea>
 <details class="card"><summary><b>更多選填欄位</b>（提示、證據、回顧）</summary>
 <label class="f">謎題提示內容<span class="opt-t">選填</span></label>
-<p class="hint">卡關時怎麼給？分幾層？（對應規劃書同名欄位，請不要寫「無」）</p>
+<p class="hint">卡關時怎麼給？分幾層？請不要留空或寫「無」。</p>
 <textarea id="f_hint"></textarea>
 <label class="f">證據<span class="opt-t">選填</span></label>
 <p class="hint">看玩家的哪些行為，可以判斷他會？</p>
