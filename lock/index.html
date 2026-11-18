@@ -354,8 +354,8 @@
 </head>
 <body>
 
-<!-- 齒輪：長按進後台 -->
-<div class="gear" id="gear" title="長按進入後台">
+<!-- 齒輪：長按進設定 -->
+<div class="gear" id="gear" title="長按進入設定">
   <span class="ring"></span>
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
 </div>
@@ -457,7 +457,7 @@
 
 <div class="gate" id="gate">
   <div class="gate-box" id="gateBox">
-    <div class="gate-title" id="gateTitle">後台密碼</div>
+    <div class="gate-title" id="gateTitle">設定密碼</div>
     <div class="gate-sub" id="gateSub">請輸入密碼以進入設定</div>
     <input class="gate-input" id="gateInput" type="password" autocomplete="off" placeholder="••••">
     <div class="gate-err" id="gateErr"></div>
@@ -471,7 +471,7 @@
 <!-- 後台 -->
 <div class="admin" id="admin">
   <div class="admin-wrap">
-    <h1>後台設定</h1>
+    <h1>出題設定</h1>
     <div class="sub">設定密碼與鎖內道具，玩家不會看到這個畫面。</div>
 
     <div class="field">
@@ -514,9 +514,9 @@
     </div>
 
     <div class="field">
-      <label>後台密碼</label>
-      <input class="url-input" id="adminPassInput" type="text" autocomplete="off" placeholder="進入後台用的密碼">
-      <div class="desc">下次長按右上角齒輪進入後台時，要輸入這組密碼。請設定後牢記，避免留空。</div>
+      <label>設定密碼</label>
+      <input class="url-input" id="adminPassInput" type="text" autocomplete="off" placeholder="打開設定頁用的密碼">
+      <div class="desc">下次長按右上角齒輪打開設定頁時，要輸入這組密碼。請設定後牢記，避免留空。</div>
     </div>
 
         <div class="field">
@@ -829,7 +829,7 @@
       paperHolder.style.cursor="default";
       var e=document.createElement("div");
       e.className="paper-empty";
-      e.textContent="尚未設定道具圖片。\n請長按右上角齒輪進入後台上傳。";
+      e.textContent="尚未設定道具圖片。\n請長按右上角齒輪打開設定頁上傳。";
       paperHolder.appendChild(e);
     }
     captionEl.textContent=cfg.caption||"";
@@ -866,7 +866,7 @@
   var gateSub=document.getElementById("gateSub");
   var gateMode="admin";
   function openGate(){
-    gateTitle.textContent="後台密碼"; gateSub.textContent="請輸入密碼以進入設定";
+    gateTitle.textContent="設定密碼"; gateSub.textContent="請輸入密碼以進入設定";
     gateErr.textContent=""; gateInput.value="";
     gate.classList.add("show");
     setTimeout(function(){ try{gateInput.focus();}catch(e){} }, 60);

@@ -733,6 +733,7 @@ function renderBase(){var c=$("baseChip"),x=EX.filter(function(e){return e.id===
 function exBind(){if(exBind.done)return;exBind.done=1;$("exQ").oninput=function(){exQ=this.value.trim();exPick=false;renderEx()};$("exPickBtn").onclick=function(){exPick=!exPick;if(exPick){exQ="";$("exQ").value="";exFilter="全部";formFilter=""}renderEx()}}
 function showView(v){$("exView").style.display=v==="ex"?"block":"none";$("wizard").style.display=v==="ex"?"none":"block";$("tabEx").className=v==="ex"?"on":"";$("tabWork").className=v==="ex"?"":"on";if(v==="ex"){exBind();renderEx()}window.scrollTo(0,0)}
 $("tabWork").onclick=function(){showView("work")};$("tabEx").onclick=function(){showView("ex")};
+if(/^#ex/.test(location.hash))setTimeout(function(){showView("ex")},0);
 function init(){renderBase();S.step=Math.min(+S.step||0,4);bind();renderLines();renderPos();renderPlay();renderSelf();show()}
 load();init();
 })();

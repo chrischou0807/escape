@@ -90,6 +90,18 @@ section.in .r:nth-child(2){transition-delay:.12s}section.in .r:nth-child(3){tran
 .grid>.r:nth-child(2){transition-delay:.15s!important}.grid>.r:nth-child(3){transition-delay:.3s!important}.grid>.r:nth-child(4){transition-delay:.45s!important}
 @media(prefers-reduced-motion:reduce){.r{opacity:1;transform:none;transition:none}#deck{scroll-behavior:auto}}
 .small{font-size:14px;color:var(--dim);margin-top:14px}
+.gh{background:#fff;border:1px solid #d0d7de;border-radius:10px;font:13px/1.5 -apple-system,"Segoe UI",Helvetica,Arial,sans-serif;color:#1f2328;padding:12px;margin-top:12px;text-align:left}
+.gh .t{font-weight:600;font-size:14px;margin-bottom:8px}
+.gh .f{border:1px solid #d0d7de;border-radius:6px;padding:4px 8px;margin:3px 0 8px;background:#f6f8fa}
+.gh .gb{display:inline-block;background:#1f883d;color:#fff;border-radius:6px;padding:4px 10px;font-weight:600}
+.gh .hl{outline:2px solid var(--orange);outline-offset:2px;border-radius:6px}
+.gh .tabs{display:flex;gap:10px;border-bottom:1px solid #d0d7de;padding-bottom:6px;margin-bottom:8px;color:#59636e}
+.gh .drop{border:2px dashed #d0d7de;border-radius:8px;padding:12px;text-align:center;color:#59636e;margin:6px 0 8px}
+.gh .live{background:#dafbe1;border:1px solid #4ac26b;border-radius:6px;padding:8px}
+.gh a{color:#0969da}
+.mock-tag{font-size:11px;color:var(--dim);margin-top:6px}
+.go-btn{display:inline-block;font-size:16px;font-weight:700;color:#fff;background:var(--orange);padding:11px 20px;border-radius:999px;text-decoration:none}
+.go-btn.b{background:var(--blue)}
 .play{display:flex;flex-wrap:wrap;gap:8px;margin:-6px 0 22px}
 .play span{font-size:14px;padding:4px 12px;border-radius:999px;background:#ece6dc;color:#6d675e}
 .def{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:18px;line-height:1.6;margin:0 0 20px}
@@ -148,15 +160,18 @@ section.in .r:nth-child(2){transition-delay:.12s}section.in .r:nth-child(3){tran
 <section id="s4"><div class="wrap">
 <span class="badge o r">現場體驗</span>
 <h2 class="r" style="margin-top:16px">〈魁地奇的邀請〉</h2>
-<p class="lead r">暑假營隊的關卡，當時在蹦世界玩，寶箱是實體的。現在三關連同寶箱，整個做成網頁。</p>
+<p class="lead r">暑假營隊的關卡，當時在蹦世界玩，寶箱是實體的。現在整個做成網頁，打開網址就能玩。</p>
 <div class="flow r">
 <div class="card"><span class="pill">第一關</span><div class="big" style="font-size:24px">照片找地點</div><p>看校園照片輸入答案</p></div>
 <div class="arr"><i></i></div>
-<div class="card" style="border:2px solid var(--orange)"><span class="pill o">第二關</span><div class="big hl-o" style="font-size:24px">線上寶箱</div><p>水晶球影片找密碼</p></div>
+<div class="card"><span class="pill">第二關</span><div class="big" style="font-size:24px">線上寶箱</div><p>水晶球影片找密碼</p></div>
 <div class="arr"><i></i></div>
-<div class="card"><span class="pill">第三關</span><div class="big" style="font-size:24px">AR 魔法信</div><p>鏡頭看見隱藏文字</p></div>
+<div class="card" style="border:2px solid var(--orange)"><span class="pill o">拿出手機</span><div class="big hl-o" style="font-size:24px">AR 魔法信</div><p>鏡頭看見隱藏文字</p></div>
 </div>
-<div class="note info r">我會分享手機畫面，帶大家快速玩一遍。開寶箱時，注意看「輸錯密碼」時畫面怎麼反應。<br>網址：chrischou0807.github.io/escape/quidditch/</div>
+<div class="grid g2" style="margin-top:18px">
+<div class="note info r" style="margin:0;display:block">前兩關我分享螢幕直接在網頁上玩。開寶箱時，注意看「輸錯密碼」時畫面怎麼反應。<br><a href="https://chrischou0807.github.io/escape/quidditch/" target="_blank" rel="noopener">開啟〈魁地奇的邀請〉↗</a></div>
+<div class="note warn r" style="margin:0;display:block">AR 這一關請大家一起體驗：用手機打開下面的網址，對準我分享在畫面上的邀請信。<br><a href="https://chrischou0807.github.io/escape/quidditch/ar.html" target="_blank" rel="noopener">chrischou0807.github.io/escape/quidditch/ar.html ↗</a><br><span style="font-size:14px">要分享在畫面上的邀請信：<a href="https://chrischou0807.github.io/escape/quidditch/letter.png" target="_blank" rel="noopener">letter.png ↗</a></span></div>
+</div>
 </div></section>
 
 <!-- 05 -->
@@ -182,7 +197,7 @@ section.in .r:nth-child(2){transition-delay:.12s}section.in .r:nth-child(3){tran
 <div class="card r"><div class="no b">02</div><h3>探索</h3><p>在一定的範圍內，找到目標</p><p style="margin-top:6px;font-size:14px">判定：找到目標</p></div>
 <div class="card r"><div class="no">03</div><h3>解謎</h3><p>找到「鑰匙」，解開「鎖」</p><p style="margin-top:6px;font-size:14px">判定：鎖被解開</p></div>
 <div class="card r"><div class="no b">04</div><h3>選擇</h3><p>沒有標準答案，在兩個以上的選項中做選擇</p><p style="margin-top:6px;font-size:14px">判定：趨向想要的結果，或獲得最終勝利</p></div>
-<div class="card r"><div class="no">05</div><h3>競爭</h3><p>和電腦或人類，在限制下較量</p><p style="margin-top:6px;font-size:14px">判定：贏過對手</p></div>
+<div class="card r"><div class="no">05</div><h3>競爭</h3><p>在限制下較量：對手可以是電腦、別人，也可以是自己；時間也是一種限制</p><p style="margin-top:6px;font-size:14px">判定：贏過對手，或超越自己的紀錄</p></div>
 <div class="card r"><div class="no b">06</div><h3>創造</h3><p>運用創造力，找出能通過考驗的方法</p><p style="margin-top:6px;font-size:14px">判定：通過考驗</p></div>
 </div>
 <p class="small r">分類參照聚樂邦。範例庫就是照這六種玩法分類，每一款都可以直接複製提示詞。</p>
@@ -234,11 +249,11 @@ section.in .r:nth-child(2){transition-delay:.12s}section.in .r:nth-child(3){tran
 
 <section id="p05"><div class="wrap">
 <p class="eyebrow r">六大玩法 05</p>
-<h2 class="r">競爭：和電腦或人類，在限制下較量</h2>
-<div class="def r"><b>判定</b><span>贏過對手</span></div>
-<div class="play r"><span>剪刀石頭布</span><span>合作碰撞</span><span>個人競賽</span><span>計時挑戰</span><span>完成度挑戰</span><span>戰鬥</span></div>
+<h2 class="r">競爭：在限制下較量，對手也可以是自己</h2>
+<div class="def r"><b>判定</b><span>贏過對手，或超越自己的紀錄（例如更快完成）</span></div>
+<div class="play r"><span>剪刀石頭布</span><span>和自己比</span><span>合作碰撞</span><span>個人競賽</span><span>計時挑戰</span><span>完成度挑戰</span><span>戰鬥</span></div>
 <div class="grid g2">
-<div class="card ex r"><span class="pill b">範例 25</span><h3>計時賽</h3><p>限時內答完全部題目，答錯加罰時間，記錄最佳成績。</p><p class="how"><b>可以這樣用：</b>已經學過的內容拿來練熟：元素符號、單字、公式。對應案例：計時挑戰。</p><a class="go" href="https://chrischou0807.github.io/escape/workbench/ex/timer.html" target="_blank" rel="noopener">開啟範例 ↗</a></div>
+<div class="card ex r"><span class="pill b">範例 25</span><h3>計時賽</h3><p>限時內答完全部題目，答錯加罰時間，記錄最佳成績。</p><p class="how"><b>可以這樣用：</b>已經學過的內容拿來練熟：元素符號、單字、公式。對手是時間，也是上一次的自己。對應案例：計時挑戰。</p><a class="go" href="https://chrischou0807.github.io/escape/workbench/ex/timer.html" target="_blank" rel="noopener">開啟範例 ↗</a></div>
 <div class="card ex r"><span class="pill b">範例 55</span><h3>雙人同機對戰</h3><p>兩人共用一台裝置，誰先答對誰得分，答錯會被鎖住一下。</p><p class="how"><b>可以這樣用：</b>同學之間的即時較量，適合下課前的複習。對應案例：戰鬥。</p><a class="go" href="https://chrischou0807.github.io/escape/workbench/ex/duel.html" target="_blank" rel="noopener">開啟範例 ↗</a></div>
 </div>
 </div></section>
@@ -261,17 +276,17 @@ section.in .r:nth-child(2){transition-delay:.12s}section.in .r:nth-child(3){tran
 <div class="card r"><span class="pill o">發散</span><h3>機關範例庫（160 多款）</h3><p>看見「原來 AI 可以做出這麼多種機關」。每一款都能直接「複製提示詞」，換成你的內容就能用。不知道從哪開始，就按「先看這 10 款」。</p></div>
 <div class="card r"><span class="pill b">收斂</span><h3>機關設計工作台</h3><p>把模糊的想法一步一步拆開：知識點、玩家得到的改變、謎題與解法、答對答錯時機關發生什麼、意外操作，最後產生行為情境式的提示詞。</p></div>
 </div>
+<div class="row r" style="display:flex;gap:12px;flex-wrap:wrap;margin-top:18px"><a class="go-btn" href="https://chrischou0807.github.io/escape/workbench/#ex" target="_blank" rel="noopener">開啟範例庫 ↗</a><a class="go-btn b" href="https://chrischou0807.github.io/escape/workbench/" target="_blank" rel="noopener">開啟工作台 ↗</a></div>
 <div class="note info r">第一版用範例庫：直接「下載 HTML」，或「複製提示詞」換成自己的內容。做第二版時，再用工作台把行為拆清楚。</div>
 </div></section>
 
 <!-- 上架 -->
 <section id="u1"><div class="wrap">
-<p class="eyebrow r">先上架</p>
-<h2 class="r">先有網址，才能測、才能改</h2>
-<div class="grid g3">
-<div class="card topo r"><div class="no">01</div><h3>第一版先能動</h3><p>從範例庫挑一款，不必完美。</p></div>
-<div class="card topo r"><div class="no">02</div><h3>拿到自己的網址</h3><p>手機打得開，別人也打得開。</p></div>
-<div class="card topb r"><div class="no b">03</div><h3>再談規格與行為</h3><p>玩過第一版，才知道哪裡不是你要的。</p></div>
+<p class="eyebrow r">上架</p>
+<h2 class="r">今天為什麼先上架？</h2>
+<div class="vs">
+<div class="card r"><span class="pill">平常</span><h3>在 AI 裡改到差不多，才上架</h3><p>設計和修改都在 AI 對話裡完成，最後一步才放上網。</p></div>
+<div class="card good r"><span class="pill o">今天</span><h3>先用範例，把上架走通一次</h3><p>上架只要學一次。先拿範例走完流程，下半場就能專心在設計，改好再更新同一個網址。</p></div>
 </div>
 <div class="note info r">今天不用 AI agent，上架的每一步都自己來。平常有在用 agent 的老師，之後也可以直接請 AI 幫你上架。</div>
 </div></section>
@@ -292,26 +307,29 @@ section.in .r:nth-child(2){transition-delay:.12s}section.in .r:nth-child(3){tran
 <p class="eyebrow r">現場註冊 · 約 5 分鐘</p>
 <h2 class="r">註冊 GitHub 帳號</h2>
 <div class="grid g4">
-<div class="card r"><div class="no">01</div><h3>打開 github.com</h3><p>按右上角 Sign up。</p></div>
+<div class="card r"><div class="no">01</div><h3>打開註冊頁</h3><p><a href="https://github.com/signup" target="_blank" rel="noopener">github.com/signup ↗</a></p></div>
 <div class="card r"><div class="no">02</div><h3>填 Email 與密碼</h3><p>用常用信箱，密碼要夠長。</p></div>
 <div class="card r"><div class="no">03</div><h3>取一個帳號名稱</h3><p>只能英數和「-」，會出現在網址裡，例如 <b>chrischou0807</b>.github.io。</p></div>
 <div class="card r"><div class="no">04</div><h3>收驗證信</h3><p>輸入信裡的驗證碼，方案選 Free。</p></div>
 </div>
-<div class="note info r">驗證信沒收到：先看垃圾郵件，或改用 Gmail；學校信箱有時會擋。卡住的人在聊天室舉手，先看別人操作。</div>
+<div class="note info r">驗證信沒收到：先看垃圾郵件，或改用 Gmail；學校信箱有時會擋。</div>
 <div class="note warn r">免費帳號的作品一定是公開的，任何人都看得到程式碼。答案、學生資料、不能公開的圖片都不要放上去。</div>
 </div></section>
 
 <section id="u4"><div class="wrap">
 <p class="eyebrow r">GitHub 上架 · 只用網頁</p>
-<h2 class="r">五個步驟，拿到網址</h2>
-<div class="tl r" style="grid-template-columns:90px 1fr">
-<div class="t">01</div><div>右上角「＋」→ <b>New repository</b>，名稱填英文（例如 <b>escape</b>），選 Public，按 Create。</div>
-<div class="t">02</div><div><b>Add file → Upload files</b>，把 HTML 檔拖進去，按 <b>Commit changes</b>。</div>
-<div class="t">03</div><div><b>Settings → Pages</b>：Source 選 Deploy from a branch，分支 <b>main</b>、資料夾 <b>/(root)</b>，按 Save。</div>
-<div class="t">04</div><div>等 1～2 分鐘，同一頁上方會出現網址：<b>帳號.github.io/escape/</b></div>
-<div class="t">05</div><div>完整網址要加上檔名，例如 <b>帳號.github.io/escape/lock.html</b>。用手機打開試試看。</div>
+<h2 class="r">四個步驟，拿到網址</h2>
+<div class="grid g4">
+<div class="card r"><div class="no">01</div><h3>建立 repository</h3><p>右上角「＋」→ New repository，名稱填英文，選 Public。</p>
+<div class="gh"><div class="t">Create a new repository</div>Repository name<div class="f hl">escape</div>◉ Public　○ Private<div style="margin-top:8px"><span class="gb">Create repository</span></div></div></div>
+<div class="card r"><div class="no">02</div><h3>上傳檔案</h3><p>Add file → Upload files，把 HTML 拖進去，按 Commit changes。</p>
+<div class="gh"><span class="f hl" style="display:inline-block">Add file ▾ · Upload files</span><div class="drop">📄 lock.html<br><span style="font-size:11px">Drag files here</span></div><span class="gb">Commit changes</span></div></div>
+<div class="card r"><div class="no">03</div><h3>開啟 Pages</h3><p>Settings → Pages，選 Deploy from a branch、main、/(root)，Save。</p>
+<div class="gh"><div class="tabs"><span>Code</span><span>Issues</span><span class="hl" style="color:#1f2328">Settings</span></div><b class="hl">Pages</b><div style="margin-top:6px">Source<div class="f">Deploy from a branch ▾</div>Branch<div class="f">main ▾　/(root) ▾　<b>Save</b></div></div></div></div>
+<div class="card r"><div class="no">04</div><h3>拿到網址</h3><p>等 1～2 分鐘，同一頁上方出現網址；後面加上檔名。</p>
+<div class="gh"><div class="live">Your site is live at<br><a>帳號.github.io/escape/</a></div><div style="margin-top:8px">完整網址：<br><b>帳號.github.io/escape/lock.html</b></div></div></div>
 </div>
-<p class="small r">檔名取成 index.html，網址就可以不寫檔名。一個 repo 可以放很多個機關，建議一個機關一個資料夾。</p>
+<p class="small r">畫面為示意，實際按鈕位置以 GitHub 為準。檔名取成 index.html，網址就可以不寫檔名；一個 repo 可以放很多個機關，建議一個機關一個資料夾。</p>
 </div></section>
 
 <section id="u5"><div class="wrap">
@@ -319,8 +337,9 @@ section.in .r:nth-child(2){transition-delay:.12s}section.in .r:nth-child(3){tran
 <h2 class="r" style="margin-top:16px">密碼鎖：不只是一把鎖</h2>
 <div class="grid g2">
 <div class="card topb r"><span class="pill b">玩家看到的</span><h3>前台</h3><p>轉動轉盤對出密碼，按開鎖。答錯會提示還剩幾次，錯太多次會暫時鎖住；打開後出現道具圖片和文字。</p></div>
-<div class="card topo r"><span class="pill o">老師用的</span><h3>管理員後台</h3><p>長按右上角齒輪、輸入後台密碼進入。直接在網頁上改密碼位數與答案、上傳道具圖片、寫提示，不用改程式。</p></div>
+<div class="card topo r"><span class="pill o">出題的人用的</span><h3>設定頁</h3><p>長按右上角齒輪、輸入設定密碼打開。直接在網頁上改密碼位數與答案、上傳道具圖片、寫提示，不用改程式。</p></div>
 </div>
+<p class="small r">這不是伺服器上的「後台」：設定頁是藏在同一個網頁裡的畫面，改好的設定只存在這台瀏覽器，或下面的分享連結裡。</p>
 <div class="callout r"><span class="ic">▶</span>設定好之後按「產生分享連結」，就得到一把新的鎖。<br>同一個檔案，可以變成第一關的寶箱、第三關的抽屜、另一個班的遊戲。</div>
 <p class="small r">示範：chrischou0807.github.io/escape/lock/</p>
 </div></section>
@@ -329,9 +348,9 @@ section.in .r:nth-child(2){transition-delay:.12s}section.in .r:nth-child(3){tran
 <h2 class="r">方便，但也有代價</h2>
 <div class="grid g2">
 <div class="card r"><div class="no b">01</div><h3>設定存在網址裡</h3><p>答案只是編碼，不是加密。懂的學生把網址拿去解碼，就看得到答案。</p></div>
-<div class="card r"><div class="no b">02</div><h3>後台密碼在原始碼裡</h3><p>預設密碼寫在公開的程式碼裡，要記得改掉；而且分享連結裡也帶著後台密碼。</p></div>
+<div class="card r"><div class="no b">02</div><h3>設定密碼看得到</h3><p>預設的設定密碼寫在公開的程式碼裡，要記得改掉；而且分享連結裡也帶著設定密碼。</p></div>
 <div class="card r"><div class="no b">03</div><h3>圖片越大，網址越長</h3><p>上傳的圖片也會塞進網址，太長時 LINE、QR code 可能放不下。</p></div>
-<div class="card r"><div class="no b">04</div><h3>只能改開放的項目</h3><p>想改流程、加新的反應，還是要請 AI 改程式，做成第二版。</p></div>
+<div class="card r"><div class="no b">04</div><h3>只能改開放的項目</h3><p>設定頁沒開放的，例如流程、新的反應，還是要請 AI 改程式，做成第二版。</p></div>
 </div>
 <div class="note info r">課堂練習、活動關卡很夠用；正式比賽或有成績的測驗，答案最好不要只靠前端檢查。</div>
 </div></section>
@@ -344,7 +363,7 @@ section.in .r:nth-child(2){transition-delay:.12s}section.in .r:nth-child(3){tran
 <div class="card good r"><span class="pill b">練習</span><h3>請 AI 生成</h3><p>在範例庫按「複製提示詞」，換成你的內容，貼給 AI，把它給的 HTML 存成檔案再上傳。</p></div>
 </div>
 <div class="grid g3" style="margin-top:18px">
-<div class="card topo r"><div class="no">01</div><h3>上架</h3><p>照五個步驟拿到網址。</p></div>
+<div class="card topo r"><div class="no">01</div><h3>上架</h3><p>照四個步驟拿到網址。</p></div>
 <div class="card topo r"><div class="no">02</div><h3>貼上 Padlet</h3><p>標註「第一版」，先發佈再說。</p></div>
 <div class="card topo r"><div class="no">03</div><h3>自己玩一次</h3><p>記下來：哪裡不是你要的？</p></div>
 </div>
