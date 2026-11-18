@@ -10,6 +10,11 @@
 *{box-sizing:border-box}
 html,body{margin:0;height:100%}
 body{font-family:"PingFang TC","Noto Sans TC","Microsoft JhengHei",system-ui,sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased}
+body.locked #deck{overflow:hidden}
+body.locked #ctr,body.locked #dots,body.locked #prog{opacity:.35;pointer-events:none}
+.shake{animation:shk .4s}
+@keyframes shk{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
+.dial.open{border-color:var(--orange);color:var(--orange)}
 #deck{height:100vh;overflow-y:auto;scroll-snap-type:y mandatory;scroll-behavior:smooth}
 section{min-height:100vh;scroll-snap-align:start;display:flex;align-items:center;justify-content:center;padding:72px 6vw 90px;position:relative}
 .wrap{width:100%;max-width:1080px}
@@ -87,7 +92,7 @@ section.in .r:nth-child(2){transition-delay:.12s}section.in .r:nth-child(3){tran
 .small{font-size:14px;color:var(--dim);margin-top:14px}
 </style>
 </head>
-<body>
+<body class="locked">
 <div id="prog"></div>
 <nav id="dots"></nav>
 <div id="ctr"><button id="up" aria-label="上一頁">︿</button><span id="num">01 / 18</span><button id="dn" aria-label="下一頁">﹀</button></div>
@@ -99,8 +104,8 @@ section.in .r:nth-child(2){transition-delay:.12s}section.in .r:nth-child(3){tran
 <h1 class="r">讓 AI 做出<br>你<span class="hl-o">真正想要</span>的機關</h1>
 <p class="lead r" style="margin-top:22px">從「寫規格」到「想清楚玩家會怎麼玩」</p>
 <div class="cover-legend r"><span><b style="background:#7fa4e3"></b>規格：機關是什麼</span><span><b style="background:var(--orange)"></b>行為：玩家這樣做時，機關怎麼反應</span></div>
-<div class="lockdemo r"><div class="dial" data-d>0</div><div class="dial" data-d>0</div><div class="dial" data-d>0</div><div class="dial" data-d>0</div><span class="lockmsg" id="lockmsg">點數字轉轉看。提示：今天的研習從幾點開始？</span></div>
-</div><a class="scrollhint" href="#s2">往下捲動<br>﹀</a></section>
+<div class="lockdemo r"><div class="dial" data-d>0</div><div class="dial" data-d>0</div><div class="dial" data-d>0</div><div class="dial" data-d>0</div><span class="lockmsg" id="lockmsg">打開密碼鎖，才能往下看。提示：今天的研習從幾點開始？</span></div>
+</div><a class="scrollhint" id="shint" href="#s2">🔒 先打開密碼鎖</a></section>
 
 <!-- 02 -->
 <section id="s2"><div class="wrap">
@@ -317,18 +322,27 @@ var dots=document.getElementById("dots");
 S.forEach(function(s,i){var a=document.createElement("a");a.href="#"+s.id;a.setAttribute("aria-label","第 "+(i+1)+" 頁");dots.appendChild(a)});
 var D=[].slice.call(dots.children);
 function pad(n){return (n<10?"0":"")+n}
-function setCur(i){cur=i;document.getElementById("num").textContent=pad(i+1)+" / "+pad(N);document.getElementById("prog").style.width=((i+1)/N*100)+"%";D.forEach(function(d,j){d.className=j===i?"on":""});var dark=S[i].classList.contains("dark");document.getElementById("ctr").style.background=dark?"#3a3940":"#3a3940"}
+function setCur(i){cur=i;document.getElementById("num").textContent=pad(i+1)+" / "+pad(N);document.getElementById("prog").style.width=((i+1)/N*100)+"%";D.forEach(function(d,j){d.className=j===i?"on":""});var dark=S[i].classList.contains("dark");}
 var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add("in");if(e.intersectionRatio>.5)setCur(S.indexOf(e.target))}})},{root:deck,threshold:[.25,.55]});
 S.forEach(function(s){io.observe(s)});
-function go(i){i=Math.max(0,Math.min(N-1,i));S[i].scrollIntoView({behavior:"smooth"})}
+function locked(){return document.body.classList.contains("locked")}
+function nudge(){var m=document.getElementById("lockmsg"),l=document.querySelector(".lockdemo");l.classList.remove("shake");void l.offsetWidth;l.classList.add("shake");m.textContent="還沒打開喔！先把密碼鎖轉開，才能往下看。";m.style.color="#f0a37e"}
+function go(i){if(locked()&&i>0){nudge();return}i=Math.max(0,Math.min(N-1,i));S[i].scrollIntoView({behavior:"smooth"})}
 document.getElementById("up").onclick=function(){go(cur-1)};
 document.getElementById("dn").onclick=function(){go(cur+1)};
-document.addEventListener("keydown",function(e){if(["ArrowDown","PageDown"," "].indexOf(e.key)>=0){e.preventDefault();go(cur+1)}else if(["ArrowUp","PageUp"].indexOf(e.key)>=0){e.preventDefault();go(cur-1)}else if(e.key==="Home"){go(0)}else if(e.key==="End"){go(N-1)}});
-[].slice.call(document.querySelectorAll('a[href^="#s"]')).forEach(function(a){a.addEventListener("click",function(e){e.preventDefault();var t=document.getElementById(a.getAttribute("href").slice(1));if(t)t.scrollIntoView({behavior:"smooth"})})});
+document.addEventListener("keydown",function(e){if(locked()&&/^[0-9]$/.test(e.key)){typeDigit(e.key);return}if(["ArrowDown","PageDown"," "].indexOf(e.key)>=0){e.preventDefault();go(cur+1)}else if(["ArrowUp","PageUp"].indexOf(e.key)>=0){e.preventDefault();go(cur-1)}else if(e.key==="Home"){go(0)}else if(e.key==="End"){go(N-1)}});
+[].slice.call(document.querySelectorAll('a[href^="#s"]')).forEach(function(a){a.addEventListener("click",function(e){e.preventDefault();if(locked()&&a.getAttribute("href")!=="#s1"){nudge();return}var t=document.getElementById(a.getAttribute("href").slice(1));if(t)t.scrollIntoView({behavior:"smooth"})})});
 setCur(0);S[0].classList.add("in");
 [].slice.call(document.querySelectorAll("[data-copy]")).forEach(function(b){b.onclick=function(){var box=b.parentNode.cloneNode(true);[].slice.call(box.querySelectorAll(".copy,.hd")).forEach(function(x){x.remove()});var t=box.textContent.replace(/^\s+|\s+$/g,"");var done=function(ok){b.textContent=ok?"已複製":"請手動選取";b.classList.toggle("ok",ok);setTimeout(function(){b.textContent="複製";b.classList.remove("ok")},1600)};try{navigator.clipboard.writeText(t).then(function(){done(true)},function(){done(false)})}catch(e){done(false)}}});
-var dials=[].slice.call(document.querySelectorAll("[data-d]")),msg=document.getElementById("lockmsg"),tries=0;
-dials.forEach(function(d){d.onclick=function(){d.textContent=(+d.textContent+1)%10;var code=dials.map(function(x){return x.textContent}).join("");if(code==="1400"){msg.textContent="🔓 打開了！這就是一個最簡單的線上密碼鎖。";msg.style.color="#f0a37e"}else{tries++;msg.style.color="";msg.textContent=tries>20?"提示：四位數，就是今天開始的時間。":"點數字轉轉看。提示：今天的研習從幾點開始？"}}});
+var dials=[].slice.call(document.querySelectorAll("[data-d]")),msg=document.getElementById("lockmsg"),tries=0,ti=0,CODE="1400";
+try{if(sessionStorage.getItem("lockOpen")==="1")openLock(true)}catch(e){}
+function check(){if(!locked())return;var code=dials.map(function(x){return x.textContent}).join("");tries++;
+ if(code===CODE){openLock(false)}else{msg.style.color="";msg.textContent=tries>24?"提示：四位數，就是今天研習開始的時間（14:00）。":tries>12?"提示：看看第 2 頁會出現的時間表……不對，那要先打開才看得到。是今天幾點開始？":"打開密碼鎖，才能往下看。提示：今天的研習從幾點開始？"}}
+function openLock(quiet){document.body.classList.remove("locked");dials.forEach(function(d,k){d.textContent=CODE[k];d.classList.add("open")});msg.textContent="🔓 打開了！這就是一個最簡單的線上密碼鎖。往下捲動繼續。";msg.style.color="#f0a37e";
+ var h=document.getElementById("shint");h.innerHTML="往下捲動<br>﹀";try{sessionStorage.setItem("lockOpen","1")}catch(e){}
+ if(!quiet)setTimeout(function(){S[1].scrollIntoView({behavior:"smooth"})},1400)}
+function typeDigit(k){dials[ti].textContent=k;ti=(ti+1)%dials.length;if(ti===0)check()}
+dials.forEach(function(d){d.onclick=function(){if(!locked())return;d.textContent=(+d.textContent+1)%10;check()}});
 })();
 </script>
 </body>
