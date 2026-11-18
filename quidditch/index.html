@@ -80,7 +80,7 @@ p,.story{font-size:17px;line-height:1.85;margin:0 0 12px}
 <h1>魁地奇的邀請</h1>
 <p>剛進入魔法學院的小菜鳥，竟然有機會加入魁地奇球隊！</p>
 <div class="row"><button class="btn" id="startBtn">開始遊戲</button></div>
-<p class="small" style="margin-top:14px">建議戴耳機或開聲音。右下角可以關掉音樂。</p>
+<p class="small" style="margin-top:14px">第三關要聽聲音，建議戴耳機。</p>
 </div></div></section>
 
 <!-- 開頭故事 -->
@@ -182,9 +182,13 @@ p,.story{font-size:17px;line-height:1.85;margin:0 0 12px}
 我最多就只能告訴你這樣了。</div>
 <p>你收到了一封入隊考試邀請信，需要展現一些魔法天賦的才能看出來關鍵！</p>
 <div class="row"><a class="btn" href="ar.html" target="_blank" rel="noopener">開啟魔法鏡頭（AR）</a></div>
-<p class="small" style="margin-top:10px">用魔法鏡頭對準邀請信，看見隱藏的文字；再聽 VOICE 裡的英文，找出答案。</p>
+<p class="small" style="margin-top:10px">用魔法鏡頭對準邀請信，看見隱藏的文字。</p>
+<p style="margin:14px 0 6px;font-weight:700">魔法 VOICE</p>
+<audio src="assets/voice.mp3" controls preload="none" style="width:100%"></audio>
+<p class="small" style="margin-top:6px">英文會告訴你往哪個方向、走幾步。從信上的巫師開始，一個字一個字數。</p>
 <div class="ans"><input id="a3" placeholder="答案" autocomplete="off"><button class="btn" data-check="3">送出</button></div>
 <div class="msg" id="m3"></div>
+<div class="hints" data-hints='["魔法鏡頭下，信上多了一段紫色的字，旁邊有一個騎掃帚的巫師。","從巫師旁邊那行字開始，照 VOICE 說的方向和步數數字。","第一個字：往右 8 步是「北」。"]'></div>
 </div></div></section>
 
 <!-- 第三關 解開 -->
@@ -192,28 +196,37 @@ p,.story{font-size:17px;line-height:1.85;margin:0 0 12px}
 <div class="eb">第三關 完成</div>
 <div class="who"><img src="assets/draco.jpg" alt="跩哥·馬份"><b>史萊哲林隊長 跩哥·馬份</b></div>
 <div class="bub">本公子跩哥·馬份是史萊哲林的隊長，那是其他三個隊長太沒用，才想要招有天賦新生進來，想加入史萊哲林球隊可沒這麼簡單！</div>
-<div class="row"><button class="btn" data-go="end">赴約</button></div>
+<div class="row"><button class="btn" data-go="choose">赴約</button></div>
 </div></div></section>
 
-<!-- 結局 -->
-<section class="scr" id="end"><div class="card"><img class="hero" src="assets/pitch.jpg" alt=""><div class="in">
+<!-- 結局：抉擇 -->
+<section class="scr" id="choose"><div class="card"><img class="hero" src="assets/pitch.jpg" alt=""><div class="in">
 <div class="eb">結局</div>
-<h2>踏上魁地奇的旅程</h2>
+<h2>踏上魁地奇的旅程？</h2>
 <div class="four"><img src="assets/harry.jpg" alt=""><img src="assets/cedric.jpg" alt=""><img src="assets/cho.jpg" alt=""><img src="assets/draco.jpg" alt=""></div>
 <div class="story">你準時地赴約，
 見到了四大學院的魁地奇隊長，
 及到處飛行的隊員們，
 成功地通過入隊考試。
 
-無論你是否有留下來，
+隊長們把掃帚遞到你面前……</div>
+<p style="font-weight:700;margin-top:6px">你的選擇是？</p>
+<div class="row"><button class="btn" data-end="stay">接受挑戰，加入球隊</button><button class="btn g" data-end="home">今天太累了，決定回家</button></div>
+</div></div></section>
+
+<!-- 結局：結果 -->
+<section class="scr" id="end"><div class="card"><img class="hero" id="endImg" src="assets/pitch.jpg" alt=""><div class="in">
+<div class="eb">結局</div>
+<h2 id="endTitle"></h2>
+<div class="story" id="endLine"></div>
+<div class="story">無論你是否有留下來，
 都是自己的選擇，
 相信自己繼續前進吧！</div>
 <div class="row"><button class="btn g" id="again">重新開始</button></div>
 </div></div></section>
 
-<div id="bar"><div class="steps" id="steps"><i></i><i></i><i></i></div><button id="music">🔊 音樂</button></div>
+<div id="bar"><div class="steps" id="steps"><i></i><i></i><i></i></div><span></span></div>
 <div id="zoom"><img alt=""></div>
-<audio id="bgm" src="assets/bgm.mp3" loop preload="none"></audio>
 
 <script>
 /* ===== 老師設定 ===== */
@@ -229,17 +242,13 @@ const CONFIG={
 /* ==================== */
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const norm=s=>String(s).normalize("NFKC").replace(/[\s「」『』"'。，,.!！]/g,"").toLowerCase();
-const DONE={cover:0,intro:0,l1:0,l1done:1,l2:1,l2done:2,l3:2,l3done:3,end:3};
+const DONE={cover:0,intro:0,l1:0,l1done:1,l2:1,l2done:2,l3:2,l3done:3,choose:3,end:3};
 function go(id){$$(".scr").forEach(s=>s.classList.toggle("on",s.id===id));scrollTo(0,0);
   $$("#steps i").forEach((e,i)=>e.classList.toggle("on",i<DONE[id]));
   try{sessionStorage.setItem("qd-scene",id)}catch(e){}if(id==="l2")resumeL2()}
 $$("[data-go]").forEach(b=>b.onclick=()=>go(b.dataset.go));
 
-/* 音樂 */
-const bgm=$("#bgm");let musicOn=true;
-function play(){if(musicOn){bgm.volume=.45;bgm.play().catch(()=>{})}}
-$("#music").onclick=()=>{musicOn=!musicOn;$("#music").textContent=musicOn?"🔊 音樂":"🔇 音樂";musicOn?play():bgm.pause()};
-$("#startBtn").onclick=()=>{play();go("intro")};
+$("#startBtn").onclick=()=>go("intro");
 
 /* 信封 */
 $("#env").onclick=()=>{$("#env").classList.add("open");setTimeout(()=>go("l1"),600)};
@@ -281,13 +290,18 @@ $("#ball").onclick=()=>{if($("#ball").classList.contains("clear"))return;$("#bal
 function resumeL2(){let d=0;try{d=+sessionStorage.getItem("qd-deadline")||0}catch(e){}
   if(d&&!tick){$("#ball").classList.add("clear");$("#vision").style.display="block";showVideo();deadline=d;startTimer()}}
 
+const ENDS={stay:["踏上魁地奇的旅程","你握緊掃帚，決定接受挑戰！\n從今天起，你就是魁地奇球隊的一員了。","assets/pitch.jpg"],
+  home:["回家休息","今天真的太累了，\n你向隊長們道謝，決定先回家好好休息。","assets/map.jpg"]};
+function showEnd(k){const e=ENDS[k]||ENDS.stay;$("#endTitle").textContent=e[0];$("#endLine").textContent=e[1];$("#endImg").src=e[2];try{sessionStorage.setItem("qd-end",k)}catch(x){}}
+$$("[data-end]").forEach(b=>b.onclick=()=>{showEnd(b.dataset.end);go("end")});
+try{showEnd(sessionStorage.getItem("qd-end")||"stay")}catch(x){showEnd("stay")}
 $("#again").onclick=()=>{try{sessionStorage.clear()}catch(e){}location.href=location.pathname};
 
 /* 重新整理後回到原本的頁面；?test=1 可直接跳關 */
 let start="cover";try{start=sessionStorage.getItem("qd-scene")||"cover"}catch(e){}
 const q=new URLSearchParams(location.search);
 if(q.get("test")==="1"){const b=document.createElement("div");b.style.cssText="position:fixed;top:6px;left:6px;z-index:60;display:flex;gap:4px;flex-wrap:wrap";
-  ["cover","intro","l1","l1done","l2","l2done","l3","l3done","end"].forEach(id=>{const x=document.createElement("button");x.textContent=id;x.style.fontSize="11px";x.onclick=()=>go(id);b.appendChild(x)});document.body.appendChild(b)}
+  ["cover","intro","l1","l1done","l2","l2done","l3","l3done","choose","end"].forEach(id=>{const x=document.createElement("button");x.textContent=id;x.style.fontSize="11px";x.onclick=()=>go(id);b.appendChild(x)});document.body.appendChild(b)}
 go(start);
 window.__test={CONFIG,norm,check,go};
 </script>
