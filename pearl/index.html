@@ -208,14 +208,22 @@ scene((sc,api)=>{
   const done=img(sc,"625c34165bc367001879284f/f4bcdc1c-d4ff-402f-9527-422619996ca7.png",601,203,586,331,0,2);
   const ph=hit(sc,601,203,586,331,next,"拿起這個密碼筒");
   const X=132,Y=123,W=453,N=3,S=W/N,url=src("625c34165bc367001879284f/c5e4c6e5-a75c-4bba-8eb0-4a2563e4cd58.jpeg");
-  const pcs=[];let order=[],sel=-1,solved=false;
-  for(let i=0;i<N*N;i++){const p=mk("div","pc","width:"+S+"px;height:"+S+"px;background-image:url('"+url+"');background-size:"+W+"px "+W+"px;background-position:-"+(i%N)*S+"px -"+Math.floor(i/N)*S+"px",sc);pcs.push(p);
-    p.onclick=()=>{if(solved)return;const slot=order.indexOf(i);if(sel<0){sel=slot;p.classList.add("sel");return}
-      const a=sel;sel=-1;pcs.forEach(q=>q.classList.remove("sel"));if(a===slot)return;[order[a],order[slot]]=[order[slot],order[a]];place();
-      if(order.every((v,k)=>v===k)){solved=true;pcs.forEach(q=>q.style.outline="none");setTimeout(()=>{done.classList.remove("hide");done.classList.add("pop");ph.classList.remove("hide");toast("拼好了！點右邊的密碼筒")},350)}}}
-  function place(){order.forEach((pi,slot)=>{pcs[pi].style.left=(X+(slot%N)*S)+"px";pcs[pi].style.top=(Y+Math.floor(slot/N)*S)+"px"})}
-  function shuffle(){do{order=[...Array(N*N).keys()].sort(()=>Math.random()-.5)}while(order.every((v,k)=>v===k));place()}
-  mk("div","","position:absolute;left:132px;top:84px;font-size:22px;color:#444;z-index:5",sc).textContent="點兩塊拼圖，交換位置。";
+  // 拼圖板：虛線格子
+  const board=mk("div","","position:absolute;left:"+X+"px;top:"+Y+"px;width:"+W+"px;height:"+W+"px;z-index:3;background:#ffffff55;border:3px dashed #8a8a8a;background-image:linear-gradient(#0002 1px,transparent 1px),linear-gradient(90deg,#0002 1px,transparent 1px);background-size:"+S+"px "+S+"px",sc);
+  const pcs=[];let solved=false,zTop=410,drag=null;
+  const scale=()=>stage.getBoundingClientRect().width/1200;
+  const home=i=>[X+(i%N)*S,Y+Math.floor(i/N)*S];
+  for(let i=0;i<N*N;i++){const p=mk("div","pc","width:"+S+"px;height:"+S+"px;touch-action:none;transition:none;box-shadow:0 4px 10px #0005;background-image:url('"+url+"');background-size:"+W+"px "+W+"px;background-position:-"+(i%N)*S+"px -"+Math.floor(i/N)*S+"px",sc);p.dataset.i=i;pcs.push(p);
+    p.addEventListener("pointerdown",e=>{if(solved||p.dataset.ok)return;e.preventDefault();p.setPointerCapture(e.pointerId);const k=scale();drag={p,dx:e.clientX/k-parseFloat(p.style.left),dy:e.clientY/k-parseFloat(p.style.top)};p.style.zIndex=++zTop;p.classList.add("sel")});
+    p.addEventListener("pointermove",e=>{if(!drag||drag.p!==p)return;const k=scale();p.style.left=Math.max(-40,Math.min(1200-S+40,e.clientX/k-drag.dx))+"px";p.style.top=Math.max(-40,Math.min(675-S+40,e.clientY/k-drag.dy))+"px"});
+    const drop=()=>{if(!drag||drag.p!==p)return;drag=null;p.classList.remove("sel");const[hx,hy]=home(i);
+      if(Math.hypot(parseFloat(p.style.left)-hx,parseFloat(p.style.top)-hy)<40){p.style.transition="left .15s,top .15s";p.style.left=hx+"px";p.style.top=hy+"px";p.dataset.ok=1;p.style.transform="none";p.style.zIndex=405;p.style.boxShadow="none";p.style.outline="none";p.style.cursor="default";
+        if(pcs.every(q=>q.dataset.ok)){solved=true;setTimeout(()=>{board.style.border="3px solid transparent";done.classList.remove("hide");done.classList.add("pop");ph.classList.remove("hide");toast("拼好了！點右邊的密碼筒")},300)}}};
+    p.addEventListener("pointerup",drop);p.addEventListener("pointercancel",drop)}
+  function shuffle(){board.style.border="3px dashed #8a8a8a";const spots=[...Array(9).keys()].sort(()=>Math.random()-.5);pcs.forEach((p,i)=>{delete p.dataset.ok;p.style.transition="none";p.style.boxShadow="0 4px 10px #0005";p.style.outline="";p.style.cursor="grab";p.style.zIndex=410;
+      // 打散到拼圖板右邊與下面的空地
+      const t=spots[i];p.style.left=(625+(t%3)*185+Math.random()*24-12)+"px";p.style.top=(45+Math.floor(t/3)*205+Math.random()*24-12)+"px";p.style.transform="rotate("+(Math.random()*16-8)+"deg)"})}
+  mk("div","","position:absolute;left:132px;top:84px;font-size:22px;color:#444;z-index:5",sc).textContent="把右邊的碎片拖進框裡，拼回原來的圖。";
   api.enter=()=>{if(!solved){done.classList.add("hide");ph.classList.add("hide");shuffle()}};
   navBack(sc);
 });
