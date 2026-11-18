@@ -145,13 +145,13 @@ report({base:[["625c34165bc367001879284f/8741a4b6-d206-4428-9c02-f02a020b5205.pn
 /* ===== 4 蠟染：刮開 + 筆電輸入 ===== */
 scene((sc,api)=>{
   img(sc,"625c34165bc367001879284f/bf24d97a-6176-4230-a832-9805a44ca563.png",595,178,594,471,0,10);
-  // 刮刮層：原作畫著銅壺筆的蠟染布；刮掉後露出背景布上的字母
+  // 刮刮層：一層蠟蓋住蠟染布；刮掉蠟就看到布上的字母
   const CX=69,CY=129,CW=507,CH=438;
   const cv=mk("canvas","scratch","left:"+CX+"px;top:"+CY+"px;width:"+CW+"px;height:"+CH+"px",sc);cv.width=CW;cv.height=CH;const g=cv.getContext("2d");
-  g.fillStyle="#3f5a4c";g.fillRect(0,0,CW,CH);
-  const cloth=new Image();cloth.onload=()=>{const k=cloth.naturalWidth/1200;g.globalCompositeOperation="source-atop";g.drawImage(cloth,(CX-2)*k,CY*k,CW*k,CH*k,0,0,CW,CH)};
-  cloth.src=src("625c34165bc367001879284f/a9e9bb79-ba6b-4fc1-9493-07d98cd5c1e5.png");
-  mk("div","","position:absolute;left:69px;top:88px;font-size:22px;color:#444;z-index:5",sc).textContent="用手指刮刮看布上的銅壺筆。";
+  (function wax(){const gr=g.createLinearGradient(0,0,CW,CH);gr.addColorStop(0,"#f0d27a");gr.addColorStop(.5,"#e2b84f");gr.addColorStop(1,"#c99a33");g.fillStyle=gr;g.fillRect(0,0,CW,CH);
+    for(let i=0;i<320;i++){const r=4+Math.random()*22;g.fillStyle=Math.random()<.5?"rgba(255,244,200,"+(.15+Math.random()*.25)+")":"rgba(150,105,20,"+(.08+Math.random()*.15)+")";g.beginPath();g.ellipse(Math.random()*CW,Math.random()*CH,r,r*(.6+Math.random()*.6),Math.random()*3,0,7);g.fill()}
+    for(let i=0;i<40;i++){g.strokeStyle="rgba(120,80,10,.18)";g.lineWidth=1+Math.random()*2;g.beginPath();const x=Math.random()*CW,y=Math.random()*CH;g.moveTo(x,y);g.bezierCurveTo(x+Math.random()*60-30,y+Math.random()*60-30,x+Math.random()*80-40,y+Math.random()*80-40,x+Math.random()*100-50,y+Math.random()*100-50);g.stroke()}})();
+  mk("div","","position:absolute;left:69px;top:88px;font-size:22px;color:#444;z-index:5",sc).textContent="布上蓋了一層蠟，用手指把蠟刮掉。";
   let down=false;const pt=e=>{const r=cv.getBoundingClientRect(),t=e.touches?e.touches[0]:e;return[(t.clientX-r.left)*CW/r.width,(t.clientY-r.top)*CH/r.height]};
   const rub=e=>{if(!down)return;e.preventDefault();const[x,y]=pt(e);g.globalCompositeOperation="destination-out";g.beginPath();g.arc(x,y,26,0,7);g.fill()};
   cv.addEventListener("pointerdown",e=>{down=true;rub(e)});addEventListener("pointerup",()=>down=false);cv.addEventListener("pointermove",rub);
@@ -168,7 +168,7 @@ scene((sc,api)=>{
   const bk=mk("div","key","left:"+(722+5*48)+"px;top:"+(331+3*48)+"px;width:92px;height:44px;font-size:18px",sc);bk.textContent="⌫";bk.onclick=()=>{if(solved)return;typed=typed.slice(0,-1);show()};
   api.enter=()=>{if(!solved){pearl.classList.add("hide");ph.classList.add("hide");typed="";show()}};
   navBack(sc);
-  hintBtn(sc,["用手指在左邊的布上刮，特別是銅壺筆的位置。","每支銅壺筆底下藏著一個字母，排成印尼「蠟染」的名字。","把五個字母用鍵盤打在螢幕上。","答案：BATIK"]);
+  hintBtn(sc,["用手指把左邊布上的蠟刮掉。","布上藏著五個字母，排成印尼「蠟染」的名字。","把五個字母用鍵盤打在螢幕上。","答案：BATIK"]);
 });
 
 /* ===== 5 訪查報告三 ===== */
