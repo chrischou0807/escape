@@ -125,7 +125,7 @@ scene((sc,api)=>{
   // 開關：0=壓下(白格) 1=拉起(紅格)；解答依面板顏色「上紅下白」
   const POS=[[691,460],[691,499],[691,537],[691,578],[750,460],[750,499],[750,537],[750,578]];
   const SOL=[0,1,0,1,1,0,0,1];
-  const st=POS.map(()=>0), sw=POS.map(([x,y])=>img(sc,P.swDown,x,y,32,27,0,20));
+  const st=POS.map(()=>0), sw=POS.map(([x,y])=>img(sc,P.swDown,x,y,32,27,0,40));
   img(sc,"625c34165bc367001879284f/583e2d63-272d-4c01-aa5d-de61ac265059.png",666,436,133,186,0,36);
   let solved=false;
   POS.forEach(([x,y],i)=>hit(sc,x-6,y-5,44,38,()=>{if(solved)return;st[i]^=1;sw[i].src=src(st[i]?P.swUp:P.swDown);
