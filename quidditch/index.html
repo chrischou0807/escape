@@ -80,7 +80,7 @@ p,.story{font-size:17px;line-height:1.85;margin:0 0 12px}
 <h1>魁地奇的邀請</h1>
 <p>剛進入魔法學院的小菜鳥，竟然有機會加入魁地奇球隊！</p>
 <div class="row"><button class="btn" id="startBtn">開始遊戲</button></div>
-<p class="small" style="margin-top:14px">建議戴耳機或開聲音。右下角可以關掉音樂。</p>
+<p class="small" style="margin-top:14px">第三關要聽聲音，建議戴耳機。</p>
 </div></div></section>
 
 <!-- 開頭故事 -->
@@ -182,7 +182,10 @@ p,.story{font-size:17px;line-height:1.85;margin:0 0 12px}
 我最多就只能告訴你這樣了。</div>
 <p>你收到了一封入隊考試邀請信，需要展現一些魔法天賦的才能看出來關鍵！</p>
 <div class="row"><a class="btn" href="ar.html" target="_blank" rel="noopener">開啟魔法鏡頭（AR）</a></div>
-<p class="small" style="margin-top:10px">用魔法鏡頭對準邀請信，看見隱藏的文字；再聽 VOICE 裡的英文，找出答案。</p>
+<p class="small" style="margin-top:10px">用魔法鏡頭對準邀請信，看見隱藏的文字。</p>
+<p style="margin:14px 0 6px;font-weight:700">魔法 VOICE</p>
+<audio src="assets/voice.mp3" controls preload="none" style="width:100%"></audio>
+<p class="small" style="margin-top:6px">聽聽看這一連串英文在說什麼，再對照教室門口的巫師。</p>
 <div class="ans"><input id="a3" placeholder="答案" autocomplete="off"><button class="btn" data-check="3">送出</button></div>
 <div class="msg" id="m3"></div>
 </div></div></section>
@@ -211,9 +214,8 @@ p,.story{font-size:17px;line-height:1.85;margin:0 0 12px}
 <div class="row"><button class="btn g" id="again">重新開始</button></div>
 </div></div></section>
 
-<div id="bar"><div class="steps" id="steps"><i></i><i></i><i></i></div><button id="music">🔊 音樂</button></div>
+<div id="bar"><div class="steps" id="steps"><i></i><i></i><i></i></div><span></span></div>
 <div id="zoom"><img alt=""></div>
-<audio id="bgm" src="assets/bgm.mp3" loop preload="none"></audio>
 
 <script>
 /* ===== 老師設定 ===== */
@@ -235,11 +237,7 @@ function go(id){$$(".scr").forEach(s=>s.classList.toggle("on",s.id===id));scroll
   try{sessionStorage.setItem("qd-scene",id)}catch(e){}if(id==="l2")resumeL2()}
 $$("[data-go]").forEach(b=>b.onclick=()=>go(b.dataset.go));
 
-/* 音樂 */
-const bgm=$("#bgm");let musicOn=true;
-function play(){if(musicOn){bgm.volume=.45;bgm.play().catch(()=>{})}}
-$("#music").onclick=()=>{musicOn=!musicOn;$("#music").textContent=musicOn?"🔊 音樂":"🔇 音樂";musicOn?play():bgm.pause()};
-$("#startBtn").onclick=()=>{play();go("intro")};
+$("#startBtn").onclick=()=>go("intro");
 
 /* 信封 */
 $("#env").onclick=()=>{$("#env").classList.add("open");setTimeout(()=>go("l1"),600)};
