@@ -88,6 +88,7 @@ td.miss{color:var(--orange);font-weight:700}
 section.in .r{opacity:1;transform:none}
 section.in .r:nth-child(2){transition-delay:.12s}section.in .r:nth-child(3){transition-delay:.24s}section.in .r:nth-child(4){transition-delay:.36s}section.in .r:nth-child(5){transition-delay:.48s}section.in .r:nth-child(6){transition-delay:.6s}
 .grid>.r:nth-child(2){transition-delay:.15s!important}.grid>.r:nth-child(3){transition-delay:.3s!important}.grid>.r:nth-child(4){transition-delay:.45s!important}
+.me-grid{grid-template-columns:minmax(200px,300px) 1fr;align-items:center;gap:34px}@media(max-width:820px){.me-grid{grid-template-columns:1fr}}
 @media(prefers-reduced-motion:reduce){.r{opacity:1;transform:none;transition:none}#deck{scroll-behavior:auto}}
 .small{font-size:14px;color:var(--dim);margin-top:14px}
 .gh{background:#fff;border:1px solid #d0d7de;border-radius:10px;font:13px/1.5 -apple-system,"Segoe UI",Helvetica,Arial,sans-serif;color:#1f2328;padding:12px;margin-top:12px;text-align:left}
@@ -131,7 +132,25 @@ section.in .r:nth-child(2){transition-delay:.12s}section.in .r:nth-child(3){tran
 <h1 class="r" style="font-size:clamp(34px,4.8vw,62px)">AI 協作設計：<br>從發想到做出一個<br>能玩的<span class="hl-o">線上密室機關</span></h1>
 <p class="lead r" style="margin-top:22px">讓 AI 做出你真正想要的機關</p>
 <div class="lockdemo r"><div class="dial" data-d>0</div><div class="dial" data-d>0</div><div class="dial" data-d>0</div><div class="dial" data-d>0</div><span class="lockmsg" id="lockmsg">打開密碼鎖，才能往下看。提示：今天的研習從幾點開始？</span></div>
-</div><a class="scrollhint" id="shint" href="#s2">🔒 先打開密碼鎖</a></section>
+</div><a class="scrollhint" id="shint" href="#sme">🔒 先打開密碼鎖</a></section>
+
+<!-- 自我介紹 -->
+<section id="sme"><div class="wrap">
+<h2 class="r">講師介紹</h2>
+<div class="grid r me-grid">
+<div><img src="me.webp" alt="周致羽老師 Q版形象照" style="width:100%;max-width:300px;display:block;margin:0 auto"></div>
+<div>
+<h3 style="font-size:clamp(28px,3vw,40px);margin:0 0 18px">周致羽 老師</h3>
+<div class="card" style="margin-bottom:16px"><span class="pill b">經歷</span>
+<ul style="margin:6px 0 0;padding-left:20px;line-height:1.85;font-size:17px">
+<li>桃園市立內壢高級中學　生活科技教師兼資訊媒體組長</li>
+<li>臺北市立內湖高級中學　生活科技教師兼社團活動組長、實驗研究組長</li>
+<li>臺北市生活科技學科平台兼任助理輔導員</li>
+</ul></div>
+<div class="card"><span class="pill o">專長</span>
+<div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:6px"><span class="tag you" style="font-size:15px;padding:6px 12px;border-radius:999px">實境解謎遊戲設計</span><span class="tag you" style="font-size:15px;padding:6px 12px;border-radius:999px">桌遊設計</span><span class="tag you" style="font-size:15px;padding:6px 12px;border-radius:999px">數位學習</span><span class="tag you" style="font-size:15px;padding:6px 12px;border-radius:999px">電腦輔助設計與製造</span><span class="tag you" style="font-size:15px;padding:6px 12px;border-radius:999px">木工製造</span><span class="tag you" style="font-size:15px;padding:6px 12px;border-radius:999px">機電整合</span></div></div>
+</div></div>
+</div></section>
 
 <!-- 02 -->
 <section id="s2"><div class="wrap">
