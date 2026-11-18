@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>從《神奇修護師》20 題學謎題設計</title>
+<meta name="theme-color" content="#2B2420">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+html,body{margin:0;height:100%;background:#17130f;overflow:hidden}
+*{box-sizing:border-box}
+#stage{position:fixed;left:50%;top:50%;width:1920px;height:1080px;transform-origin:0 0}
+#stage>section{position:absolute;inset:0;width:1920px;height:1080px;overflow:hidden;visibility:hidden;opacity:0;transition:opacity .35s}
+#stage>section.on{visibility:visible;opacity:1}
+#stage>section:not(.on) .rise{animation:none}
+h1,h2,h3,p{margin:0}
+table{border-collapse:collapse}
+th{text-align:left;font-weight:700;background:#F3E6D3;padding:14px 18px;font-size:24px}
+td{padding:14px 18px;border-bottom:2px solid #E7DCCB;vertical-align:top;line-height:1.5}
+td:first-child{font-weight:900;color:#C2551B}
+a{color:#1F6F76}
+body{font-family:'Noto Sans TC',Arial,sans-serif;color:#2B2420}
+section{background:#FBF6EE;padding:128px;display:flex;flex-direction:column;gap:36px}
+h1{font-size:112px;font-weight:900;line-height:1.2}
+h2{font-size:64px;font-weight:900;line-height:1.2}
+h3{font-size:40px;font-weight:700;line-height:1.3}
+p{font-size:30px;line-height:1.6}
+.eyebrow{font-size:24px;font-weight:700;color:#B4551F;letter-spacing:4px}
+.lead{font-size:40px;line-height:1.5}
+.soft{color:#5E534B}
+.small{font-size:24px;line-height:1.5;color:#5E534B}
+.spacer{flex:1}
+
+.cover{background:#2B2420;color:#FBF6EE;justify-content:space-between}
+.cover .eyebrow{color:#F0A36B}
+.cover .lead{color:#E7DCCB}
+.cover .small{color:#C9BBAA}
+
+.accent{background:#E0763A;color:#2B2420;justify-content:center;gap:48px}
+.accent h1{font-size:112px}
+.accent .lead{color:#2B2420}
+
+.nums{display:flex;gap:40px}
+.numbox{flex:1;background:#FFFDF8;border:2px solid #E7DCCB;border-radius:24px;padding:36px 40px;display:flex;flex-direction:column;gap:8px}
+.numbox .big{font-size:112px;font-weight:900;line-height:1.1;color:#C2551B}
+.numbox .lab{font-size:30px;font-weight:700}
+.numbox .sub{font-size:24px;line-height:1.5;color:#5E534B}
+
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:28px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:28px}
+.card{background:#FFFDF8;border:2px solid #E7DCCB;border-radius:20px;padding:30px 34px;display:flex;flex-direction:column;gap:10px}
+.card .tag{font-size:24px;font-weight:700;color:#1F6F76}
+.card .txt{font-size:26px;line-height:1.5;color:#463C35}
+.card .step{font-size:64px;font-weight:900;line-height:1.1;color:#C2551B}
+
+table{width:100%;font-size:26px;color:#2B2420}
+.tip{font-size:28px;line-height:1.55;background:#F3E6D3;border-radius:16px;padding:22px 30px;color:#2B2420}
+.tip b{color:#B4551F}
+
+.rise{animation:rise .5s both;animation-delay:calc(var(--i) * 120ms)}
+@keyframes rise{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+
+#bar{position:fixed;left:0;right:0;bottom:0;display:flex;align-items:center;gap:10px;padding:10px 14px;font:14px "Noto Sans TC",sans-serif;color:#E7DCCB;background:linear-gradient(transparent,rgba(0,0,0,.55));opacity:0;transition:opacity .3s}
+body:hover #bar,#bar:focus-within{opacity:1}
+#bar button{background:rgba(255,255,255,.12);color:#fff;border:0;border-radius:8px;padding:8px 14px;font:inherit;cursor:pointer}
+#bar .sp{flex:1}
+#prog{position:fixed;left:0;top:0;height:4px;background:#E0763A;transition:width .3s}
+@media print{html,body{overflow:visible;background:#fff}#bar,#prog{display:none}#stage{position:static;transform:none!important}#stage>section{position:relative;visibility:visible;opacity:1;page-break-after:always}@page{size:1920px 1080px;margin:0}}
+</style>
+</head>
+<body>
+<div id="prog"></div>
+<div id="stage">
+<section id="cover" class="cover" data-transition="fade"><p class="eyebrow">謎題設計教學</p>
+<h1>從《神奇修護師》<br>20 題學謎題設計</h1>
+<p class="lead">每一題怎麼解、用了哪一種設計手法、<br>怎麼搬到機關範例庫裡用</p>
+<p class="small">分析對象：《神奇修護師－謎題（含答案）》謎題卡 20 題</p>
+<aside>開場。這份簡報拆解 20 張謎題卡，目的是學會設計手法，之後套用在範例庫的機關上。</aside>
+</section>
+<section id="overview" data-transition="fade"><p class="eyebrow">全貌</p>
+<h2>20 張卡，每張只有一個畫面</h2>
+<div class="nums">
+<div class="numbox rise" style="--i:0"><p class="big">20</p><p class="lab">道謎題</p><p class="sub">答案是中文的 9 題、英文 8 題、數字 3 題</p></div>
+<div class="numbox rise" style="--i:1"><p class="big">6</p><p class="lab">種設計手法</p><p class="sub">同一種手法可以換很多種包裝</p></div>
+<div class="numbox rise" style="--i:2"><p class="big">3</p><p class="lab">級難度</p><p class="sub">第 1 級 7 題、第 2 級 8 題、第 3 級 5 題</p></div>
+</div>
+<p class="lead soft">每張卡都由三樣東西組成：謎面、一個提示圖示、一個標明字數與語言的答案框。</p>
+<aside>三個數字是全貌。難度分級來自原設計的「修護卡」欄位：01–07 是 1、08–15 是 2、16–20 是 3。</aside>
+</section>
+<section id="methods" data-transition="fade"><p class="eyebrow">分類</p>
+<h2>六種設計手法</h2>
+<div class="grid3">
+<div class="card"><p class="tag">4 題｜01、04、17、18</p><h3>變形與還原</h3><p class="txt">答案被鏡射、切半或弄殘，要做逆向操作</p></div>
+<div class="card"><p class="tag">3 題｜05、08、12</p><h3>拆字與組字</h3><p class="txt">把中文字當零件，拆開或合起來</p></div>
+<div class="card"><p class="tag">4 題｜06、14、19、20</p><h3>編碼與查表</h3><p class="txt">數字或顏色對應到注音、字母</p></div>
+<div class="card"><p class="tag">2 題｜03、13</p><h3>由例子歸納規則</h3><p class="txt">規則不明說，只給幾個例子</p></div>
+<div class="card"><p class="tag">4 題｜02、11、15、16</p><h3>空間與路徑</h3><p class="txt">拼合碎片、照指令走、連線找交會</p></div>
+<div class="card"><p class="tag">3 題｜07、09、10</p><h3>觀察與干擾</h3><p class="txt">答案就在眼前，難在知道看哪裡</p></div>
+</div>
+<aside>這是我依解法歸納的分類，不是原作者的分類。有些題同時用到兩種手法，這裡依主要步驟歸類。</aside>
+</section>
+<section id="m1" data-transition="fade"><p class="eyebrow">手法一｜4 題</p>
+<h2>變形與還原</h2>
+<table><tr><th style="width:7%">題</th><th style="width:33%">謎面</th><th style="width:42%">怎麼解</th><th style="width:18%">答案</th></tr><tr><td>01</td><td>只露出半截筆畫的字，旁邊一面鏡子</td><td>沿虛線鏡射，補回另一半</td><td>善本</td></tr><tr><td>04</td><td>四個左右對稱的怪符號，旁邊一把剪刀</td><td>從中間剪開，每個只留一半</td><td>HEPA</td></tr><tr><td>17</td><td>壞掉的七段顯示器</td><td>分辨亮錯的筆畫，讀出該有的字</td><td>SOP</td></tr><tr><td>18</td><td>六個點的方格，圓點只塗黑一半</td><td>照例題把塗黑的半邊連成筆畫</td><td>XRF</td></tr></table>
+<p class="tip"><b>設計要點：</b>答案沒有被藏起來，只是被加工過。圖示負責告訴玩家要做哪一種逆向操作。</p>
+<aside>第 17 題的畫面很小，我是依題目文字「機器壞掉了」與顯示器上明暗不同的筆畫判讀的，細節請對照原卡。</aside>
+</section>
+<section id="n1" data-transition="fade">
+<p class="eyebrow">手法一的新範例｜英文</p>
+<h2>No.140 鏡射字母剪半</h2>
+<div class="grid2">
+<div class="card"><p class="tag">謎面</p><p class="txt">六個怪符號，每一個都是英文字母和它的鏡像疊在一起。</p></div>
+<div class="card"><p class="tag">怎麼解</p><p class="txt">點符號的左半或右半，留下不是鏡像的那一邊，讀出 MUSEUM，再選出它的中文意思。</p></div>
+<div class="card"><p class="tag">對應的原題</p><p class="txt">第 04 題 HEPA。原題靠想像把符號剪開，線上版可以真的選要留哪一半。</p></div>
+<div class="card"><p class="tag">判定的是什麼</p><p class="txt">兩層判定：留對邊才讀得出單字，讀出來還要知道字義。</p></div>
+</div>
+<p class="small">線上試玩：<a href="https://chrischou0807.github.io/escape/workbench/ex/mirrorcut.html">chrischou0807.github.io/escape/workbench/ex/mirrorcut.html</a></p>
+<aside>原題的剪刀在這裡變成玩家的手指。先示範一個字母，再讓學生自己剪。</aside>
+</section>
+<section id="m2" data-transition="fade"><p class="eyebrow">手法二｜3 題</p>
+<h2>拆字與組字</h2>
+<table><tr><th style="width:7%">題</th><th style="width:33%">謎面</th><th style="width:42%">怎麼解</th><th style="width:18%">答案</th></tr><tr><td>05</td><td>油紙傘、豔陽畫作、童玩戲偶，幾個部件被圈起來</td><td>同色圈出的部件合成一個字</td><td>全色</td></tr><tr><td>08</td><td>書頁上畫著舌頭、小刀和菜刀</td><td>圖像換成部件：舌加刂是刮，再加刀</td><td>刮刀</td></tr><tr><td>12</td><td>「一金左三耳右」「孤無瓜」</td><td>照字面組字：金加三個耳；孤去掉瓜</td><td>鑷子</td></tr></table>
+<p class="tip"><b>設計要點：</b>中文字本身就是零件箱。這三題分別用圈選、圖像、文字敘述三種方式把零件交給玩家。</p>
+<aside>同一個手法三種給法：05 是從現成的字裡圈出部件，08 是用圖畫代替部件，12 是傳統字謎的文字敘述。</aside>
+</section>
+<section id="n2" data-transition="fade">
+<p class="eyebrow">手法二的新範例｜國文</p>
+<h2>No.141 部件組字</h2>
+<div class="grid2">
+<div class="card"><p class="tag">謎面</p><p class="txt">提示寫著「鳥的叫聲（左右結構）」，下面是口、鳥、言、寺、艹、化和幾個干擾部件。</p></div>
+<div class="card"><p class="tag">怎麼解</p><p class="txt">挑出兩個部件放進左格和右格，組成「鳴」。位置放反了不算。</p></div>
+<div class="card"><p class="tag">對應的原題</p><p class="txt">第 05、08、12 題。原題用圈選、圖像、文字敘述給零件，這款改成一池部件自己挑。</p></div>
+<div class="card"><p class="tag">判定的是什麼</p><p class="txt">字義、部件、結構三件事都要對，才組得出字。</p></div>
+</div>
+<p class="small">線上試玩：<a href="https://chrischou0807.github.io/escape/workbench/ex/radicals.html">chrischou0807.github.io/escape/workbench/ex/radicals.html</a></p>
+<aside>三題的答案是鳴、花、詩。可以請學生自己出一題，換掉後台的內容。</aside>
+</section>
+<section id="m3" data-transition="fade"><p class="eyebrow">手法三｜4 題</p>
+<h2>編碼與查表</h2>
+<table><tr><th style="width:7%">題</th><th style="width:33%">謎面</th><th style="width:42%">怎麼解</th><th style="width:18%">答案</th></tr><tr><td>06</td><td>三組數字各帶一個小數字，旁邊一張注音表</td><td>數字是注音在表上的序號，小數字是聲調</td><td>紅外線</td></tr><tr><td>14</td><td>調色盤上每個顏色標一個字母</td><td>用兩個例題確認讀法，再把色塊換成字母</td><td>red</td></tr><tr><td>19</td><td>畫上五個英文單字和 31235</td><td>每個數字代表取該單字的第幾個字母</td><td>story</td></tr><tr><td>20</td><td>一個正常的鐘，一個數字換成字母的鐘</td><td>由 3 是 C、6 是 F 推出字母序，再解 6135</td><td>FACE</td></tr></table>
+<p class="tip"><b>設計要點：</b>對照表可以整張給（06）、只給一部分讓人推（20）、或完全靠例題（14）。給得越少越難。</p>
+<aside>06：ㄏ是第 11 個、ㄨ第 36、ㄥ第 33，二聲，拼成「紅」。19：easy 第 3 個字母 s、teacher 第 1 個 t、hope 第 2 個 o、more 第 3 個 r、happy 第 5 個 y。</aside>
+</section>
+<section id="n3" data-transition="fade">
+<p class="eyebrow">手法三的新範例｜自然</p>
+<h2>No.142 原子序密碼</h2>
+<div class="grid2">
+<div class="card"><p class="tag">謎面</p><p class="txt">三個數字 50、8、74，旁邊一張元素對照表。</p></div>
+<div class="card"><p class="tag">怎麼解</p><p class="txt">把原子序換成元素符號 Sn、O、W，連起來就是 SNOW。</p></div>
+<div class="card"><p class="tag">對應的原題</p><p class="txt">第 06 題的注音序號。同樣是「序號查表」，把注音表換成週期表。</p></div>
+<div class="card"><p class="tag">判定的是什麼</p><p class="txt">會查表、會把符號連起來讀。後台關掉對照表，就變成要記得原子序。</p></div>
+</div>
+<p class="small">線上試玩：<a href="https://chrischou0807.github.io/escape/workbench/ex/elementcode.html">chrischou0807.github.io/escape/workbench/ex/elementcode.html</a></p>
+<aside>三題是 SNOW、BRAIN、CANDY。對照表給或不給，就是第 1 級和第 3 級的差別。</aside>
+</section>
+<section id="m4" data-transition="fade"><p class="eyebrow">手法四｜2 題</p>
+<h2>由例子歸納規則</h2>
+<table><tr><th style="width:7%">題</th><th style="width:33%">謎面</th><th style="width:42%">怎麼解</th><th style="width:18%">答案</th></tr><tr><td>03</td><td>文是 1、田是 4、回是 2，問「修護師」</td><td>數每個字裡有幾個封閉的空間</td><td>152</td></tr><tr><td>13</td><td>井字格，加上「6 在上」「2 在左」這類位置提示</td><td>井字格就是 1 到 9 的九宮格，依相鄰位置找數字</td><td>9348</td></tr></table>
+<p class="tip"><b>設計要點：</b>規則不寫出來，只給例子。例子要夠多，足以排除其他猜測：文、田、回的筆畫數是 4、5、6，和答案對不上，所以玩家不會誤以為是數筆畫。</p>
+<p class="small">第 03 題原檔有兩個版本：問「修復師」答案是 132，問「修護師」答案是 152。</p>
+<aside>歸納題最怕例子不夠。設計時先列出玩家可能猜的規則（筆畫、部首、注音），確認每一種都被至少一個例子否定。</aside>
+</section>
+<section id="n4" data-transition="fade">
+<p class="eyebrow">手法四的新範例｜數學</p>
+<h2>No.143 規則機器</h2>
+<div class="grid2">
+<div class="card"><p class="tag">謎面</p><p class="txt">機器把 3 變成 7、5 變成 11、10 變成 21。問 8 會變成多少？</p></div>
+<div class="card"><p class="tag">怎麼解</p><p class="txt">推出規則是「乘 2 再加 1」，答 17。第三題要數每個數字裡有幾個圈。</p></div>
+<div class="card"><p class="tag">對應的原題</p><p class="txt">第 03 題的封閉空間。第三台機器用的就是同一招，換成阿拉伯數字。</p></div>
+<div class="card"><p class="tag">判定的是什麼</p><p class="txt">每題只能猜三次。例子能排除別的猜測：「加 4」只對得上第一組。</p></div>
+</div>
+<p class="small">線上試玩：<a href="https://chrischou0807.github.io/escape/workbench/ex/rulemachine.html">chrischou0807.github.io/escape/workbench/ex/rulemachine.html</a></p>
+<aside>請學生說出規則，而不只是答案。答對後畫面會顯示規則，可以拿來對照。</aside>
+</section>
+<section id="m5" data-transition="fade"><p class="eyebrow">手法五｜4 題</p>
+<h2>空間與路徑</h2>
+<table><tr><th style="width:7%">題</th><th style="width:33%">謎面</th><th style="width:42%">怎麼解</th><th style="width:18%">答案</th></tr><tr><td>02</td><td>幾塊散落的彩色碎片，四個上下雙色的方塊</td><td>依顏色把兩塊碎片上下拼起來，形狀像數字</td><td>1997</td></tr><tr><td>11</td><td>字母方陣，上方一排橫直交錯的膠帶</td><td>從幸運草出發，橫膠帶走橫、直膠帶走直</td><td>LUCKYCLOVER</td></tr><tr><td>15</td><td>破盤子，兩側是斷掉的注音符號</td><td>左右碎片對接成完整注音，再拼讀</td><td>歲月痕跡</td></tr><tr><td>16</td><td>地圖上六個彩色圖釘，旁邊三組雙色詞</td><td>同色圖釘連線，三條線交會在一件物品上</td><td>地球儀</td></tr></table>
+<p class="tip"><b>設計要點：</b>玩家要動手擺、動手畫。紙本靠想像，換成線上機關後可以真的拖曳。</p>
+<aside>第 02 題的拼法是我由碎片形狀與答案反推的：框形在上、長條在下像 9，兩根長條像 1。請對照原卡確認。</aside>
+</section>
+<section id="n5" data-transition="fade">
+<p class="eyebrow">手法五的新範例｜社會</p>
+<h2>No.144 方位走格子</h2>
+<div class="grid2">
+<div class="card"><p class="tag">謎面</p><p class="txt">一張 5×5 的字格、一個指北針、一串「東、東、北、北…」的方位指令。</p></div>
+<div class="card"><p class="tag">怎麼解</p><p class="txt">從 ★ 出發照方位走，踩到的字連成「北回歸線通過嘉義」。指北針的北不在上面。</p></div>
+<div class="card"><p class="tag">對應的原題</p><p class="txt">第 11 題的膠帶走格子。原題只分橫和直，這款加上方位判讀。</p></div>
+<div class="card"><p class="tag">判定的是什麼</p><p class="txt">要先把東西南北換成畫面上的方向。走錯一步就回到起點。</p></div>
+</div>
+<p class="small">線上試玩：<a href="https://chrischou0807.github.io/escape/workbench/ex/compasswalk.html">chrischou0807.github.io/escape/workbench/ex/compasswalk.html</a></p>
+<aside>路徑每次重開都不一樣，學生之間沒辦法互相抄。</aside>
+</section>
+<section id="m6" data-transition="fade"><p class="eyebrow">手法六｜3 題</p>
+<h2>觀察與干擾</h2>
+<table><tr><th style="width:7%">題</th><th style="width:33%">謎面</th><th style="width:42%">怎麼解</th><th style="width:18%">答案</th></tr><tr><td>07</td><td>兩個竹籃，旁邊一支放大鏡</td><td>字母藏在編織紋路裡，要湊近看</td><td>OPENMIND</td></tr><tr><td>09</td><td>古卷上四行詩句，落款「頂天」</td><td>落款就是提示：只讀每一行最上面的字</td><td>家庭醫師</td></tr><tr><td>10</td><td>五個碗，上面的顏色單字和字的顏色不一致</td><td>找出字義和字色相同的那一個</td><td>藍色</td></tr></table>
+<p class="tip"><b>設計要點：</b>資訊全部攤在眼前。難的是知道該看哪裡、該忽略什麼。</p>
+<aside>第 10 題用的是心理學的史楚普效應：字義和字色衝突時，人會被干擾。只有 blue 是用藍色寫的。</aside>
+</section>
+<section id="n6" data-transition="fade">
+<p class="eyebrow">手法六的新範例｜科技</p>
+<h2>No.145 標籤貼錯了</h2>
+<div class="grid2">
+<div class="card"><p class="tag">謎面</p><p class="txt">六張工具卡，圖和名稱幾乎都對不上，字還用了不相干的顏色。</p></div>
+<div class="card"><p class="tag">怎麼解</p><p class="txt">在 8 秒內找出唯一「圖和字一致」的那一張，一共五輪。</p></div>
+<div class="card"><p class="tag">對應的原題</p><p class="txt">第 10 題碗上的顏色字。同樣是用不一致的資訊來干擾。</p></div>
+<div class="card"><p class="tag">判定的是什麼</p><p class="txt">工具辨認加上專注力，可以失誤兩次。</p></div>
+</div>
+<p class="small">線上試玩：<a href="https://chrischou0807.github.io/escape/workbench/ex/labelcheck.html">chrischou0807.github.io/escape/workbench/ex/labelcheck.html</a></p>
+<aside>這款有時間壓力，適合暖身或複習，不適合教新內容。</aside>
+</section>
+<section id="statement" class="accent" data-transition="fade"><h1>謎面上的每一樣東西<br>都是提示</h1>
+<p class="lead">鏡子、剪刀、針筒、放大鏡、畫筆，沒有一個是裝飾。</p>
+<aside>過場。接下來看這 20 題怎麼給提示、怎麼分難度。</aside>
+</section>
+<section id="hints" data-transition="fade"><p class="eyebrow">共通技巧</p>
+<h2>提示怎麼給</h2>
+<table><tr><th style="width:36%">畫面上的東西</th><th style="width:44%">暗示的動作</th><th style="width:20%">題號</th></tr><tr><td>鏡子</td><td>鏡射</td><td>01</td></tr><tr><td>剪刀</td><td>切成一半</td><td>04</td></tr><tr><td>針筒、膠水、膠帶</td><td>黏合、對接、沿著走</td><td>02、15、11</td></tr><tr><td>放大鏡</td><td>湊近看細節</td><td>07</td></tr><tr><td>畫筆、墨水</td><td>連線、補上缺的部分</td><td>16、18</td></tr><tr><td>落款「頂天」</td><td>只取最上面的字</td><td>09</td></tr></table>
+<p class="tip"><b>答案框也是提示：</b>「？？（中文）」同時說了字數和語言，玩家可以用它檢查自己的答案。</p>
+<aside>這些圖示同時扣住「文物修護」的主題：都是修護師的工具。提示和故事是同一件事。</aside>
+</section>
+<section id="levels" data-transition="fade"><p class="eyebrow">難度</p>
+<h2>三級難度差在哪裡</h2>
+<div class="grid3">
+<div class="card rise" style="--i:0"><p class="tag">第 1 級｜01–07</p><h3>圖示直接說出動作</h3><p class="txt">鏡子、剪刀、放大鏡，或直接附上對照表。看懂圖示就一步到位。</p></div>
+<div class="card rise" style="--i:1"><p class="tag">第 2 級｜08–15</p><h3>要做兩步</h3><p class="txt">先看懂一句話或一個例題，再做第二步：組字、走路徑、對接後拼讀。</p></div>
+<div class="card rise" style="--i:2"><p class="tag">第 3 級｜16–20</p><h3>規則要自己發現</h3><p class="txt">沒有文字說明。要自己想到該連線、該反過來看、或數字其實是字母序。</p></div>
+</div>
+<p class="lead soft">調難度的三個旋鈕：步驟數、提示給多少、對照表給多少。</p>
+<aside>分級是原設計的；「差在哪裡」是我比較三組題目後歸納的傾向，不是原作者的說明。</aside>
+</section>
+<section id="mapping" data-transition="fade"><p class="eyebrow">應用</p>
+<h2>六種手法，對應範例庫的機關</h2>
+<table><tr><th style="width:20%">手法</th><th style="width:32%">紙本的做法</th><th style="width:48%">範例庫可以用的機關</th></tr><tr><td>變形與還原</td><td>鏡射、切半、殘缺</td><td>75 鏡面文字、49 透明片疊合、41 圖案旋轉</td></tr><tr><td>拆字與組字</td><td>圈部件、圖像代字</td><td>121 拖字母拼答案、20 燈謎、103 移開物件</td></tr><tr><td>編碼與查表</td><td>序號表、顏色代碼、取第幾個字</td><td>22 對照表、42 座標密碼、114 字母藏數字</td></tr><tr><td>歸納規則</td><td>三個例子推規則</td><td>33 推理密碼、61 色彩序列、110 條件塗格</td></tr><tr><td>空間與路徑</td><td>碎片、方向指令、連線</td><td>57 拖曳拼圖、47 指令迷宮、109 依序連點</td></tr><tr><td>觀察與干擾</td><td>紋理、藏頭、字色衝突</td><td>14 放大鏡、76 藏頭詩、19 條件挑戰</td></tr></table>
+<aside>機關編號對應範例庫 139 款。這是建議的起點，同一種手法通常不只一款機關可以承載。</aside>
+</section>
+<section id="steps" data-transition="fade"><p class="eyebrow">應用</p>
+<h2>四步把手法套進機關</h2>
+<div class="grid2">
+<div class="card"><p class="step">1</p><h3>先定答案</h3><p class="txt">從單元裡挑一個術語。這 20 題的答案全是修護用語：善本、全色、紅外線、XRF。</p></div>
+<div class="card"><p class="step">2</p><h3>選一種手法</h3><p class="txt">答案是中文，適合拆字或注音；英文適合取字母或走路徑；數字適合歸納規則。</p></div>
+<div class="card"><p class="step">3</p><h3>放一個提示</h3><p class="txt">圖示、落款或例題，選一種就好。提示重複給，難度會掉一級。</p></div>
+<div class="card"><p class="step">4</p><h3>掛上機關</h3><p class="txt">依上一頁的對照挑一款機關，到後台把題目內容換成自己的。</p></div>
+</div>
+<aside>第 1 步最重要：答案本身就是學習內容。學生解完會記得「全色」是修護術語。</aside>
+</section>
+<section id="practice" class="cover" data-transition="fade"><p class="eyebrow">練習</p>
+<h2>用「光合作用」當答案，<br>設計兩道不同手法的謎題</h2>
+<div class="grid3">
+<div class="card" style="background:#3A312B;border-color:#57493F"><h3 style="color:#F0A36B">只有一個答案嗎</h3><p class="txt" style="color:#E7DCCB">請同學試解，看會不會解出別的答案。</p></div>
+<div class="card" style="background:#3A312B;border-color:#57493F"><h3 style="color:#F0A36B">卡住的人有路嗎</h3><p class="txt" style="color:#E7DCCB">提示夠不夠讓人知道第一步該做什麼。</p></div>
+<div class="card" style="background:#3A312B;border-color:#57493F"><h3 style="color:#F0A36B">提示剛好一個嗎</h3><p class="txt" style="color:#E7DCCB">多了會太簡單，沒有會變成猜謎。</p></div>
+</div>
+<p class="small">做完後，從範例庫挑一款機關，把謎題放進去。</p>
+<aside>收尾練習。三個檢查點對應前面講的：唯一解、提示、難度。</aside>
+</section>
+</div>
+<div id="bar"><button id="prev" aria-label="上一張">◀</button><button id="next" aria-label="下一張">▶</button><span id="num"></span><span class="sp"></span><span>← → 或點畫面換頁</span><button id="fs">全螢幕</button></div>
+<script>
+(function(){
+var st=document.getElementById("stage"),S=[].slice.call(st.children),i=0;
+function fit(){var k=Math.min(innerWidth/1920,innerHeight/1080);st.style.transform="scale("+k+") translate(-50%,-50%)";st.style.left="50%";st.style.top="50%";st.style.transformOrigin="0 0";st.style.transform="translate("+(-960*k)+"px,"+(-540*k)+"px) scale("+k+")";}
+function go(n){i=Math.max(0,Math.min(S.length-1,n));S.forEach(function(s,j){s.classList.toggle("on",j===i);});
+ document.getElementById("num").textContent=(i+1)+" / "+S.length;document.getElementById("prog").style.width=((i+1)/S.length*100)+"%";
+ try{history.replaceState(null,"","#"+(i+1));}catch(e){}}
+addEventListener("resize",fit);fit();
+var h=parseInt(location.hash.slice(1),10);go(h>0?h-1:0);
+addEventListener("keydown",function(e){var k=e.key;if(k==="ArrowRight"||k==="PageDown"||k===" "||k==="ArrowDown"){e.preventDefault();go(i+1);}else if(k==="ArrowLeft"||k==="PageUp"||k==="ArrowUp"){e.preventDefault();go(i-1);}else if(k==="Home")go(0);else if(k==="End")go(S.length-1);else if(k==="f")fs();});
+st.addEventListener("click",function(e){if(e.target.closest("a"))return;go(e.clientX<innerWidth/3?i-1:i+1);});
+var x0=null;addEventListener("touchstart",function(e){x0=e.touches[0].clientX;},{passive:true});
+addEventListener("touchend",function(e){if(x0===null)return;var dx=e.changedTouches[0].clientX-x0;if(Math.abs(dx)>40)go(dx<0?i+1:i-1);x0=null;});
+document.getElementById("prev").onclick=function(){go(i-1);};document.getElementById("next").onclick=function(){go(i+1);};
+function fs(){var d=document;if(!d.fullscreenElement){(d.documentElement.requestFullscreen||function(){}).call(d.documentElement);}else d.exitFullscreen();}
+document.getElementById("fs").onclick=fs;
+})();
+</script>
+</body>
+</html>
