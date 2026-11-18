@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>神奇修護師：缺頁的病歷表</title>
+<style>
+:root{--bg:#17130f;--bg2:#221b15;--paper:#f6efe2;--paper2:#ebe1cf;--ink:#2b2420;--soft:#6b5f57;--accent:#e0763a;--accent2:#b4551f;--teal:#2f7f86;--line:rgba(255,255,255,.1);--good:#3f9a62;--bad:#c9483b;
+ --cjk:"PingFang TC","Microsoft JhengHei","Noto Sans TC",system-ui,sans-serif;--mono:ui-monospace,Menlo,Consolas,monospace}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;min-height:100%}
+body{font-family:var(--cjk);background:radial-gradient(120% 80% at 50% 0%,#33271c 0%,var(--bg2) 40%,var(--bg) 100%) fixed;color:#efe6d6;line-height:1.75}
+#app{max-width:560px;margin:0 auto;padding:16px 16px 60px}
+.top{display:flex;align-items:center;gap:8px;font-size:13px;color:#c9bbaa;margin-bottom:12px}
+.top .sp{flex:1}
+.chip{border:1px solid var(--line);border-radius:999px;padding:4px 12px;background:rgba(255,255,255,.05);white-space:nowrap}
+.linkbtn{background:none;border:none;color:#c9bbaa;font:inherit;font-size:13px;text-decoration:underline;cursor:pointer;padding:4px}
+h1{font-size:30px;line-height:1.3;margin:8px 0;color:#fff}
+h2{font-size:22px;line-height:1.4;margin:6px 0;color:#fff}
+.eyebrow{font-size:12px;letter-spacing:3px;color:#f0a36b;font-weight:700}
+.story{font-size:16px;white-space:pre-wrap;color:#e7dccb}
+.paper{background:var(--paper);color:var(--ink);border-radius:14px;padding:18px;box-shadow:0 14px 30px -14px rgba(0,0,0,.8)}
+.paper h3{margin:0 0 6px;font-size:17px;color:var(--accent2)}
+.paper p{margin:6px 0;font-size:15px}
+.btn{display:block;width:100%;border:none;border-radius:12px;padding:14px;font:inherit;font-size:16px;font-weight:700;cursor:pointer;background:linear-gradient(180deg,#f0a36b,var(--accent));color:#2b1608;margin-top:14px}
+.btn.ghost{background:transparent;border:1px solid var(--line);color:#efe6d6;font-weight:400}
+.btn:disabled{opacity:.45}
+.list{display:flex;flex-direction:column;gap:10px;margin-top:14px}
+.item{display:flex;align-items:center;gap:12px;text-align:left;width:100%;border:1px solid var(--line);background:rgba(255,255,255,.04);color:#efe6d6;border-radius:12px;padding:13px 14px;font:inherit;font-size:15px;cursor:pointer}
+.item .no{font-family:var(--mono);font-size:13px;color:#f0a36b;flex:none;width:34px}
+.item .st{margin-left:auto;font-size:13px;color:#c9bbaa;flex:none}
+.item.done{border-color:rgba(63,154,98,.6);background:rgba(63,154,98,.12)}
+.item.lock{opacity:.45;cursor:default}
+.roles{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+.role{border:1px solid var(--line);background:rgba(255,255,255,.04);color:#efe6d6;border-radius:14px;padding:14px 6px;text-align:center;cursor:pointer;font:inherit}
+.role .ic{font-size:34px}.role .nm{font-weight:700;margin-top:4px}.role .ds{font-size:12px;color:#c9bbaa;line-height:1.5;margin-top:4px}
+.puz{margin-top:14px;display:flex;flex-direction:column;align-items:center;gap:12px;min-height:120px;user-select:none;-webkit-user-select:none}
+.fmt{display:inline-block;border:2px solid var(--accent);border-radius:10px;padding:6px 16px;font-size:16px;font-weight:700;background:#fff8ee;color:var(--ink)}
+.ans{display:flex;gap:8px;margin-top:14px}
+.ans input{flex:1;min-width:0;height:50px;border-radius:12px;border:1px solid var(--line);background:#0f0c09;color:#f0a36b;font:inherit;font-size:19px;text-align:center;letter-spacing:2px}
+.ans input:focus{outline:none;border-color:var(--accent)}
+.ans button{flex:none;border:none;border-radius:12px;padding:0 20px;font:inherit;font-weight:700;font-size:16px;background:linear-gradient(180deg,#f0a36b,var(--accent));color:#2b1608;cursor:pointer}
+.msg{min-height:24px;font-size:14px;color:#f0a36b;margin-top:8px;text-align:center}
+.hints{margin-top:10px;display:flex;flex-direction:column;gap:8px}
+.hint{border-left:3px solid var(--teal);background:rgba(47,127,134,.14);padding:9px 12px;border-radius:0 10px 10px 0;font-size:14px;color:#dfeeee}
+.hint b{color:#8fd3d9}
+.hint.pro{border-color:#f0a36b;background:rgba(224,118,58,.14);color:#f6e3d2}.hint.pro b{color:#f0a36b}
+.row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;align-items:center}
+.shake{animation:sh .35s}@keyframes sh{0%,100%{transform:translateX(0)}25%,75%{transform:translateX(-7px)}50%{transform:translateX(7px)}}
+.fade{animation:fd .4s ease}@keyframes fd{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.small{font-size:13px;color:#c9bbaa}
+.tool{font-size:34px}
+.pbtn{border:1px solid #cbbda6;background:#fff8ee;color:var(--ink);border-radius:999px;padding:7px 16px;font:inherit;font-size:14px;cursor:pointer}
+.tile{background:#fff8ee;border:1px solid #cbbda6;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:700}
+.bar{height:6px;border-radius:999px;background:rgba(255,255,255,.1);overflow:hidden;margin:6px 0 14px}.bar i{display:block;height:100%;background:var(--accent)}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+(function(){
+"use strict";
+/* ============ 資料 ============ */
+var ROLES={
+ paper:{name:"紙質修護師",ic:"📜",ds:"書籍、檔案、善本、書畫"},
+ wood:{name:"木質修護師",ic:"🪵",ds:"家具、廟宇彩繪、門神"},
+ ceramic:{name:"陶瓷修護師",ic:"🏺",ds:"器皿、禮器、醫療器具"}
+};
+var PROLOGUE="晚上九點，時光博物館的修護室還亮著燈。\n\n年度特展明天早上九點開幕，可是駐館修護師溫以晴從傍晚就聯絡不上了。館裡的人都叫她「溫醫師」，新來的人總要過一陣子才知道為什麼。\n\n她的桌上只留下一本修護紀錄。她都叫它「病歷表」。可是這一本，中間被撕掉了二十頁。\n\n館長把鑰匙交給今天才報到的你：\n\n「她最後在修的是哪一件文物？修到哪一步？人去了哪裡？天亮以前，把病歷表拼回來。」";
+var CH=[
+ {t:"推開修護室的門",intro:"修護室的門鎖著。\n\n先弄清楚：她是誰，她在修什麼。",outro:"你穿上工作袍。病歷表的開頭回來了：她是文物的家庭醫師，這陣子修的是紙質的善本。",p:["09","01","03"]},
+ {t:"第一步：檢視登錄",intro:"病歷表的第一頁只剩一行字：\n\n「不管多急，一定先做檢視登錄。」\n\n可是登錄表不在桌上。",outro:"登錄表上，文物名稱那一欄被水漬暈開了，只看得出「日記」兩個字。損傷的位置倒是畫得清清楚楚。",p:["16","17","13","15"]},
+ {t:"第二步：看不見的資訊",intro:"下一頁寫著：\n\n「肉眼看不見的，不代表不存在。」\n\n她一共做了四項檢測，檢測單散在檢測室各處。",outro:"四張檢測單都找到了。最後一張上有紅筆圈起來的警告：這本日記的墨水很脆弱。",p:["06","18","19","14"]},
+ {t:"第三步：工具櫃",intro:"檢測做完，她開始準備工具。可是工具櫃的每一格都上了鎖，標籤也被她動過手腳。\n\n她好像是故意的。",outro:"工具都在，而且每一樣都擦得乾乾淨淨、放回原位。她不是匆忙離開的。",p:["04","08","12","02"]},
+ {t:"第四步：補色與判斷",intro:"病歷表接近尾聲。最後幾頁談的不是技術，而是判斷：\n\n「修到哪裡該停，比怎麼修更難。」",outro:"只差最後兩頁。修護檯正中央那盞燈，一直亮著。",p:["05","10","07"]},
+ {t:"她在哪裡",intro:"修護檯的正中央，放著她沒修完的那件文物。\n\n答案就在這裡。",outro:"",p:["11","20"]}
+];
+var PZ={
+"09":{t:"門邊的卷軸",spec:"paper",fmt:"？？？？（中文）",a:["家庭醫師"],
+ s:"門鎖著，門禁要輸入四個字的通關語。門邊掛著一幅舊卷軸。",
+ h1:"落款「頂天」不是人名，是在告訴你該看哪裡。",h2:"只讀每一行最上面的那個字，由右往左讀。",
+ r:"門開了。門後的牆上，她用毛筆寫著：「我是這座博物館裡所有文物的家庭醫師。」",
+ k:"博物館裡的修護師就像文物的家庭醫師：了解文物進館前的來歷與保存環境，替它訂出專屬的修護與保存方針。"},
+"01":{t:"裁過的標籤",spec:"paper",fmt:"？？（中文）",a:["善本"],
+ s:"工作檯上有一張被裁過的標籤。這是她正在處理的文物類別。",
+ h1:"這兩個字都是左右對稱的，剩下的一半就夠了。",h2:"按「把鏡子立在虛線上」，鏡子裡的倒影會補上另一半。由上往下讀。",
+ r:"鏡子補上了另一半，標籤寫的是「善本」。她這陣子修的是紙質文物。",
+ k:"紙質修護師負責用紙做成的文物：書籍、檔案文獻、相片、善本書、海報、東方書畫、明信片。"},
+"03":{t:"置物櫃的便條",spec:"paper",fmt:"？？？（數字）",a:["152"],
+ s:"她的置物櫃要三位數密碼。櫃門上貼著一張便條。",
+ h1:"和筆畫、讀音都無關。看字的「形狀」：文只有一個，田有四個。",h2:"數每個字裡有幾個被筆畫完全圍起來的空間。修有 1 個、護有 5 個、師有 2 個。",
+ r:"置物櫃開了。裡面掛著三件工作袍，胸口分別繡著：木質、紙質、陶瓷。",
+ k:"修護師主要依材質分工。木質修護師處理家具、廟宇彩繪、門神；紙質修護師處理書畫文獻；陶瓷修護師處理器皿與禮器。"},
+"16":{t:"牆上的館藏地圖",spec:"wood",fmt:"一樣東西（中文三個字）",a:["地球儀"],
+ s:"登錄表不在桌上。牆上掛著一張館藏地圖。",
+ h1:"圖例的三個詞各拆成兩半，分別寫在兩根同色的圖釘上。",h2:"點兩根同色的圖釘把它們連起來。三條線會交會在同一件東西上。",
+ r:"三條線交會在地球儀上。你轉開地球儀，裡面捲著一張檢視登錄表。",
+ k:"檢視登錄包含狀況檢視與文物資訊調查：了解損傷與劣化的範圍和嚴重程度，用圖示把損傷的種類與範圍標出來，供修復前後比對。"},
+"17":{t:"壞掉的老機器",spec:"wood",fmt:"？？？（英文）",a:["SOP"],
+ s:"檢測室門口那台老機器壞了。螢幕上本來顯示的，是新人最常問她的三個字母。",
+ h1:"機器壞了：該亮的沒亮，不該亮的反而亮了。",h2:"只看暗掉的那些筆畫：第一格像 5、第二格像 0。",
+ r:"螢幕寫的是 SOP。機器旁邊，她用麥克筆補了一句：「沒有這種東西。」",
+ k:"修復原則上沒有標準的 SOP。每件文物狀況不同，有的可以先清潔，有的要先加固，都依檢視登錄的結果調整，確保文物不受二次傷害。"},
+"13":{t:"檔案櫃上的摺扇",spec:"ceramic",fmt:"？？？？（數字）",a:["9348"],
+ s:"檔案櫃是四位數的密碼鎖。櫃子上放著一把摺扇。",
+ h1:"井字有九格。你每天都會看到這樣排的九個數字。",h2:"把 1 到 9 依序填進井字（像電話按鍵）。6 的下面是 9，2 的右邊是 3，7 的上面是 4，9 的左邊是 8。",
+ r:"檔案櫃開了。裡面是歷年的修護紀錄，每一本都寫得密密麻麻。",
+ k:"修復進行時要盡可能記錄所有的過程、步驟和材料，留給後人查詢參考，就像一個人的病歷表。"},
+"15":{t:"摔成兩半的盤子",spec:"ceramic",fmt:"？？？？（中文）",a:["歲月痕跡","歳月痕跡"],
+ s:"地上有一個摔成兩半的盤子，盤緣上好像寫了什麼。",
+ h1:"左邊四片、右邊四片，要一片對一片黏回去。",h2:"先點左邊一片，再點右邊能接上的那一片。四組都黏好後，由上往下拼讀。",
+ r:"盤子上寫的是「歲月痕跡」。這就是明天開幕的特展。",
+ k:"修護師要判斷：修到什麼程度、回到什麼時期的樣貌，才不會過度修護與詮釋。"},
+"06":{t:"第一張檢測單",spec:"wood",fmt:"？？？（中文）",a:["紅外線"],
+ s:"第一張檢測單上只有三組數字。",
+ h1:"每個數字是手冊上的第幾個注音符號，右上角的小數字是聲調。",h2:"11 是ㄏ、36 是ㄨ、33 是ㄥ，二聲。另外兩組照樣拼。",
+ r:"是紅外線。她用紅外線影像，看穿了紙頁上的髒汙。",
+ k:"紅外線影像可以看見被覆蓋的畫面。有一幅廟宇壁畫被長年的香火燻黑，就是靠紅外線才看見煙燻底下原作的樣貌。"},
+"18":{t:"潑到墨水的檢測單",spec:"wood",fmt:"？？？（英文）",a:["XRF"],
+ s:"第二張檢測單被墨水潑到，儀器的名稱看不清楚了。",
+ h1:"看示範：塗了一半的圓點連起來是 K。",h2:"把每一格裡塗了一半的圓點想像成全黑，其他忽略，就會浮現字母。",
+ r:"是 XRF。她用它確認了日記裡每一種墨水的成分。",
+ k:"X 射線螢光光譜儀（XRF）是非破壞性的檢測方法，能快速分析文物所含的元素與含量高低，幫助判斷不同時期所用的材料。"},
+"19":{t:"檢測室的畫",spec:"paper",fmt:"？？？？？（英文）",a:["STORY"],
+ s:"檢測室的牆上掛著一幅畫。",
+ h1:"先開紫外光燈。出現的五個數字，和五個單字一一對應。",h2:"第一個數字是 3：取第一個單字的第 3 個字母。依此類推。",
+ r:"是 story。她在檢測單上寫：「每一件文物都有它的故事，先聽完，再動手。」",
+ k:"做測試是為了不讓肉眼看不見的資訊被忽略，文物狀況良好時，不一定每一項都要做。"},
+"14":{t:"溶劑測試的調色盤",spec:"wood",fmt:"？？？（英文）",a:["RED"],
+ s:"溶劑測試的桌上有一個調色盤，還有一張她留下的紀錄卡。",
+ h1:"一個色盤有三種顏色，就是三個字母。",h2:"把三個字母排成一個英文單字。眼是 eye、哭是 cry。第三個色盤是 e、d、r。",
+ r:"是 red，紅色警告：這本日記的墨水遇到某一種溶劑會暈開，絕對不能用。",
+ k:"清潔文物之前，要先做溶劑測試，確定清潔不會傷到文物本身。有修護師在學生時期用錯溶劑，文物當場變色，從此時時警惕自己。"},
+"04":{t:"工具櫃第一格",spec:"ceramic",fmt:"？？？？（英文）",a:["HEPA"],
+ s:"第一格的標籤上是四個奇怪的符號。",
+ h1:"每個符號都是左右對稱的。剪刀是提示。",h2:"從每個符號的正中間剪開，只看右半邊。",
+ r:"是 HEPA。格子裡是一台小型吸塵器。",
+ k:"用毛刷清潔文物時，會搭配具高效能過濾功能（HEPA）的吸塵器，避免灰塵和汙染物隨著排風口飄到其他文物上。"},
+"08":{t:"工具櫃第二格",spec:"wood",fmt:"？？（中文）",a:["刮刀"],
+ s:"第二格貼著一頁從筆記本撕下來的圖。",
+ h1:"左頁的兩個圖合成一個字，右頁是另一個字。",h2:"舌頭加一把小刀（刂）是什麼字？",
+ r:"是刮刀。格子裡排著五把大小不同的刮刀。",
+ k:"刮刀可以把填補材料混合攪拌、塑形、塞填，把小範圍缺損的地方填補整齊。修復師會依經驗準備不同尺寸、材質與造型的刮刀。"},
+"12":{t:"工具櫃第三格",spec:"ceramic",fmt:"？？（中文）",a:["鑷子","镊子"],
+ s:"第三格貼著兩塊花磚。",
+ h1:"這是字謎。每一塊花磚是一個字。",h2:"「一金左、三耳右」：左邊一個金，右邊三個耳。「孤無瓜」：孤字拿掉瓜。",
+ r:"是鑷子。格子裡有金屬的，也有竹子的。",
+ k:"鑷子用來夾取細小的文物碎片或修復材料，常見的有金屬、木竹、鐵氟龍材質。"},
+"02":{t:"工具櫃最大的一格",spec:"ceramic",fmt:"？？？？（數字）",a:["1997"],
+ s:"最大的一格要四位數密碼。桌上散著幾塊彩色碎片。",
+ h1:"每組色塊告訴你：上面黏哪一種顏色的碎片，下面黏哪一種。",h2:"兩根直條上下黏起來像 1；方框黏在直條上面像 9；橫折黏在直條上面像 7。",
+ r:"是 1997。格子裡放的不是工具，是她的畢業證書。",
+ k:"針筒可以把黏著劑注射到毛筆、畫筆伸不進去的地方。1997 年，國立臺南藝術學院成立古物維護研究所，臺灣開始培育本土的修護師。"},
+"05":{t:"顏料盒上的小卡",spec:"paper",fmt:"？？（中文）",a:["全色"],
+ s:"她的顏料盒上貼著三張文物小卡。",
+ h1:"粉紅色圈了兩處，藍色圈了一處。同色圈起來的要合在一起。",h2:"粉紅色圈的是「人」和「王」，上下合起來；藍色圈的是另一個字。",
+ r:"是全色。顏料盒裡的水彩筆，筆尖還是濕的。",
+ k:"全色是用水彩筆或毛筆沾取顏料，把要復原的區域補上顏色。修復師會依材質選擇不同尺寸、筆毛與筆頭造型的筆刷。"},
+"10":{t:"隔壁桌的五個碗",spec:"ceramic",fmt:"？？（中文）",a:["藍色","藍","BLUE"],
+ s:"隔壁陶瓷修護師的桌上有五個碗，便條寫著：「這些碗有汙損，哪一個保存良好？」",
+ h1:"汙損的不是碗，是碗上的字。",h2:"找出「字的意思」和「字的顏色」一致的那個碗。",
+ r:"只有寫著 blue 的那個碗，字和顏色是一致的。",
+ k:"陶瓷修護師要熟悉不同時代與地區的陶瓷發展歷史、製作方法與技術，才能判斷劣化狀況、規劃修復材料與方法。"},
+"07":{t:"窗邊的竹籃",spec:"wood",fmt:"？？？？？？？？（英文）",a:["OPENMIND"],
+ s:"窗邊放著一個竹籃，是木質修護師寄放的。溫醫師說過，她的座右銘就在這裡面。",
+ h1:"肉眼看不清楚。把放大鏡拖到竹籃上慢慢移動。",h2:"一共八個字母，由左到右。前四個字母是 OPEN。",
+ r:"是 open mind。這是她最常掛在嘴邊的兩個字。",
+ k:"文物修護需要跨領域合作：除了各種材質的修護師，還有藝術史學者、保存科學人員、策展人、運輸包裝、藝術保險。專文提醒，要隨時保持 open mind。"},
+"11":{t:"攤開的日記",spec:"paper",fmt:"？？？？？？？？？？？（英文）",a:["LUCKYCLOVER"],
+ s:"修護檯正中央放著一本攤開的日記，旁邊壓著一張方格紙。",
+ h1:"從幸運草那一格出發。膠帶有橫的、有直的。",h2:"橫的膠帶走左右一格，直的膠帶走上下一格，把經過的字母依序寫下來。第一步往右是 L。",
+ r:"是 lucky clover，幸運草。她在搶救的，是一位文學家的日記本：內頁用膠帶黏了滿滿的幸運草標本，而膠帶正在劣化。",
+ k:"這是真實的案例：一位文學家的日記本，用膠帶把大量的幸運草標本黏在內頁，不論修護或保存方式，都讓修護師與館員傷透腦筋。"},
+"20":{t:"她留下的懷錶",spec:"paper",fmt:"？？？？（英文）",a:["FACE"],
+ s:"日記旁邊留著她的兩只懷錶。",
+ h1:"比較兩只錶：3 的位置變成 C，6 的位置變成 F。",h2:"數字是字母的順序：1 是 A、3 是 C、5 是 E、6 是 F。",
+ r:"是 FACE。錶蓋內側刻著一行小字：「有些事不能只傳訊息，要當面談。」",
+ k:"修護師與其他人合作的過程未必一帆風順。策展人希望文物上場，修護師卻發現狀況不好時，不管怎麼決定，都需要溝通協調才有好結果。"}
+};
+var STEPS=["檢視登錄：檢查狀況、調查資訊、畫出損傷","各項測試：紫外光、紅外線、溶劑、X 光","規劃：擬定修復的步驟與材料","執行修復作業","完整記錄過程、步驟與材料"];
+var CHOICES=[
+ {t:"抽換其他館藏，日記排進待修護名單",e:"策展人換上了另一件館藏。日記留在修護室，照順序慢慢處理。它錯過了這次開幕，但會有下一次。"},
+ {t:"趕工優先處理，如期展出",e:"整個修護室陪著她趕了一夜。日記在開幕前一小時送進展櫃，膠帶暫時穩住了。"},
+ {t:"照樣展出，但縮短展期讓它早點休息",e:"日記只展出兩週，就回到修護室休息。來看展的人不多，但每一位都看到了那些幸運草。"}
+];
+
+/* ============ 狀態 ============ */
+var KEY="restorer.story.v1", S;
+function fresh(){ return {role:null,solved:{},hint:{},t0:0,t1:0,seen:{},order:false,choice:-1}; }
+function load(){ try{ var s=JSON.parse(localStorage.getItem(KEY)); if(s&&typeof s==="object"&&s.solved)return s; }catch(e){} return fresh(); }
+function save(){ try{ localStorage.setItem(KEY,JSON.stringify(S)); }catch(e){} }
+S=load();
+var app=document.getElementById("app");
+function esc(s){ return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];}); }
+function norm(s){ s=String(s); try{s=s.normalize("NFKC");}catch(e){} return s.replace(/\s+/g,"").toUpperCase(); }
+function nSolved(){ return Object.keys(S.solved).length; }
+function chDone(i){ return CH[i].p.every(function(id){return S.solved[id];}); }
+function chOpen(i){ return i===0||chDone(i-1); }
+function usedHints(){ var n=0; Object.keys(S.hint).forEach(function(id){ var lv=S.hint[id]; if(lv>=1&&PZ[id].spec!==S.role)n++; if(lv>=2)n++; }); return n; }
+function peeks(){ return Object.keys(S.hint).filter(function(id){return S.hint[id]>=3;}).length; }
+function top(){ var r=ROLES[S.role]; return '<div class="top"><span class="chip">'+r.ic+' '+r.name+'</span><span class="chip">病歷表 '+nSolved()+' / 20 頁</span><span class="sp"></span><button class="linkbtn" id="menu">重新開始</button></div><div class="bar"><i style="width:'+(nSolved()/20*100)+'%"></i></div>'; }
+function bindTop(){ var m=document.getElementById("menu"); if(m)m.onclick=function(){ if(confirm("要清除進度、從頭開始嗎？")){ S=fresh(); save(); title(); } }; }
+function show(html){ app.innerHTML='<div class="fade">'+html+'</div>'; window.scrollTo(0,0); bindTop(); }
+
+/* ============ 畫面 ============ */
+function title(){
+  show('<p class="eyebrow">線上解謎 · 單人或小組</p><h1>神奇修護師<br>缺頁的病歷表</h1><p class="story">一位失聯的修護師、一本被撕掉二十頁的修護紀錄，和一件天亮前必須有答案的文物。</p>'+
+   '<div class="paper" style="margin-top:16px"><h3>怎麼玩</h3><p>一共六章、二十道謎題。每解開一題，就找回一頁病歷表。</p><p>進度會自動存在這台裝置上，可以分次玩完。全部完成大約 40 到 60 分鐘。</p></div>'+
+   '<button class="btn" id="go">'+(S.role?"繼續上次的進度":"開始")+'</button>');
+  document.getElementById("go").onclick=function(){ if(S.role)hub(); else roleSel(); };
+}
+function roleSel(){
+  var h='<p class="eyebrow">報到</p><h2>你是哪一種修護師？</h2><p class="story">修護師依文物的材質分工。和你的專長有關的謎題，你會直接看到「專業直覺」；其他的謎題，第一個提示要問隊友，或是花一次提示機會。</p><div class="roles">';
+  Object.keys(ROLES).forEach(function(k){ var r=ROLES[k]; h+='<button class="role" data-role="'+k+'"><div class="ic">'+r.ic+'</div><div class="nm">'+r.name+'</div><div class="ds">'+r.ds+'</div></button>'; });
+  h+='</div><p class="small" style="margin-top:14px">小組一起玩時，每個人選不同的角色，遇到不是自己專長的題目就互相問。</p>';
+  app.innerHTML='<div class="fade">'+h+'</div>';
+  [].forEach.call(app.querySelectorAll("[data-role]"),function(b){ b.onclick=function(){ S.role=b.dataset.role; S.t0=Date.now(); save(); prologue(); }; });
+}
+function prologue(){
+  show(top()+'<p class="eyebrow">序章</p><h2>晚上九點的修護室</h2><p class="story">'+esc(PROLOGUE)+'</p><button class="btn" id="go">走進修護室</button>');
+  document.getElementById("go").onclick=function(){ chapter(0); };
+}
+function hub(){
+  if(nSolved()===20){ if(S.choice>=0)return ending(); return S.order?choice():finale(); }
+  var h=top()+'<p class="eyebrow">修護紀錄</p><h2>缺頁的病歷表</h2><div class="list">';
+  CH.forEach(function(c,i){ var done=chDone(i), open=chOpen(i), n=c.p.filter(function(id){return S.solved[id];}).length;
+    h+='<button class="item'+(done?" done":"")+(open?"":" lock")+'" data-ch="'+i+'"><span class="no">第'+"一二三四五六"[i]+'章</span><span>'+esc(c.t)+'</span><span class="st">'+(open?n+" / "+c.p.length:"未開放")+'</span></button>'; });
+  h+='</div>';
+  show(h);
+  [].forEach.call(app.querySelectorAll("[data-ch]"),function(b){ b.onclick=function(){ var i=+b.dataset.ch; if(chOpen(i))chapter(i); }; });
+}
+function chapter(i){
+  var c=CH[i], done=chDone(i);
+  var h=top()+'<p class="eyebrow">第'+"一二三四五六"[i]+'章</p><h2>'+esc(c.t)+'</h2><p class="story">'+esc(c.intro)+'</p><div class="list">';
+  c.p.forEach(function(id){ var p=PZ[id], ok=S.solved[id]; h+='<button class="item'+(ok?" done":"")+'" data-p="'+id+'"><span class="no">'+id+'</span><span>'+esc(p.t)+(p.spec===S.role?' <span class="small">· 你的專長</span>':'')+'</span><span class="st">'+(ok?"已找回":"調查")+'</span></button>'; });
+  h+='</div>';
+  if(done){ if(c.outro)h+='<div class="paper" style="margin-top:16px"><h3>這一章的發現</h3><p>'+esc(c.outro)+'</p></div>';
+    h+='<button class="btn" id="next">'+(i<CH.length-1?"前往下一章":"把病歷表拼回來")+'</button>'; }
+  h+='<button class="btn ghost" id="back">回到病歷表</button>';
+  show(h);
+  [].forEach.call(app.querySelectorAll("[data-p]"),function(b){ b.onclick=function(){ puzzle(b.dataset.p,i); }; });
+  document.getElementById("back").onclick=hub;
+  var nx=document.getElementById("next"); if(nx)nx.onclick=function(){ if(i<CH.length-1)chapter(i+1); else finale(); };
+}
+function puzzle(id,ci){
+  var p=PZ[id], mine=(p.spec===S.role), lv=S.hint[id]||0, ok=!!S.solved[id];
+  var h=top()+'<p class="eyebrow">第 '+id+' 頁'+(mine?" · 你的專長":"")+'</p><h2>'+esc(p.t)+'</h2><p class="story">'+esc(p.s)+'</p>'+
+   '<div class="paper"><div class="puz" id="puz"></div><div style="text-align:center;margin-top:12px"><span class="fmt">'+esc(p.fmt)+'</span></div></div>';
+  if(ok){ h+=record(p)+'<button class="btn" id="back">回到這一章</button>'; }
+  else { h+='<div class="ans"><input id="in" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="輸入答案"><button id="ok">確認</button></div><div class="msg" id="msg"></div><div class="hints" id="hints"></div><button class="btn ghost" id="back">回到這一章</button>'; }
+  show(h);
+  var host=document.getElementById("puz"); try{ RENDER[id](host); }catch(e){ host.textContent="（這一題的畫面載入失敗）"; }
+  document.getElementById("back").onclick=function(){ chapter(ci); };
+  if(ok)return;
+  var inp=document.getElementById("in"), msg=document.getElementById("msg");
+  function submit(){ var v=norm(inp.value); if(!v)return;
+    if(p.a.map(norm).indexOf(v)>=0){ S.solved[id]=true; save(); puzzle(id,ci); }
+    else { msg.textContent="不對。再看一次謎面。"; inp.classList.remove("shake"); void inp.offsetWidth; inp.classList.add("shake"); } }
+  document.getElementById("ok").onclick=submit; inp.addEventListener("keydown",function(e){ if(e.key==="Enter")submit(); });
+  function drawHints(){ var hd=document.getElementById("hints"), lv=S.hint[id]||0, x="";
+    if(mine)x+='<div class="hint pro"><b>專業直覺：</b>'+esc(p.h1)+'</div>';
+    else if(lv>=1)x+='<div class="hint"><b>提示一：</b>'+esc(p.h1)+'</div>';
+    else x+='<button class="btn ghost" id="h1" style="margin-top:0">這題是'+ROLES[p.spec].name+'的專長。問問隊友，或花一次提示機會</button>';
+    if(lv>=2)x+='<div class="hint"><b>提示二：</b>'+esc(p.h2)+'</div>';
+    else if(mine||lv>=1)x+='<button class="btn ghost" id="h2" style="margin-top:0">還是卡住，再給一個提示</button>';
+    if(lv>=3)x+='<div class="hint"><b>答案：</b>'+esc(p.a[0])+'</div>';
+    else if(lv>=2)x+='<button class="btn ghost" id="h3" style="margin-top:0">看答案（會記在結算裡）</button>';
+    hd.innerHTML=x;
+    ["h1","h2","h3"].forEach(function(k,n){ var b=document.getElementById(k); if(b)b.onclick=function(){ S.hint[id]=Math.max(S.hint[id]||0,n+1); save(); drawHints(); }; }); }
+  drawHints();
+}
+function record(p){ return '<div class="paper fade" style="margin-top:14px;border-left:6px solid var(--good)"><h3>找回的病歷表</h3><p>'+esc(p.r)+'</p><p style="color:var(--soft);font-size:14px;border-top:1px dashed #cbbda6;padding-top:8px;margin-top:10px"><b>修護筆記｜</b>'+esc(p.k)+'</p></div>'; }
+function finale(){
+  if(S.order)return choice();
+  var idx=[2,4,0,3,1], k=0;
+  var h=top()+'<p class="eyebrow">最後一步</p><h2>把病歷表拼回來</h2><p class="story">二十頁都找到了，但順序是亂的。她是照什麼順序做的？\n\n從第一步開始，依序點下去。</p><div class="list" id="ord">';
+  idx.forEach(function(i){ h+='<button class="item" data-s="'+i+'"><span class="no">？</span><span>'+esc(STEPS[i])+'</span></button>'; });
+  h+='</div><div class="msg" id="msg"></div><button class="btn ghost" id="back">回到病歷表的各章</button>';
+  show(h);
+  document.getElementById("back").onclick=function(){ chapter(CH.length-1); };
+  [].forEach.call(app.querySelectorAll("[data-s]"),function(b){ b.onclick=function(){ if(b.classList.contains("done"))return; var i=+b.dataset.s;
+    if(i===k){ k++; b.classList.add("done"); b.querySelector(".no").textContent=k; if(k===STEPS.length){ S.order=true; save(); setTimeout(choice,700); } }
+    else { document.getElementById("msg").textContent="順序不對，從第一步重新排。想想她在每一章做了什麼。"; k=0; [].forEach.call(app.querySelectorAll("[data-s]"),function(x){x.classList.remove("done");x.querySelector(".no").textContent="？";}); } }; });
+}
+function choice(){
+  var h=top()+'<p class="eyebrow">天快亮了</p><h2>門口傳來腳步聲</h2><p class="story">病歷表拼回來了。最後一頁是她昨天傍晚寫的：\n\n「膠帶比我想的更脆。還沒把它看清楚以前，我不動它。我去找保存科學的同事和策展人，當面談。」\n\n門開了。溫醫師走進來，身後跟著兩個人。她的手機早就沒電了。\n\n「你把它拼回來了。」她笑了。「我把病歷表拆開，一頁一頁留在每個步驟該在的地方。這樣不管誰來接手，都會照順序走一遍。」\n\n策展人看著你：「這本日記是特展的主角。可是它撐不撐得住整個展期，沒有人敢保證。你把整本病歷表都讀過了，你會怎麼建議？」</p><div class="list">';
+  CHOICES.forEach(function(c,i){ h+='<button class="item" data-c="'+i+'"><span>'+esc(c.t)+'</span></button>'; });
+  h+='</div><p class="small" style="margin-top:12px">這一題沒有標準答案。</p>';
+  show(h);
+  [].forEach.call(app.querySelectorAll("[data-c]"),function(b){ b.onclick=function(){ S.choice=+b.dataset.c; if(!S.t1)S.t1=Date.now(); save(); ending(); }; });
+}
+function ending(){
+  var c=CHOICES[S.choice], min=Math.max(1,Math.round(((S.t1||Date.now())-S.t0)/60000));
+  var h=top()+'<p class="eyebrow">結局</p><h2>早上九點，《歲月痕跡》開幕</h2><p class="story">'+esc(c.e)+'\n\n溫醫師把完整的病歷表交還給你。\n\n「不管選哪一條路，都要大家坐下來談過才行得通。修文物從來不是一個人的事。」\n\n她在封面補上一行字：實習修護師，今天起正式上工。</p>'+
+   '<div class="paper" style="margin-top:16px"><h3>你的修護紀錄</h3><p>角色：'+ROLES[S.role].ic+' '+ROLES[S.role].name+'</p><p>找回病歷表：20 / 20 頁</p><p>花費時間：約 '+min+' 分鐘</p><p>使用提示：'+usedHints()+' 次　直接看答案：'+peeks()+' 題</p></div>'+
+   '<div class="paper" style="margin-top:12px"><h3>病歷表教我們的事</h3><p>一定先做檢視登錄，再做需要的測試，然後才規劃、執行，而且每一步都要留下紀錄。</p><p>沒有標準的 SOP。每件文物的狀況不同，做法都要跟著調整。</p><p>修護需要木質、紙質、陶瓷各種專長，也需要保存科學人員、策展人一起合作。</p></div>'+
+   '<p class="small" style="margin-top:14px">故事裡的人物與博物館是虛構的。修護知識與幸運草日記的案例，取材自台南市文化資產處與故事 StoryStudio 的專文〈我在○○修文物……之外還有很多事〉、〈組隊來治病〉。謎題改編自《神奇修護師》謎題卡。</p>'+
+   '<button class="btn ghost" id="review">回頭看每一頁病歷表</button>';
+  show(h);
+  document.getElementById("review").onclick=function(){ chapter(0); };
+}
+
+/* ============ 謎面 ============ */
+function H(tag,css,html,parent){ var e=document.createElement(tag); if(css)e.style.cssText=css; if(html!=null)e.innerHTML=html; if(parent)parent.appendChild(e); return e; }
+var RENDER={
+"09":function(el){ var box=H("div","background:#e9d9b6;border:1px solid #b79c68;border-radius:6px;padding:14px 16px;display:flex;flex-direction:row-reverse;gap:14px;box-shadow:inset 0 0 20px rgba(120,80,20,.25)",null,el);
+  ["家更向南湖","庭草黃山明","醫北風高樹","師一春日行"].forEach(function(c){ H("div","display:flex;flex-direction:column;font-size:24px;font-weight:700;line-height:1.5;font-family:serif",c.split("").map(function(x){return "<span>"+x+"</span>";}).join(""),box); });
+  H("div","display:flex;flex-direction:column;justify-content:flex-end;font-size:13px;color:#7a5a2a","<span>頂</span><span>天</span>",box); },
+"01":function(el){ var Wd=92, wrap=H("div","display:flex;align-items:stretch;justify-content:center",null,el);
+  function half(mir){ var col=H("div","display:flex;flex-direction:column;gap:6px"+(mir?";transform:scaleX(-1);opacity:0;transition:opacity .4s":""),null,wrap);
+    ["善","本"].forEach(function(c){ var b=H("div","width:"+(Wd/2)+"px;height:"+Wd+"px;overflow:hidden",null,col); H("div","width:"+Wd+"px;height:"+Wd+"px;line-height:"+Wd+"px;font-size:"+(Wd-4)+"px;font-weight:900;text-align:center;color:"+(mir?"#5a7f86":"#2b2420"),c,b); }); return col; }
+  half(false); H("div","border-left:3px dotted #2b2420;margin:0 1px",null,wrap); var ref=half(true); ref.id="mir";
+  var b=H("button",null,"🪞 把鏡子立在虛線上",el); b.className="pbtn"; b.onclick=function(){ ref.style.opacity=ref.style.opacity==="0"?".8":"0"; }; },
+"03":function(el){ H("div","font-size:34px;font-weight:900;line-height:1.6;text-align:center;font-family:var(--cjk)","文 ➜ 1<br>田 ➜ 4<br>回 ➜ 2",el); H("div","font-size:30px;font-weight:900","修護師 ➜ ？？？",el); },
+"16":function(el){ H("div","font-size:15px;font-weight:700;display:flex;gap:14px",'<span style="color:#d9822b">檢視登錄</span><span style="color:#1f8a8a">類型測試</span><span style="color:#9a5fb0">修復作業</span> <span>🖌️</span>',el);
+  var map=H("div","position:relative;width:100%;aspect-ratio:4/3;background:#dcc9a0;border-radius:10px;overflow:hidden;border:1px solid #b79c68",null,el);
+  var NS="http://www.w3.org/2000/svg", svg=document.createElementNS(NS,"svg"); svg.setAttribute("viewBox","0 0 100 100"); svg.setAttribute("preserveAspectRatio","none"); svg.style.cssText="position:absolute;inset:0;width:100%;height:100%"; map.appendChild(svg);
+  [["🌍",50,50],["🏺",22,12],["🖼️",82,22],["🗿",50,88],["🎭",88,90],["🍶",8,88],["📿",12,38]].forEach(function(o){ H("div","position:absolute;transform:translate(-50%,-50%);font-size:26px;left:"+o[1]+"%;top:"+o[2]+"%",o[0],map); });
+  var pins=[["檢視","#d9822b",15,30,0],["登錄","#d9822b",85,70,0],["類型","#1f8a8a",30,85,1],["測試","#1f8a8a",70,15,1],["修復","#9a5fb0",10,60,2],["作業","#9a5fb0",90,40,2]], sel=null, done={};
+  pins.forEach(function(p,i){ var b=H("button","position:absolute;transform:translate(-50%,-50%);left:"+p[2]+"%;top:"+p[3]+"%;border:2px solid #fff;border-radius:999px;background:"+p[1]+";color:#fff;font:inherit;font-size:12px;font-weight:700;padding:3px 7px;cursor:pointer",p[0],map); b.dataset.pin=i;
+    b.onclick=function(){ if(sel===null){ sel=i; b.style.outline="3px solid #2b2420"; return; } var a=pins[sel], pb=map.querySelector('[data-pin="'+sel+'"]'); pb.style.outline="";
+      if(sel!==i&&a[4]===p[4]&&!done[p[4]]){ done[p[4]]=1; var l=document.createElementNS(NS,"line"); l.setAttribute("x1",a[2]); l.setAttribute("y1",a[3]); l.setAttribute("x2",p[2]); l.setAttribute("y2",p[3]); l.setAttribute("stroke",p[1]); l.setAttribute("stroke-width","1.2"); l.setAttribute("vector-effect","non-scaling-stroke"); l.style.strokeWidth="3px"; svg.appendChild(l); }
+      sel=null; }; });
+  H("div","font-size:13px;color:#6b5f57","點兩根圖釘，用畫筆把它們連起來",el); },
+"17":function(el){ var scr=H("div","background:#1a0f0d;border:4px solid #c58a2a;border-radius:10px;padding:16px 18px;display:flex;gap:16px",null,el);
+  var SEG={a:[8,0,40,8],b:[48,8,8,36],c:[48,52,8,36],d:[8,88,40,8],e:[0,52,8,36],f:[0,8,8,36],g:[8,44,40,8]};
+  ["afgcd","abcdef","abefg"].forEach(function(on){ var d=H("div","position:relative;width:56px;height:96px",null,scr); Object.keys(SEG).forEach(function(k){ var s=SEG[k]; H("div","position:absolute;border-radius:3px;left:"+s[0]+"px;top:"+s[1]+"px;width:"+s[2]+"px;height:"+s[3]+"px;background:"+(on.indexOf(k)<0?"#ff4a36;box-shadow:0 0 8px #ff4a36":"#6a241d"),null,d); }); }); },
+"13":function(el){ var g=H("div","display:grid;grid-template-columns:repeat(3,44px);grid-template-rows:repeat(3,44px)",null,el);
+  for(var i=0;i<9;i++)H("div","border-right:"+(i%3<2?"4px solid #2b2420":"none")+";border-bottom:"+(i<6?"4px solid #2b2420":"none"),null,g);
+  var r=H("div","display:flex;gap:22px;font-size:26px;font-weight:900;align-items:center",null,el);
+  H("div","display:flex;flex-direction:column;align-items:center;line-height:1.1","<span>6</span><span style='border-top:3px solid #2b2420;padding:0 8px'>？</span>",r);
+  H("div",null,"2<span style='border-left:3px solid #2b2420;margin-left:6px;padding-left:6px'>？</span>",r);
+  H("div","display:flex;flex-direction:column;align-items:center;line-height:1.1","<span>？</span><span style='border-top:3px solid #2b2420;padding:0 8px'>7</span>",r);
+  H("div",null,"？<span style='border-left:3px solid #2b2420;margin-left:6px;padding-left:6px'>9</span>",r); },
+"15":function(el){ var syl=["ㄙㄨㄟˋ","ㄩㄝˋ","ㄏㄣˊ","ㄐㄧ"], W=104, ord=[2,0,3,1], sel=null, glued={};
+  var wrap=H("div","display:flex;gap:10px;align-items:flex-start;width:100%;justify-content:center",null,el), L=H("div","display:flex;flex-direction:column;gap:8px",null,wrap), M=H("div","display:flex;flex-direction:column;gap:8px;min-width:"+(W+10)+"px;align-items:center",null,wrap), R=H("div","display:flex;flex-direction:column;gap:8px",null,wrap);
+  H("div","font-size:13px;color:#6b5f57","🧴 黏好的",M);
+  function piece(i,side,parent){ var b=H("button","width:"+(W/2)+"px;height:46px;overflow:hidden;padding:0;border:1px solid #b79c68;background:#fff8ee;border-radius:"+(side==="L"?"10px 0 0 10px":"0 10px 10px 0")+";cursor:pointer",null,parent);
+    H("div","width:"+W+"px;height:46px;line-height:46px;text-align:center;font-size:26px;font-weight:700;color:#2b2420;margin-left:"+(side==="L"?0:-W/2)+"px",syl[i],b); b.dataset.side=side; b.dataset.syl=i; return b; }
+  var Ls=syl.map(function(_,i){return piece(i,"L",L);}), Rs={}; ord.forEach(function(i){ Rs[i]=piece(i,"R",R); });
+  function tapL(i){ sel=i; Ls.forEach(function(b,j){b.style.outline=j===i?"3px solid #e0763a":"";}); }
+  Ls.forEach(function(b,i){ b.onclick=function(){ if(!glued[i])tapL(i); }; });
+  ord.forEach(function(i){ Rs[i].onclick=function(){ if(sel===null||glued[i])return; if(sel===i){ glued[i]=1; Ls[i].style.visibility="hidden"; Rs[i].style.visibility="hidden"; H("div","width:"+W+"px;height:46px;line-height:46px;text-align:center;font-size:26px;font-weight:700;border:1px solid #3f9a62;border-radius:10px;background:#e6f3ea;order:"+i,syl[i],M); sel=null; } else { Rs[i].classList.remove("shake"); void Rs[i].offsetWidth; Rs[i].classList.add("shake"); } }; }); },
+"06":function(el){ var r=H("div","display:flex;gap:26px;font-family:var(--mono);font-size:24px;font-weight:700;line-height:1.3",null,el);
+  [["11","36","33","2"],["36","26","","4"],["14","35","30","4"]].forEach(function(g){ var t=g[3]; H("div","position:relative;padding-right:16px",g.slice(0,3).filter(Boolean).join("<br>")+'<span style="position:absolute;right:0;top:34%;font-size:15px">'+t+'</span>',r); });
+  var tb=H("div","background:linear-gradient(180deg,#5b5ea6,#e9c98a);border-radius:8px;padding:10px;width:100%",null,el); H("div","text-align:center;color:#fff;font-size:14px;letter-spacing:3px;margin-bottom:6px","國語注音符號手冊",tb);
+  var g=H("div","display:grid;grid-template-columns:repeat(7,1fr);gap:4px",null,tb); "ㄅㄆㄇㄈㄉㄊㄋㄌㄍㄎㄏㄐㄑㄒㄓㄔㄕㄖㄗㄘㄙㄚㄛㄜㄝㄞㄟㄠㄡㄢㄣㄤㄥㄦㄧㄨㄩ".split("").forEach(function(c){ H("div","background:rgba(255,255,255,.85);border-radius:5px;text-align:center;font-size:18px;font-weight:700;padding:3px 0;color:#2b2420",c,g); }); },
+"18":function(el){ var F={K:"10001,10010,10100,11000,10100,10010,10001",X:"10001,10001,01010,00100,01010,10001,10001",R:"11110,10001,10001,11110,10100,10010,10001",F:"11111,10000,10000,11110,10000,10000,10000"};
+  function grid(ch,parent){ var g=H("div","display:grid;grid-template-columns:repeat(5,13px);gap:4px;padding:8px;border:2px solid #9a8f80;border-radius:6px;background:#fff",null,parent);
+    F[ch].split(",").join("").split("").forEach(function(b,i){ var deg=[0,90,180,270,45,135][(i*7+ch.charCodeAt(0))%6]; H("div","width:13px;height:13px;border-radius:50%;border:1.5px solid #9a8f80;background:"+(b==="1"?"linear-gradient("+deg+"deg,#2b2420 50%,#fff 50%)":"#fff"),null,g); }); }
+  var ex=H("div","display:flex;align-items:center;gap:12px;font-size:30px;font-weight:900",null,el); H("span","font-size:14px;font-weight:700","補色復原字母 🖌️",ex); grid("K",ex); H("span",null,"＝ K",ex);
+  var r=H("div","display:flex;gap:10px",null,el); ["X","R","F"].forEach(function(c){grid(c,r);}); },
+"19":function(el){ var fr=H("div","position:relative;background:radial-gradient(circle at 30% 30%,#3b5fb0,#16234d 70%);border:10px solid #8a4b1c;border-radius:4px;padding:16px 22px 46px;color:#fff;font-size:22px;font-weight:700;line-height:1.7;min-width:200px",null,el);
+  ["easy","&nbsp;teacher","hope","&nbsp;&nbsp;more","&nbsp;happy"].forEach(function(w){ H("div",null,w,fr); });
+  var tag=H("div","position:absolute;left:50%;bottom:8px;transform:translateX(-50%) rotate(-3deg);font-family:var(--mono);font-size:22px;letter-spacing:4px;color:#c8a6ff;text-shadow:0 0 10px #a070ff;opacity:0;transition:opacity .4s","31235",fr);
+  var b=H("button",null,"🔦 打開紫外光燈",el); b.className="pbtn"; b.onclick=function(){ var on=tag.style.opacity==="0"; tag.style.opacity=on?"1":"0"; fr.style.filter=on?"brightness(.75) saturate(1.4)":""; b.textContent=on?"🔦 關掉紫外光燈":"🔦 打開紫外光燈"; }; },
+"14":function(el){ var C={y:"#c0503c",e:"#e8c84a",r:"#3f6b5c",d:"#8cc0c8",c:"#2a2422",m:"#7a7a2a",a:"#f4efe4"};
+  var pal=H("div","display:flex;flex-wrap:wrap;gap:8px;justify-content:center;background:#c8b08a;border-radius:40px;padding:12px 16px;max-width:260px",null,el);
+  "yerdcma".split("").forEach(function(k){ H("div","width:40px;height:40px;border-radius:50%;background:"+C[k]+";display:flex;align-items:center;justify-content:center;font-weight:900;font-size:18px;color:"+(k==="e"||k==="d"||k==="a"?"#2b2420":"#fff"),k,pal); });
+  function pie(ks){ return '<span style="display:inline-block;width:46px;height:46px;border-radius:50%;vertical-align:middle;border:1px solid #9a8f80;background:conic-gradient('+C[ks[0]]+' 0 120deg,'+C[ks[1]]+' 120deg 240deg,'+C[ks[2]]+' 240deg 360deg)"></span>'; }
+  H("div","font-size:20px;font-weight:900",pie("eye")+" ＝ 眼",el); H("div","font-size:20px;font-weight:900",pie("cry")+" ＝ 哭",el); H("div","font-size:20px;font-weight:900",pie("red")+" ＝ ？",el); },
+"04":function(el){ var r=H("div","display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center",null,el); H("span","font-size:24px","✂️",r);
+  "HEPA".split("").forEach(function(c){ H("div","display:flex;font-size:36px;font-weight:900;line-height:1;font-family:Arial,Helvetica,sans-serif",'<span style="display:inline-block;transform:scaleX(-1);margin-right:-.06em">'+c+'</span><span>'+c+'</span>',r); }); },
+"08":function(el){ var bk=H("div","display:flex;background:#f1e4e0;border:3px solid #8a4b3a;border-radius:6px;box-shadow:0 6px 0 -2px #c9b4ac",null,el);
+  H("div","padding:18px 20px;font-size:44px;border-right:2px solid #c9b4ac","👅🗡️",bk); H("div","padding:18px 20px;font-size:44px","🔪",bk); },
+"12":function(el){ var r=H("div","display:flex;gap:12px",null,el);
+  H("div","width:130px;height:110px;border-radius:6px;background:repeating-conic-gradient(#9fd0cf 0 25%,#f2d27a 0 50%) 0 0/40px 40px;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;font-family:serif;text-align:center;line-height:1.5",'<span style="background:rgba(255,255,255,.75);padding:4px 8px;border-radius:4px">一金左<br>三耳右</span>',r);
+  H("div","width:130px;height:110px;border-radius:6px;background:repeating-conic-gradient(#f29a84 0 25%,#f6e6cc 0 50%) 0 0/40px 40px;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;font-family:serif",'<span style="background:rgba(255,255,255,.75);padding:4px 8px;border-radius:4px">孤無瓜</span>',r); },
+"02":function(el){ var P={Y:["#f2cf4a","黃"],T:["#19908f","青"],S:["#f08a6a","橘"],K:["#e062a8","粉"]};
+  H("div","font-size:14px;font-weight:700","💉 用裝著黏著劑的針筒，把碎片上下黏合",el);
+  var pcs=H("div","display:flex;gap:18px;align-items:flex-end;justify-content:center",null,el);
+  H("div","width:14px;height:44px;background:"+P.Y[0],null,pcs); H("div","width:14px;height:44px;background:"+P.T[0],null,pcs);
+  H("div","width:44px;height:44px;border:12px solid "+P.S[0],null,pcs); H("div","width:44px;height:44px;border-top:12px solid "+P.K[0]+";border-right:12px solid "+P.K[0],null,pcs);
+  var r=H("div","display:flex;gap:8px",null,el); [["Y","T"],["S","Y"],["S","T"],["K","Y"]].forEach(function(b){ H("div","width:50px;border:1px solid #9a8f80",'<div style="height:26px;background:'+P[b[0]][0]+'"></div><div style="height:26px;background:'+P[b[1]][0]+'"></div>',r); }); },
+"05":function(el){ var r=H("div","display:flex;gap:14px;justify-content:center;flex-wrap:wrap",null,el);
+  function word(ic,chars){ var w=H("div","text-align:center",null,r); H("div","font-size:34px",ic,w); var t=H("div","font-size:34px;font-weight:900;white-space:nowrap",null,w);
+    chars.forEach(function(c){ var s=H("span","position:relative;display:inline-block;line-height:1.15",c[0],t); if(c[1])H("span","position:absolute;border:2.5px solid "+c[1]+";border-radius:50%;"+c[2],null,s); }); }
+  var pk="#e062a8", bl="#3f7fd0";
+  word("☂️",[["油"],["紙"],["傘",pk,"left:4%;top:2%;width:92%;height:40%"]]);
+  word("🖼️",[["豔",bl,"left:46%;top:6%;width:54%;height:90%"],["陽"],["畫"],["作"]]);
+  word("🧸",[["童"],["玩",pk,"left:0;top:6%;width:44%;height:90%"],["戲"],["偶"]]);
+  H("div","font-size:20px;font-weight:900",'<span style="display:inline-block;width:18px;height:28px;border:2.5px solid '+pk+';border-radius:50%;vertical-align:middle"></span> ＝ ？　<span style="display:inline-block;width:18px;height:28px;border:2.5px solid '+bl+';border-radius:50%;vertical-align:middle"></span> ＝ ？',el); },
+"10":function(el){ var r=H("div","display:flex;flex-wrap:wrap;gap:10px;justify-content:center",null,el);
+  [["orange","#8e5bd0"],["yellow","#e05fa8"],["blue","#2f5fd0"],["red","#2e9e57"],["green","#d9423a"]].forEach(function(b){ H("div","width:104px;height:58px;border-radius:12px 12px 52px 52px;background:linear-gradient(180deg,#fff,#dcdcdc);border:1px solid #bdbdbd;display:flex;align-items:center;justify-content:center;font-size:19px;font-weight:900;color:"+b[1],b[0],r); }); },
+"07":function(el){ var W=300,Hh=120; var bk=H("div","position:relative;width:"+W+"px;max-width:100%;height:"+Hh+"px;border-radius:14px 14px 60px 60px;overflow:hidden;touch-action:none;cursor:grab;border:3px solid #a8641f",null,el);
+  var weave="repeating-linear-gradient(90deg,#d9944a 0 9px,#c27d35 9px 18px),repeating-linear-gradient(0deg,rgba(0,0,0,.14) 0 6px,transparent 6px 12px)";
+  function layer(col,extra){ var l=H("div","position:absolute;inset:0;background:"+weave+";display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:30px;font-weight:900;letter-spacing:7px;color:"+col+";"+(extra||""),"OPENMIND",bk); return l; }
+  layer("rgba(120,70,20,.06)"); var top=layer("#3a1f08","background:"+weave+",#f6d9a8;filter:contrast(1.3) brightness(1.15);clip-path:circle(0 at 0 0)");
+  var lens=H("div","position:absolute;width:64px;height:64px;margin:-32px 0 0 -32px;border-radius:50%;border:4px solid #2f7f86;box-shadow:0 0 0 2px rgba(255,255,255,.6) inset;pointer-events:none;left:34px;top:36px",null,bk);
+  function mv(e){ var b=bk.getBoundingClientRect(), x=Math.max(0,Math.min(b.width,e.clientX-b.left)), y=Math.max(0,Math.min(b.height,e.clientY-b.top)); lens.style.left=x+"px"; lens.style.top=y+"px"; top.style.clipPath="circle(30px at "+x+"px "+y+"px)"; }
+  var on=false; bk.addEventListener("pointerdown",function(e){on=true;try{bk.setPointerCapture(e.pointerId);}catch(_){ } mv(e);}); bk.addEventListener("pointermove",function(e){ if(on)mv(e); }); bk.addEventListener("pointerup",function(){on=false;}); bk.addEventListener("pointercancel",function(){on=false;});
+  top.style.clipPath="circle(30px at 34px 36px)"; H("div","font-size:13px;color:#6b5f57","🔍 按住竹籃拖動放大鏡",el); },
+"11":function(el){ H("div","font-size:14px;font-weight:700","膠帶黏貼的幸運草標本，藏有訊息",el);
+  var tp=H("div","display:flex;gap:5px;align-items:center;justify-content:center;flex-wrap:wrap",null,el); "HVHHVHVVHVH".split("").forEach(function(d){ H("div","background:#b58ad6;border-radius:2px;opacity:.9;"+(d==="H"?"width:22px;height:8px":"width:8px;height:22px"),null,tp); });
+  var g=H("div","display:grid;grid-template-columns:repeat(6,34px);gap:2px;background:#f2b21d;padding:10px;border-radius:4px;transform:rotate(-1.5deg)",null,el);
+  ["🍀LDYCH","AUCKLA","HGXVOJ","SWRETZ","QAMHNF"].forEach(function(row){ Array.from(row).forEach(function(c){ H("div","height:30px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:18px;font-family:Arial,sans-serif",c,g); }); }); },
+"20":function(el){ var r=H("div","display:flex;gap:14px;justify-content:center",null,el);
+  function watch(lab,mid){ var w=H("div","position:relative;width:132px;height:132px;border-radius:50%;background:#f4efe4;border:9px solid #b8862b;box-shadow:0 0 0 3px #e9a8c2 inset",null,r);
+    [[50,13,lab[0]],[87,50,lab[1]],[50,87,lab[2]],[13,50,lab[3]]].forEach(function(p){ H("div","position:absolute;transform:translate(-50%,-50%);left:"+p[0]+"%;top:"+p[1]+"%;font-weight:900;font-size:17px;color:#6b4fa0",p[2],w); });
+    H("div","position:absolute;left:50%;top:50%;width:3px;height:34px;background:#6b4fa0;transform-origin:50% 100%;transform:translate(-50%,-100%)",null,w); H("div","position:absolute;left:50%;top:50%;width:3px;height:26px;background:#6b4fa0;transform-origin:50% 100%;transform:translate(-50%,-100%) rotate(130deg)",null,w);
+    H("div","position:absolute;left:30%;top:60%;transform:translateX(-50%);font-family:var(--mono);font-size:12px;font-weight:700;font-style:italic",mid,w); }
+  watch(["12","3","6","9"],"6135"); watch(["L","C","F","I"],"????"); }
+};
+
+/* 測試用：可從主控台讀到題目資料 */
+window.RESTORER={PZ:PZ,CH:CH,STEPS:STEPS,state:function(){return S;}};
+if(S.role)hub(); else title();
+})();
+</script>
+</body>
+</html>
