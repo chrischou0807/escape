@@ -342,14 +342,14 @@ section.in .r:nth-child(2){transition-delay:.12s}section.in .r:nth-child(3){tran
 <div class="grid g4">
 <div class="card r"><div class="no">01</div><h3>建立 repository</h3><p>右上角「＋」→ New repository，名稱填英文，選 Public。</p>
 <div class="gh"><div class="t">Create a new repository</div>Repository name<div class="f hl">escape</div>◉ Public　○ Private<div style="margin-top:8px"><span class="gb">Create repository</span></div></div></div>
-<div class="card r"><div class="no">02</div><h3>上傳檔案</h3><p>Add file → Upload files，把 HTML 拖進去，按 Commit changes。</p>
-<div class="gh"><span class="f hl" style="display:inline-block">Add file ▾ · Upload files</span><div class="drop">📄 lock.html<br><span style="font-size:11px">Drag files here</span></div><span class="gb">Commit changes</span></div></div>
+<div class="card r"><div class="no">02</div><h3>上傳資料夾</h3><p>電腦上建一個資料夾（例如 lock），檔案改名 index.html 放進去；Add file → Upload files，把整個資料夾拖進去，Commit。</p>
+<div class="gh"><span class="f hl" style="display:inline-block">Add file ▾ · Upload files</span><div class="drop">📁 lock<br>└ 📄 index.html<br><span style="font-size:11px">Drag files here</span></div><span class="gb">Commit changes</span></div></div>
 <div class="card r"><div class="no">03</div><h3>開啟 Pages</h3><p>Settings → Pages，選 Deploy from a branch、main、/(root)，Save。</p>
 <div class="gh"><div class="tabs"><span>Code</span><span>Issues</span><span class="hl" style="color:#1f2328">Settings</span></div><b class="hl">Pages</b><div style="margin-top:6px">Source<div class="f">Deploy from a branch ▾</div>Branch<div class="f">main ▾　/(root) ▾　<b>Save</b></div></div></div></div>
-<div class="card r"><div class="no">04</div><h3>拿到網址</h3><p>等 1～2 分鐘，同一頁上方出現網址；後面加上檔名。</p>
-<div class="gh"><div class="live">Your site is live at<br><a>帳號.github.io/escape/</a></div><div style="margin-top:8px">完整網址：<br><b>帳號.github.io/escape/lock.html</b></div></div></div>
+<div class="card r"><div class="no">04</div><h3>拿到網址</h3><p>等 1～2 分鐘，同一頁上方出現網址；後面加上資料夾名稱。</p>
+<div class="gh"><div class="live">Your site is live at<br><a>帳號.github.io/escape/</a></div><div style="margin-top:8px">這個機關的網址：<br><b>帳號.github.io/escape/lock/</b></div></div></div>
 </div>
-<p class="small r">畫面為示意，實際按鈕位置以 GitHub 為準。檔名取成 index.html，網址就可以不寫檔名；一個 repo 可以放很多個機關，建議一個機關一個資料夾。</p>
+<p class="small r">畫面為示意，實際按鈕位置以 GitHub 為準。一個機關一個資料夾，檔名都用 index.html，網址就是資料夾名稱，又短又好記。</p>
 </div></section>
 
 <section id="u5"><div class="wrap">
@@ -379,7 +379,7 @@ section.in .r:nth-child(2){transition-delay:.12s}section.in .r:nth-child(3){tran
 <p class="eyebrow r">實作第一版 · 14:40–15:00</p>
 <h2 class="r">兩條路，選一條上架</h2>
 <div class="vs">
-<div class="card good r"><span class="pill o">最快</span><h3>直接下載範例</h3><p>從六大玩法的 12 個範例挑一款，或到範例庫看其他 160 多款，按「下載 HTML」上傳到 GitHub。5 分鐘就有網址。</p></div>
+<div class="card good r"><span class="pill o">最快</span><h3>直接下載範例</h3><p>從六大玩法的 12 個範例挑一款，或到範例庫看其他 160 多款，按「下載 HTML」，改名 index.html 放進資料夾，上傳到 GitHub。5 分鐘就有網址。</p></div>
 <div class="card good r"><span class="pill b">練習</span><h3>請 AI 生成</h3><p>在範例庫按「複製提示詞」，換成你的內容，貼給 AI，把它給的 HTML 存成檔案再上傳。</p></div>
 </div>
 <div class="grid g3" style="margin-top:18px">
@@ -542,12 +542,12 @@ section.in .r:nth-child(2){transition-delay:.12s}section.in .r:nth-child(3){tran
 <h2 class="r">寫出行為，更新到 GitHub</h2>
 <p class="lead r" style="margin-bottom:14px">把三句話和第一版的程式碼一起貼給 AI，拿到新的檔案後，上傳同一個檔名取代舊的。網址不變，玩家重新整理就是第二版。</p>
 <div class="grid g4">
-<div class="card r" style="padding:18px"><div class="no">01</div><h3>存成同一個檔名</h3><p>新程式碼存檔時，檔名和第一版一模一樣。電腦自動存成 lock (1).html 的話，先改回來。</p>
-<div class="gh"><div class="t">下載</div>📄 lock.html <span style="color:#59636e">（第一版）</span><br><span class="hl">📄 lock.html</span> <span style="color:#1f883d">（第二版）</span><div style="margin-top:6px;font-size:11px;color:#59636e">檔名一樣，才會取代</div></div></div>
-<div class="card r" style="padding:18px"><div class="no">02</div><h3>Upload files</h3><p>進到 repo，按 Add file → Upload files。</p>
-<div class="gh"><div class="t">escape</div><span class="f hl" style="display:inline-block">Add file ▾ · Upload files</span><div style="margin-top:6px">📄 lock.html</div></div></div>
+<div class="card r" style="padding:18px"><div class="no">01</div><h3>還是存成 index.html</h3><p>新程式碼存成 index.html，放回同一個資料夾。電腦自動存成 index (1).html 的話，先改回來。</p>
+<div class="gh"><div class="t">📁 lock</div><span class="hl">📄 index.html</span> <span style="color:#1f883d">（第二版）</span><div style="margin-top:6px;font-size:11px;color:#59636e">檔名一樣，才會取代</div></div></div>
+<div class="card r" style="padding:18px"><div class="no">02</div><h3>進到資料夾，Upload files</h3><p>在 repo 點進 lock 資料夾，再按 Add file → Upload files。</p>
+<div class="gh"><div class="t">escape / lock</div><span class="f hl" style="display:inline-block">Add file ▾ · Upload files</span><div style="margin-top:6px">📄 index.html</div></div></div>
 <div class="card r" style="padding:18px"><div class="no">03</div><h3>拖進去，Commit</h3><p>拖進新檔案，寫一句這版改了什麼，按 Commit changes。</p>
-<div class="gh"><div class="drop" style="margin-top:0">📄 lock.html</div>Commit message<div class="f hl">第二版：答錯時寶箱晃一下</div><span class="gb">Commit changes</span></div></div>
+<div class="gh"><div class="drop" style="margin-top:0">📄 index.html</div>Commit message<div class="f hl">第二版：答錯時寶箱晃一下</div><span class="gb">Commit changes</span></div></div>
 <div class="card r" style="padding:18px"><div class="no">04</div><h3>看歷程、比兩版</h3><p>點開檔案按 History，點一筆紀錄，看改了哪幾行。</p>
 <div class="gh"><b class="hl" style="padding:0 4px">🕘 History</b><div style="margin-top:6px;border-top:1px solid #d0d7de;padding-top:4px">● 第二版：答錯時寶箱晃一下<br>● 第一版</div><div style="font-family:monospace;font-size:11px;margin-top:6px"><span style="background:#ffebe9">- alert("錯誤")</span><br><span style="background:#dafbe1">+ box.classList.add("shake")</span></div></div></div>
 </div>
@@ -560,7 +560,7 @@ section.in .r:nth-child(2){transition-delay:.12s}section.in .r:nth-child(3){tran
 <div class="grid g3">
 <div class="card r"><div class="no b">01</div><h3>手機拖不動</h3><p>觸控要另外處理，記得用手機實測。</p></div>
 <div class="card r"><div class="no b">02</div><h3>一打開沒有聲音</h3><p>瀏覽器規定要先點一下才會出聲。</p></div>
-<div class="card r"><div class="no b">03</div><h3>GitHub 網址 404</h3><p>等 1～2 分鐘；檢查檔名大小寫，網址要加上檔名。</p></div>
+<div class="card r"><div class="no b">03</div><h3>GitHub 網址 404</h3><p>等 1～2 分鐘；檢查檔名是不是 index.html，網址最後是資料夾名稱加「/」。</p></div>
 <div class="card r"><div class="no b">04</div><h3>語音辨識失靈</h3><p>需要 https，Chrome 或 Edge 比較穩。</p></div>
 <div class="card r"><div class="no b">05</div><h3>重新整理後卡住</h3><p>確認能回到可以開始的狀態。</p></div>
 <div class="card r"><div class="no b">06</div><h3>答錯沒反應</h3><p>答錯一定要有看得到的回饋。</p></div>
