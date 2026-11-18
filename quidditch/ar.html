@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>第三關：展現天賦的時候（魔法 AR 測試）</title>
+<style>
+:root{--ink:#2b2a30;--gold:#d9b878;--bg:#15141a}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--bg);color:#f3efe8;font-family:"PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif}
+#ar{position:fixed;inset:0;overflow:hidden}
+#ar video{object-fit:cover}
+.panel{position:fixed;left:0;right:0;z-index:10;padding:16px 18px calc(16px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:10px;align-items:center;text-align:center}
+#top{top:0;padding-top:calc(14px + env(safe-area-inset-top));background:linear-gradient(#000a,#0000)}
+#bottom{bottom:0;background:linear-gradient(#0000,#000c)}
+#status{font-size:15px;line-height:1.6;max-width:520px}
+button{font:inherit;font-size:16px;font-weight:700;border:0;border-radius:999px;padding:12px 22px;cursor:pointer}
+.main{background:var(--gold);color:#2b2010}
+.ghost{background:#ffffff22;color:#f3efe8}
+#intro{position:fixed;inset:0;z-index:20;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:28px}
+#intro .card{max-width:520px;line-height:1.8}
+#intro h1{font-size:26px;margin:0 0 6px}
+#intro .eyebrow{color:var(--gold);font-size:14px;letter-spacing:.08em}
+#intro p{color:#cfc8bc}
+#intro ol{text-align:left;color:#cfc8bc;padding-left:22px}
+#fallback{position:fixed;inset:0;z-index:30;background:#000e;display:none;overflow:auto;padding:20px}
+#fallback .box{max-width:560px;margin:0 auto;position:relative}
+#fallback img{width:100%;display:block;border-radius:8px}
+#fallback #fbHidden{position:absolute;inset:0;opacity:0;transition:opacity 1.6s}
+#fallback.show #fbHidden{opacity:1}
+.found{color:var(--gold);font-weight:700}
+</style>
+<script type="importmap">
+{"imports":{
+ "three":"https://unpkg.com/three@0.160.0/build/three.module.js",
+ "three/addons/":"https://unpkg.com/three@0.160.0/examples/jsm/",
+ "mindar-image-three":"https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-three.prod.js"
+}}
+</script>
+</head>
+<body>
+<div id="intro"><div class="card">
+<div class="eyebrow">第三關 · 展現天賦的時候</div>
+<h1>你收到了一封入隊考試邀請信</h1>
+<p>嗨小菜鳥，你原本是不是以為我給你的信件是惡作劇？那是我們要考驗你的魔法能力！我最多就只能告訴你這樣了。</p>
+<ol>
+<li>把邀請信顯示在另一個螢幕上，或印出來。</li>
+<li>按下方按鈕，允許使用相機。</li>
+<li>讓整封信都進入鏡頭，看看具有魔法的人能看見什麼。</li>
+</ol>
+<p style="font-size:13px">第一次開啟時，手機要先「學會」這封信，需要幾秒鐘。</p>
+<button class="main" id="start">開啟魔法 AR</button>
+</div></div>
+
+<div id="ar"></div>
+<div class="panel" id="top"><div id="status">準備中……</div></div>
+<div class="panel" id="bottom"><button class="ghost" id="help">看不到嗎？</button></div>
+
+<div id="fallback"><div class="box">
+<p id="fbMsg" style="line-height:1.7"></p>
+<div style="position:relative"><img src="letter.png" alt="邀請信"><img id="fbHidden" src="hidden.png" alt="隱藏的文字"></div>
+<p style="text-align:center;margin-top:14px"><button class="main" id="fbClose">回到相機</button></p>
+</div></div>
+
+<script type="module">
+const CONFIG={
+  letter:"letter.png",        // 要辨識的圖（邀請信）
+  hidden:"hidden.png",        // 疊上去的隱藏文字（透明背景，和邀請信一樣大小）
+  mind:"letter.mind",         // 可選：預先編譯好的辨識檔；找不到就在手機上即時編譯
+  ratio:2000/1414,            // 圖片的高 / 寬
+  helpAfter:20                // 幾秒還沒對準，就把「看不到嗎？」變明顯
+};
+const $=id=>document.getElementById(id);
+const say=(t,cls)=>{$("status").innerHTML=t;$("status").className=cls||""};
+let started=false,found=false,timer=null,mind=null;
+
+function showFallback(msg){
+  $("fbMsg").textContent=msg||"沒關係，這是信紙在魔法下的樣子：";
+  $("fallback").style.display="block";
+  requestAnimationFrame(()=>$("fallback").classList.add("show"));
+}
+$("fbClose").onclick=()=>{$("fallback").classList.remove("show");$("fallback").style.display="none"};
+$("help").onclick=()=>showFallback(started?"看不到嗎？這是信紙在魔法下的樣子：":"");
+
+function loadImg(src){return new Promise((ok,no)=>{const i=new Image();i.onload=()=>ok(i);i.onerror=()=>no(new Error("圖片載入失敗："+src));i.src=src})}
+
+async function getTargetUrl(){
+  try{const r=await fetch(CONFIG.mind);if(r.ok)return URL.createObjectURL(await r.blob())}catch(e){}
+  say("第一次使用，正在學習這封邀請信……");
+  const m=await import("https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image.prod.js");
+  const Compiler=m.Compiler||(window.MINDAR&&window.MINDAR.IMAGE&&window.MINDAR.IMAGE.Compiler);
+  if(!Compiler)throw new Error("找不到 MindAR 編譯器");
+  const img=await loadImg(CONFIG.letter);
+  const c=new Compiler();
+  await c.compileImageTargets([img],p=>say("正在學習這封邀請信…… "+Math.round(p)+"%"));
+  const buf=await c.exportData();
+  return URL.createObjectURL(new Blob([buf]));
+}
+
+async function start(){
+  if(started)return;started=true;
+  $("intro").style.display="none";
+  if(!window.isSecureContext){say("這個頁面要放在 https 網址才能使用相機。");showFallback("這個網址不能使用相機，先看看魔法下的信紙：");return}
+  try{
+    const THREE=await import("three");
+    const {MindARThree}=await import("mindar-image-three");
+    const url=await getTargetUrl();
+    say("請允許使用相機……");
+    mind=new MindARThree({container:$("ar"),imageTargetSrc:url,uiLoading:"no",uiScanning:"no",uiError:"no",filterMinCF:0.0001,filterBeta:0.001});
+    const {renderer,scene,camera}=mind;
+    const tex=new THREE.TextureLoader().load(CONFIG.hidden);
+    tex.colorSpace=THREE.SRGBColorSpace;
+    const mat=new THREE.MeshBasicMaterial({map:tex,transparent:true,opacity:0,depthWrite:false});
+    const plane=new THREE.Mesh(new THREE.PlaneGeometry(1,CONFIG.ratio),mat);
+    const anchor=mind.addAnchor(0);anchor.group.add(plane);
+    anchor.onTargetFound=()=>{found=true;say("✨ 你看見了！仔細讀信紙下半部浮現的文字。","found")};
+    anchor.onTargetLost=()=>{say("把整封信放回鏡頭裡。")};
+    await mind.start();
+    say("把整封邀請信放進鏡頭裡。");
+    renderer.setAnimationLoop(()=>{const target=anchor.group.visible?1:0;mat.opacity+=(target-mat.opacity)*0.08;renderer.render(scene,camera)});
+    timer=setTimeout(()=>{if(!found){$("help").className="main";say("對不準嗎？讓整封信入鏡、光線亮一點，或按「看不到嗎？」。")}},CONFIG.helpAfter*1000);
+  }catch(e){
+    console.error(e);
+    const denied=e&&(e.name==="NotAllowedError"||/Permission|denied/i.test(e.message||""));
+    say(denied?"沒有相機權限，無法使用魔法 AR。":"魔法 AR 啟動失敗："+(e&&e.message||e));
+    showFallback(denied?"沒有相機權限也沒關係，先看看魔法下的信紙：":"這支手機開不了魔法 AR，先看看魔法下的信紙：");
+  }
+}
+$("start").onclick=start;
+</script>
+</body>
+</html>
