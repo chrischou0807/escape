@@ -413,9 +413,9 @@ section.in .r:nth-child(2){transition-delay:.12s}section.in .r:nth-child(3){tran
 
 <!-- 08 -->
 <section id="q1"><div class="wrap">
-<p class="eyebrow r">完整規劃書範例</p>
+<p class="eyebrow r">規劃書範例</p>
 <h2 class="r">〈魁地奇的邀請〉的規劃書</h2>
-<p class="lead r">封面介紹、開頭故事、每一關、結局，一份規劃書長這樣。</p>
+<p class="lead r">這是規劃書的基本架構，當然可以再寫更多。關鍵的解法，就是玩家的行為。</p>
 <table class="r tight" style="font-size:14px"><tr><th style="width:110px"></th><th>第一關：謎樣的邀請信</th><th>第二關：撥開未來的迷霧</th><th>第三關：展現天賦的時候</th></tr>
 <tr><td><b>前言故事</b></td><td>信只有一半，「具有魔法才能看見 AR 與聽見 VOICE」</td><td>張秋：時間有限，找到寶箱並打開它</td><td>「那是我們要考驗你的魔法能力」</td></tr>
 <tr><td><b>謎題內容</b></td><td>西追傳來校園照片，這是哪裡？</td><td>照著水晶球的畫面，找到寶箱</td><td>需要魔法天賦才看得出關鍵</td></tr>
@@ -490,7 +490,6 @@ section.in .r:nth-child(2){transition-delay:.12s}section.in .r:nth-child(3){tran
 <span class="k">那麼</span>兩塊不會黏住，可以再拖開。</div><div class="code r" style="margin-top:0;font-size:14px"><button class="copy" data-copy>複製</button><div class="hd">操作的方式</div><span class="k">假設</span>兩塊碎片已經黏在一起，
 <span class="k">當</span>玩家拖其中一塊，
 <span class="k">那麼</span>兩塊一起移動，只平移、不旋轉。</div></div>
-<p class="small r">這個拼圖改了三版：點兩塊交換位置 → 拖到固定格子才吸附，還會旋轉 → 相鄰的碎片互相吸附、只平移。每一次改，都是在補上這三句話。</p>
 </div>
 </div></section>
 
@@ -509,26 +508,34 @@ section.in .r:nth-child(2){transition-delay:.12s}section.in .r:nth-child(3){tran
 <!-- 13 -->
 <section id="s13"><div class="wrap">
 <span class="badge r">示範</span>
-<h2 class="r" style="margin-top:16px">〈找尋千島珍珠〉搖竹這一關</h2>
-<p class="lead r">樂譜上散落著數字，把搖竹拖到樂譜上對照；保險箱密碼是印尼的國慶日 <b>817</b>。</p>
-<div class="grid g2">
-<div class="card r"><span class="pill b">規劃書有寫</span><h3>謎題、道具、答案</h3><p>搖竹、樂譜、保險箱、817。規格很完整。</p></div>
-<div class="card r" style="border-color:#efc8b4"><span class="pill o">規劃書沒寫</span><h3>搖竹拖不拖得動？輸入 718 會怎樣？</h3><p>原作的搖竹是固定的圖；答錯時要不要提示「想想印尼的國慶日」？沒寫，AI 就自己決定。</p></div>
+<h2 class="r" style="margin-top:16px">〈找尋千島珍珠〉拼圖這一關</h2>
+<p class="lead r">規劃書寫了：克差的圖切成 3×3，拼回來讀出 <b>KECAK</b>。沒寫的是：玩家要怎麼拼？</p>
+<div class="flow r">
+<div class="card"><span class="pill">第一版</span><p style="color:var(--ink)">AI 做成「點兩塊碎片，交換位置」</p><p style="font-size:14px;margin-top:8px">我想要：打散，讓玩家自己移動拼回去</p></div>
+<div class="arr"><i></i></div>
+<div class="card"><span class="pill">第二版</span><p style="color:var(--ink)">拖到固定格子才吸附，碎片還會旋轉</p><p style="font-size:14px;margin-top:8px">我想要：兩片接得上就黏住，只平移</p></div>
+<div class="arr"><i></i></div>
+<div class="card" style="border:2px solid var(--orange)"><span class="pill o">第三版</span><p style="color:var(--ink)">相鄰的碎片互相吸附，黏住後一起移動</p><p style="font-size:14px;margin-top:8px">這才是我要的玩法</p></div>
 </div>
-<div class="callout r"><span class="ic">▶</span>先照規劃書做出第一版 → 試玩看 AI 怎麼處理 → 補上行為，做第二版。</div>
+<div class="callout r"><span class="ic">▶</span>規格沒變，變的都是行為。先照規劃書做出第一版 → 試玩找出落差 → 補上行為，做第二版。</div>
 </div></section>
 
 <!-- 14 -->
 <section id="s14"><div class="wrap">
 <p class="eyebrow r">實作第二版 · 15:35–16:05</p>
-<h2 class="r">寫出行為，做第二版</h2>
+<h2 class="r">寫出行為，更新到 GitHub</h2>
+<p class="lead r" style="margin-bottom:14px">先把三句話和第一版的程式碼一起貼給 AI，拿到新的程式碼後，照下面四步更新。網址不變，玩家重新整理就是第二版。</p>
 <div class="grid g4">
-<div class="card topo r"><div class="no">01</div><h3>寫三句話</h3><span class="tag you">你自己來</span><p>答對、答錯、亂猜、成功後再操作，機關各要怎麼反應？</p></div>
-<div class="card topb r"><div class="no b">02</div><h3>請 AI 修改</h3><span class="tag ai">交給 AI</span><p>把第一版的程式碼和三句話一起貼給 AI。</p></div>
-<div class="card topo r"><div class="no">03</div><h3>更新到 GitHub</h3><span class="tag you">你自己來</span><p>點開檔案、按鉛筆，整份貼上新程式碼，Commit。</p></div>
-<div class="card topo r"><div class="no">04</div><h3>比對兩版</h3><span class="tag you">你自己來</span><p>按 History 看第一版和第二版差在哪裡。</p></div>
+<div class="card r" style="padding:18px"><div class="no">01</div><h3>點開檔案</h3><p>進到 repo，點要改的檔案。</p>
+<div class="gh"><div class="t">escape</div><div style="border-top:1px solid #d0d7de;padding-top:6px">📁 pearl<br><span class="hl">📄 lock.html</span><br>📄 README.md</div></div></div>
+<div class="card r" style="padding:18px"><div class="no">02</div><h3>按鉛筆編輯</h3><p>檔案右上角的鉛筆圖示。</p>
+<div class="gh"><div style="display:flex;justify-content:space-between;align-items:center"><b>lock.html</b><span class="hl" style="padding:0 4px">✏️</span></div><div class="f" style="font-family:monospace;font-size:11px;margin-top:8px">&lt;!DOCTYPE html&gt;<br>&lt;html lang="zh-Hant"&gt;…</div></div></div>
+<div class="card r" style="padding:18px"><div class="no">03</div><h3>整份換掉，Commit</h3><p>全選刪除，貼上新程式碼，按 Commit changes，寫一句這版改了什麼。</p>
+<div class="gh"><div class="f" style="font-family:monospace;font-size:11px">（貼上新的程式碼）</div>Commit message<div class="f hl">第二版：答錯時寶箱晃一下</div><span class="gb">Commit changes</span></div></div>
+<div class="card r" style="padding:18px"><div class="no">04</div><h3>看歷程、比兩版</h3><p>按 History，點一筆紀錄，看改了哪幾行。</p>
+<div class="gh"><b class="hl" style="padding:0 4px">🕘 History</b><div style="margin-top:6px;border-top:1px solid #d0d7de;padding-top:4px">● 第二版：答錯時寶箱晃一下<br>● 第一版</div><div style="font-family:monospace;font-size:11px;margin-top:6px"><span style="background:#ffebe9">- alert("錯誤")</span><br><span style="background:#dafbe1">+ box.classList.add("shake")</span></div></div></div>
 </div>
-<div class="note warn r">網址不變，玩家重新整理就是第二版。貼上 Padlet 時，把「第一版」改成「第二版」。</div>
+<p class="small r">另一種做法：Add file → Upload files，上傳同檔名的新檔案，會直接取代舊的。畫面為示意，貼上 Padlet 時把「第一版」改成「第二版」。</p>
 </div></section>
 
 <!-- 15 -->
