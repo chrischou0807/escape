@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>讓 AI 做出你真正想要的機關</title>
+<meta name="theme-color" content="#1c1b22">
+<style>
+:root{--bg:#f6f2ec;--ink:#2b2a30;--dim:#77736c;--card:#fbf9f5;--line:#e6dfd4;--blue:#3d66a8;--blue2:#e7edf7;--orange:#d0683c;--orange2:#f8e8de;--dark:#1c1b22;--mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{font-family:"PingFang TC","Noto Sans TC","Microsoft JhengHei",system-ui,sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased}
+body.locked #deck{overflow:hidden}
+body.locked #ctr,body.locked #dots,body.locked #prog{opacity:.35;pointer-events:none}
+.shake{animation:shk .4s}
+@keyframes shk{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
+.dial.open{border-color:var(--orange);color:var(--orange)}
+#deck{height:100vh;overflow-y:auto;scroll-snap-type:y mandatory;scroll-behavior:smooth}
+section{min-height:100vh;scroll-snap-align:start;display:flex;align-items:center;justify-content:center;padding:72px 6vw 90px;position:relative}
+.wrap{width:100%;max-width:1080px}
+.dark{background:var(--dark);color:#f3efe8}
+.eyebrow{font-family:var(--mono);font-size:14px;letter-spacing:.08em;color:var(--orange);margin:0 0 18px}
+h1{font-size:clamp(38px,5.6vw,72px);line-height:1.18;margin:0;font-weight:800;letter-spacing:.01em}
+h2{font-size:clamp(28px,3.6vw,44px);line-height:1.25;margin:0 0 26px;font-weight:800}
+.lead{font-size:clamp(17px,1.6vw,21px);color:var(--dim);margin:-10px 0 26px;line-height:1.7}
+.dark .lead{color:#aaa49a}
+.hl-b{color:var(--blue)}.hl-o{color:var(--orange)}
+.dark .hl-b{color:#7fa4e3}
+.grid{display:grid;gap:18px}
+.g2{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(4,1fr)}
+@media(max-width:820px){.g2,.g3,.g4{grid-template-columns:1fr}section{padding:64px 5vw 90px}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:26px 26px 24px;line-height:1.65}
+.card .no{font-family:var(--mono);font-size:30px;font-weight:600;color:var(--orange);margin-bottom:6px}
+.card .no.b{color:var(--blue)}
+.card h3{font-size:21px;margin:0 0 8px;line-height:1.4}
+.card p{margin:0;color:var(--dim);font-size:16px}
+.card.topb{border-top:5px solid var(--blue)}.card.topo{border-top:5px solid var(--orange)}
+.tag{display:inline-block;font-size:13px;font-weight:700;padding:3px 11px;border-radius:999px;margin:2px 0 10px}
+.tag.ai{background:var(--blue2);color:var(--blue)}.tag.you{background:var(--orange2);color:var(--orange)}
+.badge{display:inline-block;font-family:var(--mono);font-size:13px;font-weight:700;color:#fff;background:var(--blue);padding:7px 15px;border-radius:999px;margin-right:8px;letter-spacing:.06em}
+.badge.o{background:var(--orange)}
+.callout{display:flex;gap:14px;align-items:center;background:var(--dark);color:#f3efe8;border-radius:16px;padding:22px 26px;font-size:19px;font-weight:700;margin-top:22px;line-height:1.6}
+.callout .ic{font-size:24px;color:var(--orange)}
+.note{display:flex;gap:12px;align-items:flex-start;border-radius:14px;padding:16px 20px;margin-top:18px;font-size:16px;line-height:1.65}
+.note.info{background:var(--blue2);color:#29436d}.note.warn{background:var(--orange2);color:#8a3f1d;border:1px dashed #e3b49c}
+.flow{display:flex;align-items:stretch;gap:0}
+.flow .card{flex:1;text-align:center}
+.flow .arr{flex:0 0 70px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:13px;color:var(--dim)}
+.flow .arr i{display:block;width:52px;height:2px;background:currentColor;position:relative;margin-top:6px}
+.flow .arr i:after{content:"";position:absolute;right:-1px;top:-4px;border-left:8px solid currentColor;border-top:5px solid transparent;border-bottom:5px solid transparent}
+@media(max-width:820px){.flow{flex-direction:column}.flow .arr{flex-basis:44px}.flow .arr i{transform:rotate(90deg)}}
+.pill{display:inline-block;font-size:12px;font-weight:700;padding:3px 10px;border-radius:999px;background:#ece6dc;color:#6d675e;margin-bottom:8px}
+.pill.b{background:var(--blue2);color:var(--blue)}.pill.o{background:var(--orange2);color:var(--orange)}
+.big{font-size:34px;font-weight:800;margin:2px 0 6px}
+table{width:100%;border-collapse:separate;border-spacing:0;background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;font-size:16px}
+th,td{padding:14px 18px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top;line-height:1.6}
+th{background:#efe9df;font-size:15px}
+tr:last-child td{border-bottom:none}
+td.miss{color:var(--orange);font-weight:700}
+.code{margin-top:18px;background:var(--dark);color:#e9e4da;border-radius:18px;padding:22px 26px;font-family:var(--mono);font-size:15px;line-height:1.85;position:relative;white-space:pre-wrap;box-shadow:0 18px 40px -22px rgba(0,0,0,.5)}
+.code .hd{font-family:inherit;color:#8fb0e6;font-size:14px;margin-bottom:10px}
+.code .k{color:#f0a37e;font-weight:700}
+.copy{position:absolute;top:16px;right:18px;font:700 13px/1 inherit;font-family:"PingFang TC","Noto Sans TC",sans-serif;background:#6f95d6;color:#fff;border:0;border-radius:999px;padding:8px 14px;cursor:pointer}
+.copy.ok{background:#4f9a6a}
+.tl{display:grid;grid-template-columns:120px 1fr;gap:0;background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.tl div{padding:13px 18px;border-bottom:1px solid var(--line);font-size:17px}
+.tl .t{font-family:var(--mono);color:var(--blue);font-weight:700}
+.tl .brk{color:var(--dim)}
+.tl div:nth-last-child(-n+2){border-bottom:none}
+.vs{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media(max-width:820px){.vs{grid-template-columns:1fr}}
+.bad{border-left:5px solid #c9b8a7}.good{border-left:5px solid var(--orange)}
+.cover-legend{display:flex;gap:22px;margin-top:34px;font-size:15px;color:#aaa49a}
+.cover-legend b{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:8px;vertical-align:-1px}
+.lockdemo{margin-top:40px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.dial{width:62px;height:78px;border-radius:12px;background:#2c2b33;border:1px solid #3c3b44;color:#f3efe8;font:700 34px var(--mono);display:flex;align-items:center;justify-content:center;cursor:pointer;user-select:none;transition:transform .15s}
+.dial:active{transform:scale(.95)}
+.lockmsg{font-size:15px;color:#aaa49a;margin-left:8px}
+.scrollhint{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);color:#8d877d;font-size:13px;text-decoration:none;text-align:center}
+#prog{position:fixed;top:0;left:0;height:3px;width:0;background:linear-gradient(90deg,var(--blue),var(--orange));z-index:20;transition:width .3s}
+#dots{position:fixed;right:18px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:9px;z-index:20}
+#dots a{width:8px;height:8px;border-radius:50%;background:#bdb6ab;display:block;transition:all .2s}
+#dots a.on{background:var(--orange);transform:scale(1.4)}
+#ctr{position:fixed;right:18px;bottom:18px;background:#3a3940;color:#eee;border-radius:12px;display:flex;align-items:center;gap:6px;padding:6px 8px;font:13px var(--mono);z-index:20}
+#ctr button{background:none;border:0;color:#eee;cursor:pointer;font-size:14px;padding:2px 6px}
+@media(max-width:820px){#dots{display:none}}
+.r{opacity:0;transform:translateY(22px);transition:opacity .6s ease,transform .6s ease}
+section.in .r{opacity:1;transform:none}
+section.in .r:nth-child(2){transition-delay:.12s}section.in .r:nth-child(3){transition-delay:.24s}section.in .r:nth-child(4){transition-delay:.36s}section.in .r:nth-child(5){transition-delay:.48s}section.in .r:nth-child(6){transition-delay:.6s}
+.grid>.r:nth-child(2){transition-delay:.15s!important}.grid>.r:nth-child(3){transition-delay:.3s!important}.grid>.r:nth-child(4){transition-delay:.45s!important}
+@media(prefers-reduced-motion:reduce){.r{opacity:1;transform:none;transition:none}#deck{scroll-behavior:auto}}
+.small{font-size:14px;color:var(--dim);margin-top:14px}
+</style>
+</head>
+<body class="locked">
+<div id="prog"></div>
+<nav id="dots"></nav>
+<div id="ctr"><button id="up" aria-label="上一頁">︿</button><span id="num">01 / 18</span><button id="dn" aria-label="下一頁">﹀</button></div>
+<main id="deck">
+
+<!-- 01 -->
+<section class="dark" id="s1"><div class="wrap">
+<p class="eyebrow r">線上機關 AI 協作設計研習 · 14:00–16:45</p>
+<h1 class="r">讓 AI 做出<br>你<span class="hl-o">真正想要</span>的機關</h1>
+<p class="lead r" style="margin-top:22px">從「寫規格」到「想清楚玩家會怎麼玩」</p>
+<div class="cover-legend r"><span><b style="background:#7fa4e3"></b>規格：機關是什麼</span><span><b style="background:var(--orange)"></b>行為：玩家這樣做時，機關怎麼反應</span></div>
+<div class="lockdemo r"><div class="dial" data-d>0</div><div class="dial" data-d>0</div><div class="dial" data-d>0</div><div class="dial" data-d>0</div><span class="lockmsg" id="lockmsg">打開密碼鎖，才能往下看。提示：今天的研習從幾點開始？</span></div>
+</div><a class="scrollhint" id="shint" href="#s2">🔒 先打開密碼鎖</a></section>
+
+<!-- 02 -->
+<section id="s2"><div class="wrap">
+<h2 class="r">今天的流程</h2>
+<div class="tl r">
+<div class="t">14:00</div><div>這門課從哪裡來：營隊、實體道具變線上機關</div>
+<div class="t">14:05</div><div>快速體驗〈魁地奇的邀請〉：解三關，打開線上寶箱</div>
+<div class="t">14:15</div><div>需求定義與平台認識：從<span class="hl-b">規格</span>走到<span class="hl-o">行為</span></div>
+<div class="t brk">14:45</div><div class="brk">休息 10 分鐘</div>
+<div class="t">14:55</div><div>專屬機關實作：先做出第一版，貼到 Padlet</div>
+<div class="t">16:00</div><div>驗收除錯與實際上架：互相試玩，修出第二版</div>
+<div class="t">16:30</div><div>總結</div>
+</div>
+</div></section>
+
+<!-- 03 -->
+<section id="s3"><div class="wrap">
+<p class="eyebrow r">緣起</p>
+<h2 class="r">這門課從哪裡來？</h2>
+<div class="grid g2">
+<div class="card r"><div class="no">01</div><h3>實體道具太耗時</h3><p>每一組都要準備、上鎖、重設，壞了要修，很難推廣與複製。</p></div>
+<div class="card r"><div class="no b">02</div><h3>學生很想學 AI</h3><p>暑假解謎營隊，乾脆讓 AI 把道具做成線上機關。最簡單的例子：實體密碼鎖變成線上版。</p></div>
+</div>
+<p class="small r">之前的經驗：112 學年多元選修設計線上解謎遊戲、113 學年用 Arduino 做密室機關，更早之前帶學生為校慶、畢典、國際交流設計實境解謎。</p>
+</div></section>
+
+<!-- 04 -->
+<section id="s4"><div class="wrap">
+<span class="badge o r">現場體驗</span>
+<h2 class="r" style="margin-top:16px">〈魁地奇的邀請〉</h2>
+<p class="lead r">營隊當時的關卡。在蹦世界解完三個小關卡，最後要打開一個寶箱，這個寶箱原本是實體的，後來改成線上機關。</p>
+<div class="flow r">
+<div class="card"><span class="pill">蹦世界</span><div class="big">三個小關卡</div><p>收集線索</p></div>
+<div class="arr">得到密碼<i></i></div>
+<div class="card" style="border:2px solid var(--orange)"><span class="pill o">線上機關</span><div class="big hl-o">寶箱</div><p>輸入密碼打開</p></div>
+</div>
+<div class="note info r">我會分享手機畫面，帶大家快速玩一遍。開寶箱時，注意看「輸錯密碼」時畫面怎麼反應。</div>
+</div></section>
+
+<!-- 05 -->
+<section id="s5"><div class="wrap">
+<h2 class="r">實體寶箱 vs 線上寶箱</h2>
+<table class="r"><tr><th></th><th>實體寶箱</th><th>線上寶箱</th></tr>
+<tr><td><b>準備</b></td><td>買鎖、上鎖、放道具</td><td>一個網址</td></tr>
+<tr><td><b>多組同時玩</b></td><td>一組一個箱子</td><td>不限</td></tr>
+<tr><td><b>下一組</b></td><td>關主手動重設</td><td>重新整理</td></tr>
+<tr><td><b>損壞與遺失</b></td><td>會發生</td><td>不會</td></tr>
+<tr><td><b>推廣複製</b></td><td>難</td><td>傳連結就好</td></tr>
+</table>
+<div class="callout r"><span class="ic">◆</span>這個機關的目的很單純：簡化實體道具、方便重複使用。</div>
+</div></section>
+
+<!-- 06 -->
+<section id="s6"><div class="wrap">
+<h2 class="r">但轉到線上，有些事變了</h2>
+<div class="grid g2">
+<div class="card r"><div class="no b">實體</div><h3>轉一組密碼要時間</h3><p>亂試很慢，玩家自然會先想。</p><h3 style="margin-top:16px">關主在旁邊</h3><p>看到卡關，會給提示。</p></div>
+<div class="card r" style="border-color:#efc8b4"><div class="no">線上</div><h3>幾秒就能猜很多次</h3><p>不想的人也可能矇到。</p><h3 style="margin-top:16px">沒有人在旁邊</h3><p>答錯時，畫面要自己說話。</p></div>
+</div>
+<div class="callout r"><span class="ic">？</span>實體世界自動幫你處理的事，轉成線上後，誰來寫？</div>
+</div></section>
+
+<!-- 07 -->
+<section id="s7"><div class="wrap">
+<p class="eyebrow r">AI 變了</p>
+<h2 class="r">幾個月前 vs 現在</h2>
+<div class="vs">
+<div class="card bad r"><span class="pill b">幾個月前</span><h3>規格要一次寫滿</h3><p>沒寫清楚，AI 就猜，還常混用不同的程式語言。要來回很多次、明確講出錯在哪，才做得出能上線的機關。</p></div>
+<div class="card good r"><span class="pill o">現在</span><h3>寫程式很強，也會補你沒說的</h3><p>技術細節大多不用再交代。提示詞好像沒那麼重要了。</p></div>
+</div>
+<div class="callout r"><span class="ic">◆</span>AI 補得了技術，補不了「學生要學到什麼、體驗到什麼」。<br>這是老師要自己想清楚的事。</div>
+</div></section>
+
+<!-- 08 -->
+<section id="s8"><div class="wrap">
+<h2 class="r">一份規劃書，其實只回答三個問題</h2>
+<div class="flow r">
+<div class="card"><span class="pill b">規格</span><div class="big hl-b" style="font-size:26px">這是什麼？</div><p>知識點、謎題、答案、素材</p></div>
+<div class="arr"><i></i></div>
+<div class="card" style="border:2px solid var(--orange)"><span class="pill o">行為</span><div class="big hl-o" style="font-size:26px">玩家做了什麼，<br>它怎麼反應？</div><p>答對、答錯、亂試、卡住</p></div>
+<div class="arr"><i></i></div>
+<div class="card"><span class="pill">驗證</span><div class="big" style="font-size:26px">怎麼知道做對了？</div><p>試玩、封測紀錄</p></div>
+</div>
+<div class="note warn r">大部分規劃書都把第一題寫得很完整，第二題卻很少寫。你沒寫的，AI 就替你決定了。</div>
+</div></section>
+
+<!-- 09 -->
+<section id="s9"><div class="wrap">
+<h2 class="r">兩份規劃書，同一個缺口</h2>
+<table class="r"><tr><th></th><th>學生作品〈衣襬下的抗爭〉</th><th>汪老師〈自由花蕊〉</th></tr>
+<tr><td><b>出發點</b></td><td>議題與故事</td><td>場域與展件</td></tr>
+<tr><td><b>每關寫什麼</b></td><td>謎題內容、答案、答對時的內文、解法、提示</td><td>現場互動、題目、解法、提示、通關回饋、備註</td></tr>
+<tr><td><b>行為寫在哪</b></td><td>只有「答對時」</td><td>散在備註，事後補封測紀錄</td></tr>
+<tr><td><b>都沒寫的</b></td><td class="miss">答錯時會怎樣</td><td class="miss">選錯時會怎樣</td></tr>
+</table>
+<div class="callout r"><span class="ic">◆</span>學生規劃書裡有一格很關鍵：「玩完遊戲後，玩家得到的改變」。<br>行為情境，就是把這一格寫到每一關的操作上。</div>
+</div></section>
+
+<!-- 10 -->
+<section id="s10"><div class="wrap">
+<h2 class="r">三句話，寫出玩家的行為</h2>
+<div class="grid g3">
+<div class="card topb r"><div class="no b">假設</div><h3>玩家現在……</h3><p>開始前的狀態</p></div>
+<div class="card topb r"><div class="no b">當</div><h3>玩家做了……</h3><p>一個實際的動作</p></div>
+<div class="card topo r"><div class="no">那麼</div><h3>機關應該……</h3><p>畫面上看得到、聽得到的結果</p></div>
+</div>
+<div class="code r"><button class="copy" data-copy>複製</button><div class="hd">範例：學生作品第 2 關〈進入皇宮〉，答案是 SDGs5</div><span class="k">假設</span>玩家已經從燈謎找到答案，
+<span class="k">當</span>他輸入 SDGS5（第四個 s 打成大寫），
+<span class="k">那麼</span>機關不放行，並提示「再看一次洞窟裡的動物有多大」。</div>
+</div></section>
+
+<!-- 11 -->
+<section id="s11"><div class="wrap">
+<h2 class="r">每個機關，至少想到這四種</h2>
+<div class="grid g4">
+<div class="card topo r"><div class="no">01</div><h3>成功</h3><p>做對了，機關怎麼反應？例如鎖打開。</p></div>
+<div class="card topb r"><div class="no b">02</div><h3>做錯</h3><p>指出哪裡不一樣，但不直接給答案。</p></div>
+<div class="card topb r"><div class="no b">03</div><h3>亂猜</h3><p>不懂的人，不能靠一直試過關。</p></div>
+<div class="card topb r"><div class="no b">04</div><h3>成功後再操作</h3><p>不重複觸發，也不變成錯誤。</p></div>
+</div>
+<p class="small r">還可以再想：差一點就對（大小寫、空白）、第一次看到畫面不知道能做什麼、重新整理後會不會卡住。</p>
+</div></section>
+
+<!-- 12 -->
+<section id="s12"><div class="wrap">
+<h2 class="r">兩個工具：範例庫與工作台</h2>
+<div class="grid g2">
+<div class="card r"><span class="pill o">發散</span><h3>機關範例庫（150 多款）</h3><p>看見「原來 AI 可以做出這麼多種機關」。每一款都能直接「複製提示詞」，換成你的內容就能用。不知道從哪開始，就按「先看這 10 款」。</p></div>
+<div class="card r"><span class="pill b">收斂</span><h3>機關設計工作台</h3><p>把模糊的想法一步一步拆開：知識點、玩家得到的改變、謎題與解法、答對答錯時機關發生什麼、意外操作，最後產生行為情境式的提示詞。</p></div>
+</div>
+<div class="note info r">今天大多數人走「從範例改」：挑一款範例 → 複製提示詞 → 換成自己的內容。已經有明確想法的，再用工作台從頭拆。</div>
+</div></section>
+
+<!-- 13 -->
+<section id="s13"><div class="wrap">
+<span class="badge r">示範</span>
+<h2 class="r" style="margin-top:16px">第 2 關〈進入皇宮〉</h2>
+<p class="lead r">五個燈謎串成一條路線，答案是 <b>SDGs5</b>：洞窟裡的動物小小的，所以第四個 s 要小寫。</p>
+<div class="grid g2">
+<div class="card r"><span class="pill b">規劃書有寫</span><h3>謎題、路線、答案、解法</h3><p>規格很完整。</p></div>
+<div class="card r" style="border-color:#efc8b4"><span class="pill o">規劃書沒寫</span><h3>輸入 SDGS5 或 sdgs5 算不算對？</h3><p>提示欄寫「無」，卡關時怎麼辦？AI 多半會忽略大小寫，學生的巧思就被吃掉了。</p></div>
+</div>
+<div class="callout r"><span class="ic">▶</span>先照規劃書做出第一版 → 試玩看 AI 怎麼處理 → 補三句話，做第二版。</div>
+</div></section>
+
+<!-- 14 -->
+<section id="s14"><div class="wrap">
+<p class="eyebrow r">專屬機關實作 · 14:55–16:00</p>
+<h2 class="r">先做出來，再想清楚</h2>
+<div class="grid g4">
+<div class="card topo r"><div class="no">01</div><h3>挑一款範例</h3><span class="tag you">你自己來</span><p>在範例庫按「複製提示詞」，填上你的內容。</p></div>
+<div class="card topb r"><div class="no b">02</div><h3>做出第一版</h3><span class="tag ai">交給 AI</span><p>貼給 AI，拿到單一 HTML 檔。</p></div>
+<div class="card topo r"><div class="no">03</div><h3>貼上 Padlet</h3><span class="tag you">你自己來</span><p>標註「第一版」，先發佈再說。</p></div>
+<div class="card topo r"><div class="no">04</div><h3>找落差</h3><span class="tag you">你自己來</span><p>玩自己的第一版：哪裡不是你要的？</p></div>
+</div>
+<div class="note warn r">你沒說清楚的地方，AI 就替你決定了。第一版「能玩但不是你要的」很正常，這個落差就是今天的教材。</div>
+</div></section>
+
+<!-- 15 -->
+<section id="s15"><div class="wrap">
+<h2 class="r">發佈平台與常見問題</h2>
+<div class="grid g3">
+<div class="card r"><div class="no b">01</div><h3>手機拖不動</h3><p>觸控要另外處理，記得用手機實測。</p></div>
+<div class="card r"><div class="no b">02</div><h3>一打開沒有聲音</h3><p>瀏覽器規定要先點一下才會出聲。</p></div>
+<div class="card r"><div class="no b">03</div><h3>校園網路打不開</h3><p>不要載入外部資源，全部包在一個檔案。</p></div>
+<div class="card r"><div class="no b">04</div><h3>語音辨識失靈</h3><p>需要 https，Chrome 或 Edge 比較穩。</p></div>
+<div class="card r"><div class="no b">05</div><h3>重新整理後卡住</h3><p>確認能回到可以開始的狀態。</p></div>
+<div class="card r"><div class="no b">06</div><h3>答錯沒反應</h3><p>答錯一定要有看得到的回饋。</p></div>
+</div>
+</div></section>
+
+<!-- 16 -->
+<section id="s16"><div class="wrap">
+<p class="eyebrow r">驗收除錯與實際上架 · 16:00–16:30</p>
+<h2 class="r">用具體現象回報問題</h2>
+<div class="vs">
+<div class="card bad r"><span class="pill">不好回報</span><h3>「怪怪的」「不能玩」</h3><p>AI 和你自己都不知道要改哪裡。</p></div>
+<div class="card good r"><span class="pill o">好回報</span><h3>寫成三句話</h3><p>假設玩家已經找到答案，當他輸入 sdgs5（全小寫），那麼畫面只說「錯誤」，沒說哪裡不對。我希望提示「大小寫再看一次」。</p></div>
+</div>
+<div class="code r"><button class="copy" data-copy>複製</button><div class="hd">封測紀錄格式（互換試玩時用）</div>卡住位置：
+玩家實際行為：
+修改方向：
+改寫成：<span class="k">假設</span>……，<span class="k">當</span>……，<span class="k">那麼</span>……</div>
+<p class="small r">修好後，網址加上 ?test=1 看自動測試結果，再用手機人工試玩，最後把第二版貼上 Padlet。</p>
+</div></section>
+
+<!-- 17 -->
+<section id="s17"><div class="wrap">
+<h2 class="r">線上參與小提醒</h2>
+<div class="grid g3">
+<div class="card r"><div class="no">01</div><h3>開兩個視窗</h3><p>一個開 AI，一個開範例庫或工作台。有雙螢幕更好。</p></div>
+<div class="card r"><div class="no b">02</div><h3>卡關打在聊天室</h3><p>用三句話描述你看到的狀況，大家都能幫忙。</p></div>
+<div class="card r"><div class="no">03</div><h3>分組討論室試玩</h3><p>兩三人一組，從 Padlet 點開彼此的機關來玩。</p></div>
+</div>
+</div></section>
+
+<!-- 18 -->
+<section class="dark" id="s18"><div class="wrap">
+<p class="eyebrow r">總結</p>
+<h1 class="r" style="font-size:clamp(34px,4.6vw,60px)"><span class="hl-b">AI 負責寫程式</span>，<br><span class="hl-o">你負責想玩家。</span></h1>
+<div class="grid g3" style="margin-top:40px">
+<div class="card r" style="background:#26252d;border-color:#38373f"><div class="no b" style="color:#7fa4e3">規格</div><p style="color:#bdb7ad">說清楚「機關是什麼」</p></div>
+<div class="card r" style="background:#26252d;border-color:#38373f"><div class="no">行為</div><p style="color:#bdb7ad">想清楚「玩家這樣做時，機關怎麼反應」</p></div>
+<div class="card r" style="background:#26252d;border-color:#38373f"><div class="no" style="color:#e9e4da">驗證</div><p style="color:#bdb7ad">試玩、記錄、改寫成三句話</p></div>
+</div>
+<p class="small r" style="color:#8d877d;margin-top:30px"><a href="#s1" style="color:#8d877d">回到開頭</a></p>
+</div></section>
+
+</main>
+<script>
+(function(){
+var deck=document.getElementById("deck"),S=[].slice.call(document.querySelectorAll("section")),N=S.length,cur=0;
+var dots=document.getElementById("dots");
+S.forEach(function(s,i){var a=document.createElement("a");a.href="#"+s.id;a.setAttribute("aria-label","第 "+(i+1)+" 頁");dots.appendChild(a)});
+var D=[].slice.call(dots.children);
+function pad(n){return (n<10?"0":"")+n}
+function setCur(i){cur=i;document.getElementById("num").textContent=pad(i+1)+" / "+pad(N);document.getElementById("prog").style.width=((i+1)/N*100)+"%";D.forEach(function(d,j){d.className=j===i?"on":""});var dark=S[i].classList.contains("dark");}
+var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add("in");if(e.intersectionRatio>.5)setCur(S.indexOf(e.target))}})},{root:deck,threshold:[.25,.55]});
+S.forEach(function(s){io.observe(s)});
+function locked(){return document.body.classList.contains("locked")}
+function nudge(){var m=document.getElementById("lockmsg"),l=document.querySelector(".lockdemo");l.classList.remove("shake");void l.offsetWidth;l.classList.add("shake");m.textContent="還沒打開喔！先把密碼鎖轉開，才能往下看。";m.style.color="#f0a37e"}
+function go(i){if(locked()&&i>0){nudge();return}i=Math.max(0,Math.min(N-1,i));S[i].scrollIntoView({behavior:"smooth"})}
+document.getElementById("up").onclick=function(){go(cur-1)};
+document.getElementById("dn").onclick=function(){go(cur+1)};
+document.addEventListener("keydown",function(e){if(locked()&&/^[0-9]$/.test(e.key)){typeDigit(e.key);return}if(["ArrowDown","PageDown"," "].indexOf(e.key)>=0){e.preventDefault();go(cur+1)}else if(["ArrowUp","PageUp"].indexOf(e.key)>=0){e.preventDefault();go(cur-1)}else if(e.key==="Home"){go(0)}else if(e.key==="End"){go(N-1)}});
+[].slice.call(document.querySelectorAll('a[href^="#s"]')).forEach(function(a){a.addEventListener("click",function(e){e.preventDefault();if(locked()&&a.getAttribute("href")!=="#s1"){nudge();return}var t=document.getElementById(a.getAttribute("href").slice(1));if(t)t.scrollIntoView({behavior:"smooth"})})});
+setCur(0);S[0].classList.add("in");
+[].slice.call(document.querySelectorAll("[data-copy]")).forEach(function(b){b.onclick=function(){var box=b.parentNode.cloneNode(true);[].slice.call(box.querySelectorAll(".copy,.hd")).forEach(function(x){x.remove()});var t=box.textContent.replace(/^\s+|\s+$/g,"");var done=function(ok){b.textContent=ok?"已複製":"請手動選取";b.classList.toggle("ok",ok);setTimeout(function(){b.textContent="複製";b.classList.remove("ok")},1600)};try{navigator.clipboard.writeText(t).then(function(){done(true)},function(){done(false)})}catch(e){done(false)}}});
+var dials=[].slice.call(document.querySelectorAll("[data-d]")),msg=document.getElementById("lockmsg"),tries=0,ti=0,CODE="1400";
+try{if(sessionStorage.getItem("lockOpen")==="1")openLock(true)}catch(e){}
+function check(){if(!locked())return;var code=dials.map(function(x){return x.textContent}).join("");tries++;
+ if(code===CODE){openLock(false)}else{msg.style.color="";msg.textContent=tries>24?"提示：四位數，就是今天研習開始的時間（14:00）。":tries>12?"提示：看看第 2 頁會出現的時間表……不對，那要先打開才看得到。是今天幾點開始？":"打開密碼鎖，才能往下看。提示：今天的研習從幾點開始？"}}
+function openLock(quiet){document.body.classList.remove("locked");dials.forEach(function(d,k){d.textContent=CODE[k];d.classList.add("open")});msg.textContent="🔓 打開了！這就是一個最簡單的線上密碼鎖。往下捲動繼續。";msg.style.color="#f0a37e";
+ var h=document.getElementById("shint");h.innerHTML="往下捲動<br>﹀";try{sessionStorage.setItem("lockOpen","1")}catch(e){}
+ if(!quiet)setTimeout(function(){S[1].scrollIntoView({behavior:"smooth"})},1400)}
+function typeDigit(k){dials[ti].textContent=k;ti=(ti+1)%dials.length;if(ti===0)check()}
+dials.forEach(function(d){d.onclick=function(){if(!locked())return;d.textContent=(+d.textContent+1)%10;check()}});
+})();
+</script>
+</body>
+</html>
