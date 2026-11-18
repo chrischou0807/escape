@@ -208,22 +208,31 @@ scene((sc,api)=>{
   const done=img(sc,"625c34165bc367001879284f/f4bcdc1c-d4ff-402f-9527-422619996ca7.png",601,203,586,331,0,2);
   const ph=hit(sc,601,203,586,331,next,"拿起這個密碼筒");
   const X=132,Y=123,W=453,N=3,S=W/N,url=src("625c34165bc367001879284f/c5e4c6e5-a75c-4bba-8eb0-4a2563e4cd58.jpeg");
-  // 拼圖板：虛線格子
-  const board=mk("div","","position:absolute;left:"+X+"px;top:"+Y+"px;width:"+W+"px;height:"+W+"px;z-index:3;background:#ffffff55;border:3px dashed #8a8a8a;background-image:linear-gradient(#0002 1px,transparent 1px),linear-gradient(90deg,#0002 1px,transparent 1px);background-size:"+S+"px "+S+"px",sc);
-  const pcs=[];let solved=false,zTop=410,drag=null;
+  // 自由拼圖：碎片打散在畫面上；兩塊相鄰的碎片靠近就會黏在一起，成為一組一起移動
+  const pcs=[],pos=[],grp=[];let solved=false,zTop=410,drag=null;const SNAP=32;
   const scale=()=>stage.getBoundingClientRect().width/1200;
-  const home=i=>[X+(i%N)*S,Y+Math.floor(i/N)*S];
-  for(let i=0;i<N*N;i++){const p=mk("div","pc","width:"+S+"px;height:"+S+"px;touch-action:none;transition:none;box-shadow:0 4px 10px #0005;background-image:url('"+url+"');background-size:"+W+"px "+W+"px;background-position:-"+(i%N)*S+"px -"+Math.floor(i/N)*S+"px",sc);p.dataset.i=i;pcs.push(p);
-    p.addEventListener("pointerdown",e=>{if(solved||p.dataset.ok)return;e.preventDefault();p.setPointerCapture(e.pointerId);const k=scale();drag={p,dx:e.clientX/k-parseFloat(p.style.left),dy:e.clientY/k-parseFloat(p.style.top)};p.style.zIndex=++zTop;p.classList.add("sel")});
-    p.addEventListener("pointermove",e=>{if(!drag||drag.p!==p)return;const k=scale();p.style.left=Math.max(-40,Math.min(1200-S+40,e.clientX/k-drag.dx))+"px";p.style.top=Math.max(-40,Math.min(675-S+40,e.clientY/k-drag.dy))+"px"});
-    const drop=()=>{if(!drag||drag.p!==p)return;drag=null;p.classList.remove("sel");const[hx,hy]=home(i);
-      if(Math.hypot(parseFloat(p.style.left)-hx,parseFloat(p.style.top)-hy)<40){p.style.transition="left .15s,top .15s";p.style.left=hx+"px";p.style.top=hy+"px";p.dataset.ok=1;p.style.transform="none";p.style.zIndex=405;p.style.boxShadow="none";p.style.outline="none";p.style.cursor="default";
-        if(pcs.every(q=>q.dataset.ok)){solved=true;setTimeout(()=>{board.style.border="3px solid transparent";done.classList.remove("hide");done.classList.add("pop");ph.classList.remove("hide");toast("拼好了！點右邊的密碼筒")},300)}}};
+  const col=i=>i%N,row=i=>Math.floor(i/N);
+  const setPos=(i,x,y)=>{pos[i]=[x,y];pcs[i].style.left=x+"px";pcs[i].style.top=y+"px"};
+  const members=g=>pcs.map((_,i)=>i).filter(i=>grp[i]===g);
+  for(let i=0;i<N*N;i++){const p=mk("div","pc","width:"+S+"px;height:"+S+"px;touch-action:none;transition:none;cursor:grab;background-image:url('"+url+"');background-size:"+W+"px "+W+"px;background-position:-"+col(i)*S+"px -"+row(i)*S+"px",sc);pcs.push(p);
+    p.addEventListener("pointerdown",e=>{if(solved)return;e.preventDefault();p.setPointerCapture(e.pointerId);const k=scale(),ms=members(grp[i]);zTop++;ms.forEach(m=>{pcs[m].style.zIndex=zTop;pcs[m].classList.add("sel")});drag={i,ms,sx:e.clientX/k,sy:e.clientY/k,start:ms.map(m=>pos[m].slice())}});
+    p.addEventListener("pointermove",e=>{if(!drag||drag.i!==i)return;const k=scale();let dx=e.clientX/k-drag.sx,dy=e.clientY/k-drag.sy;
+      // 整組不要拖出畫面
+      const xs=drag.start.map(s=>s[0]),ys=drag.start.map(s=>s[1]);dx=Math.max(-Math.min(...xs)-40,Math.min(1200-S+40-Math.max(...xs),dx));dy=Math.max(-Math.min(...ys)-40,Math.min(675-S+40-Math.max(...ys),dy));
+      drag.ms.forEach((m,j)=>setPos(m,drag.start[j][0]+dx,drag.start[j][1]+dy))});
+    const drop=()=>{if(!drag||drag.i!==i)return;const ms=drag.ms;drag=null;ms.forEach(m=>pcs[m].classList.remove("sel"));
+      let merged=true;while(merged){merged=false;const g=grp[i],mine=members(g);
+        outer:for(const m of mine)for(let q=0;q<N*N;q++){if(grp[q]===g)continue;const dc=col(q)-col(m),dr=row(q)-row(m);if(Math.abs(dc)+Math.abs(dr)!==1)continue;
+          const ex=pos[m][0]+dc*S,ey=pos[m][1]+dr*S;if(Math.hypot(pos[q][0]-ex,pos[q][1]-ey)<SNAP){const ox=pos[q][0]-ex,oy=pos[q][1]-ey;mine.forEach(t=>setPos(t,pos[t][0]+ox,pos[t][1]+oy));
+            const og=grp[q];grp.forEach((v,t)=>{if(v===og)grp[t]=g});const z=++zTop;members(g).forEach(t=>pcs[t].style.zIndex=z);merged=true;break outer}}}
+      const g=grp[i],all=members(g);all.forEach(t=>pcs[t].style.outline=all.length>1?"none":"");
+      if(all.length===N*N){solved=true;const ox=X-pos[0][0],oy=Y-pos[0][1];pcs.forEach((q,t)=>{q.style.transition="left .5s,top .5s";setPos(t,pos[t][0]+ox,pos[t][1]+oy);q.style.cursor="default"});
+        setTimeout(()=>{done.classList.remove("hide");done.classList.add("pop");ph.classList.remove("hide");toast("拼好了！點右邊的密碼筒")},600)}};
     p.addEventListener("pointerup",drop);p.addEventListener("pointercancel",drop)}
-  function shuffle(){board.style.border="3px dashed #8a8a8a";const spots=[...Array(9).keys()].sort(()=>Math.random()-.5);pcs.forEach((p,i)=>{delete p.dataset.ok;p.style.transition="none";p.style.boxShadow="0 4px 10px #0005";p.style.outline="";p.style.cursor="grab";p.style.zIndex=410;
-      // 打散到拼圖板右邊與下面的空地
-      const t=spots[i];p.style.left=(625+(t%3)*185+Math.random()*24-12)+"px";p.style.top=(45+Math.floor(t/3)*205+Math.random()*24-12)+"px";p.style.transform="rotate("+(Math.random()*16-8)+"deg)"})}
-  mk("div","","position:absolute;left:132px;top:84px;font-size:22px;color:#444;z-index:5",sc).textContent="把右邊的碎片拖進框裡，拼回原來的圖。";
+  function shuffle(){const spots=[...Array(12).keys()].sort(()=>Math.random()-.5);
+    pcs.forEach((p,i)=>{grp[i]=i;p.style.transition="none";p.style.outline="";p.style.cursor="grab";p.style.zIndex=410;const t=spots[i];
+      setPos(i,90+(t%4)*280+Math.random()*30-15,70+Math.floor(t/4)*200+Math.random()*20-10)})}
+  mk("div","","position:absolute;left:0;right:0;top:20px;text-align:center;font-size:22px;color:#444;z-index:5",sc).textContent="拖動碎片：能接在一起的兩塊靠近就會黏住，拼回完整的圖。";
   api.enter=()=>{if(!solved){done.classList.add("hide");ph.classList.add("hide");shuffle()}};
   navBack(sc);
 });
