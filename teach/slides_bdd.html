@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>讓 AI 做出你真正想要的機關</title>
+<title>AI 協作設計：從發想到做出一個能玩的線上密室機關</title>
 <meta name="theme-color" content="#1c1b22">
 <style>
 :root{--bg:#f6f2ec;--ink:#2b2a30;--dim:#77736c;--card:#fbf9f5;--line:#e6dfd4;--blue:#3d66a8;--blue2:#e7edf7;--orange:#d0683c;--orange2:#f8e8de;--dark:#1c1b22;--mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
@@ -90,6 +90,23 @@ section.in .r:nth-child(2){transition-delay:.12s}section.in .r:nth-child(3){tran
 .grid>.r:nth-child(2){transition-delay:.15s!important}.grid>.r:nth-child(3){transition-delay:.3s!important}.grid>.r:nth-child(4){transition-delay:.45s!important}
 @media(prefers-reduced-motion:reduce){.r{opacity:1;transform:none;transition:none}#deck{scroll-behavior:auto}}
 .small{font-size:14px;color:var(--dim);margin-top:14px}
+.gh{background:#fff;border:1px solid #d0d7de;border-radius:10px;font:13px/1.5 -apple-system,"Segoe UI",Helvetica,Arial,sans-serif;color:#1f2328;padding:12px;margin-top:12px;text-align:left}
+.gh .t{font-weight:600;font-size:14px;margin-bottom:8px}
+.gh .f{border:1px solid #d0d7de;border-radius:6px;padding:4px 8px;margin:3px 0 8px;background:#f6f8fa}
+.gh .gb{display:inline-block;background:#1f883d;color:#fff;border-radius:6px;padding:4px 10px;font-weight:600}
+.gh .hl{outline:2px solid var(--orange);outline-offset:2px;border-radius:6px}
+.gh .tabs{display:flex;gap:10px;border-bottom:1px solid #d0d7de;padding-bottom:6px;margin-bottom:8px;color:#59636e}
+.gh .drop{border:2px dashed #d0d7de;border-radius:8px;padding:12px;text-align:center;color:#59636e;margin:6px 0 8px}
+.gh .live{background:#dafbe1;border:1px solid #4ac26b;border-radius:6px;padding:8px}
+.gh a{color:#0969da}
+.mock-tag{font-size:11px;color:var(--dim);margin-top:6px}
+.tight td,.tight th{padding:7px 12px;line-height:1.45}
+.tight .pill{margin:0 6px 0 0;vertical-align:1px}
+.more{margin-top:12px}.more b{font-size:14px;color:var(--dim)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.chips span{font-size:12px;padding:2px 9px;border-radius:999px;background:#fff;border:1px solid var(--line);color:#5d574f}
+.go-btn{display:inline-block;font-size:16px;font-weight:700;color:#fff;background:var(--orange);padding:11px 20px;border-radius:999px;text-decoration:none}
+.go-btn.b{background:var(--blue)}
 .play{display:flex;flex-wrap:wrap;gap:8px;margin:-6px 0 22px}
 .play span{font-size:14px;padding:4px 12px;border-radius:999px;background:#ece6dc;color:#6d675e}
 .def{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:18px;line-height:1.6;margin:0 0 20px}
@@ -110,10 +127,9 @@ section.in .r:nth-child(2){transition-delay:.12s}section.in .r:nth-child(3){tran
 
 <!-- 01 -->
 <section class="dark" id="s1"><div class="wrap">
-<p class="eyebrow r">線上機關 AI 協作設計研習 · 14:00–16:45</p>
-<h1 class="r">讓 AI 做出<br>你<span class="hl-o">真正想要</span>的機關</h1>
-<p class="lead r" style="margin-top:22px">從「寫規格」到「想清楚玩家會怎麼玩」</p>
-<div class="cover-legend r"><span><b style="background:#7fa4e3"></b>規格：機關是什麼</span><span><b style="background:var(--orange)"></b>行為：玩家這樣做時，機關怎麼反應</span></div>
+<p class="eyebrow r">解鎖 AI 解謎遊戲創新設計工作坊</p>
+<h1 class="r" style="font-size:clamp(34px,4.8vw,62px)">AI 協作設計：<br>從發想到做出一個<br>能玩的<span class="hl-o">線上密室機關</span></h1>
+<p class="lead r" style="margin-top:22px">讓 AI 做出你真正想要的機關</p>
 <div class="lockdemo r"><div class="dial" data-d>0</div><div class="dial" data-d>0</div><div class="dial" data-d>0</div><div class="dial" data-d>0</div><span class="lockmsg" id="lockmsg">打開密碼鎖，才能往下看。提示：今天的研習從幾點開始？</span></div>
 </div><a class="scrollhint" id="shint" href="#s2">🔒 先打開密碼鎖</a></section>
 
@@ -122,13 +138,23 @@ section.in .r:nth-child(2){transition-delay:.12s}section.in .r:nth-child(3){tran
 <h2 class="r">今天的流程</h2>
 <div class="tl r">
 <div class="t">14:00</div><div>緣起，快速體驗〈魁地奇的邀請〉</div>
-<div class="t">14:10</div><div>先上架：平台比較、GitHub 上架、示範關「密碼鎖」</div>
-<div class="t">14:25</div><div><b class="hl-o">第一版</b>：挑一款範例上架，網址貼到 Padlet</div>
-<div class="t brk">14:45</div><div class="brk">休息 10 分鐘</div>
-<div class="t">14:55</div><div>從<span class="hl-b">規格</span>走到<span class="hl-o">行為</span>，認識六大玩法</div>
-<div class="t">15:20</div><div><b class="hl-o">第二版</b>：寫出玩家的行為，請 AI 修改，重新上架</div>
-<div class="t">16:00</div><div>互相試玩、用三句話回報、修正</div>
+<div class="t">14:10</div><div>遊戲的六大玩法，認識範例庫</div>
+<div class="t">14:25</div><div>上架：平台比較、現場註冊 GitHub、示範關「密碼鎖」</div>
+<div class="t">14:40</div><div><b class="hl-o">第一版</b>：挑一款範例上架，網址貼到 Padlet</div>
+<div class="t brk">15:00</div><div class="brk">休息 10 分鐘</div>
+<div class="t">15:10</div><div>從<span class="hl-b">規格</span>走到<span class="hl-o">行為</span>：體驗〈找尋千島珍珠〉，拆解一關的規劃書</div>
+<div class="t">15:35</div><div><b class="hl-o">第二版</b>：寫出玩家的行為，請 AI 修改，重新上架</div>
+<div class="t">16:05</div><div>互相試玩、用三句話回報、修正</div>
 <div class="t">16:30</div><div>總結</div>
+</div>
+</div></section>
+
+<section id="s17"><div class="wrap">
+<h2 class="r">線上參與小提醒</h2>
+<div class="grid g3">
+<div class="card r"><div class="no">01</div><h3>開兩個視窗</h3><p>一個開 AI，一個開範例庫或工作台。有雙螢幕更好。</p></div>
+<div class="card r"><div class="no b">02</div><h3>實作時先舉手</h3><p>開始實作時大家先舉手，做好了就放下。卡關打在聊天室：寫你做了什麼、出現什麼結果。</p></div>
+<div class="card r"><div class="no">03</div><h3>作品貼到 Padlet</h3><p>每一版都把網址貼上 Padlet，從 Padlet 點開彼此的機關來玩。</p></div>
 </div>
 </div></section>
 
@@ -147,15 +173,18 @@ section.in .r:nth-child(2){transition-delay:.12s}section.in .r:nth-child(3){tran
 <section id="s4"><div class="wrap">
 <span class="badge o r">現場體驗</span>
 <h2 class="r" style="margin-top:16px">〈魁地奇的邀請〉</h2>
-<p class="lead r">暑假營隊的關卡，當時在蹦世界玩，寶箱是實體的。現在三關連同寶箱，整個做成網頁。</p>
+<p class="lead r">暑假營隊的關卡，當時在蹦世界玩，寶箱是實體的。現在整個做成網頁，打開網址就能玩。</p>
 <div class="flow r">
 <div class="card"><span class="pill">第一關</span><div class="big" style="font-size:24px">照片找地點</div><p>看校園照片輸入答案</p></div>
 <div class="arr"><i></i></div>
-<div class="card" style="border:2px solid var(--orange)"><span class="pill o">第二關</span><div class="big hl-o" style="font-size:24px">線上寶箱</div><p>水晶球影片找密碼</p></div>
+<div class="card"><span class="pill">第二關</span><div class="big" style="font-size:24px">線上寶箱</div><p>水晶球影片找密碼</p></div>
 <div class="arr"><i></i></div>
-<div class="card"><span class="pill">第三關</span><div class="big" style="font-size:24px">AR 魔法信</div><p>鏡頭看見隱藏文字</p></div>
+<div class="card" style="border:2px solid var(--orange)"><span class="pill o">拿出手機</span><div class="big hl-o" style="font-size:24px">AR 魔法信</div><p>鏡頭看見隱藏文字</p></div>
 </div>
-<div class="note info r">我會分享手機畫面，帶大家快速玩一遍。開寶箱時，注意看「輸錯密碼」時畫面怎麼反應。<br>網址：chrischou0807.github.io/escape/quidditch/</div>
+<div class="grid g2" style="margin-top:18px">
+<div class="note info r" style="margin:0;display:block">前兩關我分享螢幕直接在網頁上玩。開寶箱時，注意看「輸錯密碼」時畫面怎麼反應。<br><a href="https://chrischou0807.github.io/escape/quidditch/" target="_blank" rel="noopener">開啟〈魁地奇的邀請〉網頁版 ↗</a>　<a href="https://popworld.cc/guide/15005/preview" target="_blank" rel="noopener">蹦世界原版 ↗</a></div>
+<div class="note warn r" style="margin:0;display:block">AR 這一關請大家一起體驗：用手機打開下面的網址，對準我分享在畫面上的邀請信。<br><a href="https://chrischou0807.github.io/escape/quidditch/ar.html" target="_blank" rel="noopener">chrischou0807.github.io/escape/quidditch/ar.html ↗</a><br><span style="font-size:14px">要分享在畫面上的邀請信：<a href="https://chrischou0807.github.io/escape/quidditch/letter.png" target="_blank" rel="noopener">letter.png ↗</a></span></div>
+</div>
 </div></section>
 
 <!-- 05 -->
@@ -171,16 +200,114 @@ section.in .r:nth-child(2){transition-delay:.12s}section.in .r:nth-child(3){tran
 <div class="callout r"><span class="ic">◆</span>這個機關的目的很單純：簡化實體道具、方便重複使用。</div>
 </div></section>
 
+<!-- 六大玩法 -->
+<section id="p0"><div class="wrap">
+<p class="eyebrow r">挑戰＋玩法＝遊戲性</p>
+<h2 class="r">遊戲的六大玩法</h2>
+<p class="lead r">玩法，就是玩家為了完成挑戰所採取的行動。等一下每個人要從這裡挑一款範例上架，先想：你要學生「做」什麼？</p>
+<div class="grid g3 six">
+<div class="card r"><div class="no">01</div><h3>操作</h3><p>動手和物體互動，得到藏起來的訊息</p><p style="margin-top:6px;font-size:14px">判定：獲得訊息</p></div>
+<div class="card r"><div class="no b">02</div><h3>探索</h3><p>在一定的範圍內，找到目標</p><p style="margin-top:6px;font-size:14px">判定：找到目標</p></div>
+<div class="card r"><div class="no">03</div><h3>解謎</h3><p>找到「鑰匙」，解開「鎖」</p><p style="margin-top:6px;font-size:14px">判定：鎖被解開</p></div>
+<div class="card r"><div class="no b">04</div><h3>選擇</h3><p>沒有標準答案，在兩個以上的選項中做選擇</p><p style="margin-top:6px;font-size:14px">判定：趨向想要的結果，或獲得最終勝利</p></div>
+<div class="card r"><div class="no">05</div><h3>競爭</h3><p>在限制下較量：對手可以是電腦、別人，也可以是自己；時間也是一種限制</p><p style="margin-top:6px;font-size:14px">判定：贏過對手，或超越自己的紀錄</p></div>
+<div class="card r"><div class="no b">06</div><h3>創造</h3><p>運用創造力，找出能通過考驗的方法</p><p style="margin-top:6px;font-size:14px">判定：通過考驗</p></div>
+</div>
+<p class="small r">分類參照聚樂邦。範例庫就是照這六種玩法分類，每一款都可以直接複製提示詞。</p>
+</div></section>
+
+<section id="p01"><div class="wrap">
+<p class="eyebrow r">六大玩法 01</p>
+<h2 class="r">操作：動手和物體互動，得到藏起來的訊息</h2>
+<div class="def r"><b>判定</b><span>獲得訊息</span></div>
+<div class="play r"><span>按鈕</span><span>摺紙</span><span>編織</span><span>隱形文字</span><span>放大隱藏文字</span><span>音樂盒</span><span>拼圖</span><span>Arduino</span></div>
+<div class="grid g2">
+<div class="card ex r"><span class="pill b">範例 06</span><h3>紫外線顯影</h3><p>用手指當紫外線燈，照出隱形墨水寫的選項，再點選答案。</p><p class="how"><b>可以這樣用：</b>把底圖換成教材圖：照出葉片的氣孔、地圖上的地名。對應案例：隱形文字（化學反應）。</p><a class="go" href="https://chrischou0807.github.io/escape/uv/" target="_blank" rel="noopener">開啟範例 ↗</a></div>
+<div class="card ex r"><span class="pill b">範例 14</span><h3>放大鏡</h3><p>拖動放大鏡，找出畫面上藏得很小的字，拼起來就是答案。</p><p class="how"><b>可以這樣用：</b>換成顯微鏡下的切片、古地圖、標本照片。對應案例：放大隱藏文字（物理反應）。</p><a class="go" href="https://chrischou0807.github.io/escape/workbench/ex/zoom.html" target="_blank" rel="noopener">開啟範例 ↗</a></div>
+</div>
+<div class="more r"><b>範例庫裡其他「操作」範例（40 款）</b><div class="chips"><span>03 線索拼圖</span><span>08 記憶燈號</span><span>10 電話撥號</span><span>11 密室收音機</span><span>12 咒語</span><span>13 開關面板</span><span>15 滴定</span><span>16 接電路</span><span>31 稀釋配製</span><span>32 讀刻度</span><span>34 按壓節奏</span><span>40 滑塊拼圖</span><span>41 圖案旋轉</span><span>44 天平找假幣</span><span>47 指令迷宮</span><span>48 刮刮樂顯影</span><span>49 透明片疊合</span><span>50 雷射反射</span><span>51 聽音排序</span><span>57 拖曳吸附拼圖</span><span>66 溫度顯影</span><span>67 齒輪傳動</span><span>68 管線連接</span><span>69 動態躲避</span><span>70 節奏模仿</span><span>75 鏡面文字</span><span>125 滑軌機關</span><span>126 取色染色</span><span>127 畫線圈地分類</span><span>128 跨頁開關</span><span>129 互斥切換</span><span>130 記住擺放位置</span><span>140 鏡射字母剪半</span><span>147 比例尺量測</span><span>152 動作感測</span><span>153 吹氣</span><span>157 AR 圖像顯影</span><span>160 手電筒探照</span><span>161 拖動道具對照底圖</span><span>162 相鄰吸附拼圖</span></div></div>
+</div></section>
+
+<section id="p02"><div class="wrap">
+<p class="eyebrow r">六大玩法 02</p>
+<h2 class="r">探索：在一定的範圍內，找到目標</h2>
+<div class="def r"><b>判定</b><span>找到目標</span></div>
+<div class="play r"><span>捉迷藏</span><span>差異挑戰</span><span>範圍挑戰</span><span>條件挑戰</span></div>
+<div class="grid g2">
+<div class="card ex r"><span class="pill b">範例 17</span><h3>大家來找碴</h3><p>左右兩張圖有幾處不同，點出來。</p><p class="how"><b>可以這樣用：</b>比對兩個分子結構、兩張標本、兩版地圖，練細微差異的辨別。對應案例：差異挑戰。</p><a class="go" href="https://chrischou0807.github.io/escape/workbench/ex/diff.html" target="_blank" rel="noopener">開啟範例 ↗</a></div>
+<div class="card ex r"><span class="pill b">範例 19</span><h3>條件挑戰</h3><p>找出所有符合條件的物品，多選或漏選都不算過。</p><p class="how"><b>可以這樣用：</b>分類判斷：酸或鹼、導體或絕緣體、哪些是哺乳類。對應案例：條件挑戰。</p><a class="go" href="https://chrischou0807.github.io/escape/workbench/ex/cond.html" target="_blank" rel="noopener">開啟範例 ↗</a></div>
+</div>
+<div class="more r"><b>範例庫裡其他「探索」範例（23 款）</b><div class="chips"><span>04 翻牌記憶</span><span>18 範圍搜尋</span><span>36 找出錯誤</span><span>37 場景調查</span><span>38 容器翻找</span><span>53 詞對定義翻牌</span><span>56 日夜切換</span><span>78 實景尋物（掃碼回報）</span><span>91 目擊者訪談</span><span>92 檔案室檢索</span><span>99 迷霧探索</span><span>100 資料表篩選</span><span>101 找字遊戲</span><span>102 門後偷聽</span><span>103 移開物件找線索</span><span>104 圖層翻找</span><span>105 找共同項</span><span>106 快速找對應圖</span><span>107 探測器</span><span>144 方位走格子</span><span>145 標籤貼錯了</span><span>149 視角成形</span><span>154 逐格找月相</span></div></div>
+</div></section>
+
+<section id="p03"><div class="wrap">
+<p class="eyebrow r">六大玩法 03</p>
+<h2 class="r">解謎：找到「鑰匙」，解開「鎖」</h2>
+<div class="def r"><b>判定</b><span>鎖被解開</span></div>
+<div class="play r"><span>猜燈謎</span><span>摩斯密碼</span><span>凱薩密碼</span><span>電報碼</span><span>豬圈密碼</span><span>解碼盤</span></div>
+<div class="grid g2">
+<div class="card ex r"><span class="pill b">範例 20</span><h3>燈謎</h3><p>猜對每個燈謎得到一個字，湊成通關詞。</p><p class="how"><b>可以這樣用：</b>每一題的答案就是鑰匙：字謎、成語、名詞解釋都能放進去。對應案例：猜燈謎。</p><a class="go" href="https://chrischou0807.github.io/escape/workbench/ex/riddle.html" target="_blank" rel="noopener">開啟範例 ↗</a></div>
+<div class="card ex r"><span class="pill b">範例 21</span><h3>凱撒密碼</h3><p>用轉盤找出位移量，把密文翻回原文。</p><p class="how"><b>可以這樣用：</b>數學的模運算、資訊的編碼與解碼。對應案例：解碼盤。</p><a class="go" href="https://chrischou0807.github.io/escape/workbench/ex/caesar.html" target="_blank" rel="noopener">開啟範例 ↗</a></div>
+</div>
+<div class="more r"><b>範例庫裡其他「解謎」範例（51 款）</b><div class="chips"><span>01 密碼鎖</span><span>02 摩斯密碼燈</span><span>05 連線謎題</span><span>07 拆炸彈</span><span>09 暗門櫃</span><span>10 電話撥號</span><span>22 對照表解碼</span><span>33 邏輯推理密碼</span><span>39 道具收集與組合</span><span>42 座標密碼</span><span>43 二進位燈泡</span><span>45 選項排序</span><span>46 4×4 數獨</span><span>52 拖曳配對</span><span>58 方向鎖</span><span>59 豬圈密碼</span><span>60 成語接龍</span><span>61 色彩序列</span><span>62 交叉比對</span><span>63 地圖路線推理</span><span>64 知識配方</span><span>65 歷史時間軸</span><span>76 藏頭詩</span><span>77 小型填字</span><span>108 同心圓環拼圖</span><span>109 依序連點</span><span>110 條件塗格顯圖</span><span>111 答題上色像素畫</span><span>112 踩地雷</span><span>113 吊人猜字</span><span>114 字母藏數字</span><span>115 湊數拖放</span><span>116 逐步線索猜謎</span><span>117 高低提示猜數字</span><span>118 給答案找問題</span><span>119 軟木板推理</span><span>120 鑰匙配保險箱</span><span>121 拖字母拼答案</span><span>122 一個輸入框多把鑰匙</span><span>123 骨牌鏈</span><span>124 列舉搶答</span><span>141 部件組字</span><span>142 原子序密碼</span><span>143 規則機器</span><span>146 只答是否的提問</span><span>148 遮罩取字</span><span>150 分油問題</span><span>151 點燈遊戲</span><span>156 介面即答案</span><span>158 盲人鎖</span><span>159 按鍵輸入</span></div></div>
+</div></section>
+
+<section id="p04"><div class="wrap">
+<p class="eyebrow r">六大玩法 04</p>
+<h2 class="r">選擇：沒有標準答案，在兩個以上的選項中做選擇</h2>
+<div class="def r"><b>判定</b><span>趨向想要的結果，或獲得最終勝利</span></div>
+<div class="play r"><span>策略選擇</span></div>
+<div class="grid g2">
+<div class="card ex r"><span class="pill b">範例 23</span><h3>策略選擇</h3><p>每回合選一個行動，三項資源的變化決定結局。</p><p class="how"><b>可以這樣用：</b>資源分配、環境議題、公民決策：讓學生看見每個選擇的代價。對應案例：策略選擇。</p><a class="go" href="https://chrischou0807.github.io/escape/workbench/ex/strategy.html" target="_blank" rel="noopener">開啟範例 ↗</a></div>
+<div class="card ex r"><span class="pill b">範例 24</span><h3>劇情分支</h3><p>依選擇走不同的故事線，選的路會影響最後的結果。</p><p class="how"><b>可以這樣用：</b>安全守則、歷史抉擇、倫理兩難：用故事帶出「如果當時這樣選」。</p><a class="go" href="https://chrischou0807.github.io/escape/workbench/ex/branch.html" target="_blank" rel="noopener">開啟範例 ↗</a></div>
+</div>
+<div class="more r"><b>範例庫裡其他「選擇」範例（14 款）</b><div class="chips"><span>35 兩難抉擇</span><span>54 多重結局</span><span>71 多回合經營</span><span>79 權衡矩陣</span><span>80 轉發前三秒</span><span>81 站位光譜</span><span>82 最後通牒</span><span>93 社區預算分配</span><span>94 一天 24 小時</span><span>131 押注答題</span><span>132 百萬挑戰</span><span>133 轉盤集塊</span><span>134 選角色</span><span>135 擲骰與抽牌</span></div></div>
+</div></section>
+
+<section id="p05"><div class="wrap">
+<p class="eyebrow r">六大玩法 05</p>
+<h2 class="r">競爭：在限制下較量，對手也可以是自己</h2>
+<div class="def r"><b>判定</b><span>贏過對手，或超越自己的紀錄（例如更快完成）</span></div>
+<div class="play r"><span>剪刀石頭布</span><span>和自己比</span><span>合作碰撞</span><span>個人競賽</span><span>計時挑戰</span><span>完成度挑戰</span><span>戰鬥</span></div>
+<div class="grid g2">
+<div class="card ex r"><span class="pill b">範例 25</span><h3>計時賽</h3><p>限時內答完全部題目，答錯加罰時間，記錄最佳成績。</p><p class="how"><b>可以這樣用：</b>已經學過的內容拿來練熟：元素符號、單字、公式。對手是時間，也是上一次的自己。對應案例：計時挑戰。</p><a class="go" href="https://chrischou0807.github.io/escape/workbench/ex/timer.html" target="_blank" rel="noopener">開啟範例 ↗</a></div>
+<div class="card ex r"><span class="pill b">範例 55</span><h3>雙人同機對戰</h3><p>兩人共用一台裝置，誰先答對誰得分，答錯會被鎖住一下。</p><p class="how"><b>可以這樣用：</b>同學之間的即時較量，適合下課前的複習。對應案例：戰鬥。</p><a class="go" href="https://chrischou0807.github.io/escape/workbench/ex/duel.html" target="_blank" rel="noopener">開啟範例 ↗</a></div>
+</div>
+<div class="more r"><b>範例庫裡其他「競爭」範例（14 款）</b><div class="chips"><span>07 拆炸彈</span><span>26 排序完成度</span><span>27 電腦對戰</span><span>72 倒數逃生</span><span>87 問答賽跑</span><span>88 記憶對戰</span><span>89 座標戰艦</span><span>90 連擊分類擂台</span><span>97 取石子對戰</span><span>98 估算擂台</span><span>136 答題換兵守城</span><span>137 答題跳台</span><span>138 拉霸</span><span>139 答題換道具的消除遊戲</span></div></div>
+</div></section>
+
+<section id="p06"><div class="wrap">
+<p class="eyebrow r">六大玩法 06</p>
+<h2 class="r">創造：運用創造力，找出能通過考驗的方法</h2>
+<div class="def r"><b>判定</b><span>通過考驗</span></div>
+<div class="play r"><span>當個創世神</span><span>你畫我猜</span></div>
+<div class="grid g2">
+<div class="card ex r"><span class="pill b">範例 28</span><h3>建造挑戰</h3><p>用積木蓋出符合條件的結構：高度、預算、必須用到的零件。</p><p class="how"><b>可以這樣用：</b>橋、房子、塔的設計：判定的是有沒有符合條件，不是好不好看。對應案例：當個創世神。</p><a class="go" href="https://chrischou0807.github.io/escape/workbench/ex/build.html" target="_blank" rel="noopener">開啟範例 ↗</a></div>
+<div class="card ex r"><span class="pill b">範例 29</span><h3>你畫我猜</h3><p>一個人看題目畫，另一個人猜。</p><p class="how"><b>可以這樣用：</b>用畫面說明概念：真的理解才畫得出來，例如光合作用、槓桿原理。對應案例：你畫我猜。</p><a class="go" href="https://chrischou0807.github.io/escape/workbench/ex/draw.html" target="_blank" rel="noopener">開啟範例 ↗</a></div>
+</div>
+<div class="more r"><b>範例庫裡其他「創造」範例（10 款）</b><div class="chips"><span>30 自己設計機關</span><span>73 承重橋梁</span><span>74 互相解題接力</span><span>83 標語工坊</span><span>84 旋律工坊</span><span>85 迷宮設計師</span><span>86 對稱圖案設計</span><span>95 四格故事工坊</span><span>96 指令畫圖</span><span>155 手繪形狀辨識</span></div></div>
+</div></section>
+
+<!-- 12 -->
+<section id="s12"><div class="wrap">
+<h2 class="r">兩個工具：範例庫與工作台</h2>
+<div class="grid g2">
+<div class="card r"><span class="pill o">發散</span><h3>機關範例庫（160 多款）</h3><p>看見「原來 AI 可以做出這麼多種機關」。每一款都能直接「複製提示詞」，換成你的內容就能用。不知道從哪開始，就按「先看這 10 款」。</p></div>
+<div class="card r"><span class="pill b">收斂</span><h3>機關設計工作台</h3><p>把模糊的想法一步一步拆開：知識點、玩家得到的改變、謎題與解法、答對答錯時機關發生什麼、意外操作，最後產生行為情境式的提示詞。</p></div>
+</div>
+<div class="row r" style="display:flex;gap:12px;flex-wrap:wrap;margin-top:18px"><a class="go-btn" href="https://chrischou0807.github.io/escape/workbench/" target="_blank" rel="noopener">開啟範例庫與工作台 ↗</a></div>
+<div class="note info r">第一版用範例庫：直接「下載 HTML」，或「複製提示詞」換成自己的內容。做第二版時，再用工作台把行為拆清楚。</div>
+</div></section>
+
 <!-- 上架 -->
 <section id="u1"><div class="wrap">
-<p class="eyebrow r">先上架</p>
-<h2 class="r">先有網址，才能測、才能改</h2>
-<div class="grid g3">
-<div class="card topo r"><div class="no">01</div><h3>第一版先能動</h3><p>從範例庫挑一款，不必完美。</p></div>
-<div class="card topo r"><div class="no">02</div><h3>拿到自己的網址</h3><p>手機打得開，別人也打得開。</p></div>
-<div class="card topb r"><div class="no b">03</div><h3>再談規格與行為</h3><p>玩過第一版，才知道哪裡不是你要的。</p></div>
+<p class="eyebrow r">上架</p>
+<h2 class="r">今天為什麼先上架？</h2>
+<div class="vs">
+<div class="card r"><span class="pill">平常</span><h3>在 AI 裡改到差不多，才上架</h3><p>設計和修改都在 AI 對話裡完成，最後一步才放上網。</p></div>
+<div class="card good r"><span class="pill o">今天</span><h3>先用範例，把上架走通一次</h3><p>上架只要學一次。先拿範例走完流程，下半場就能專心在設計，改好再更新同一個網址。</p></div>
 </div>
-<div class="note info r">今天不用 AI agent，上架的每一步都自己來。平常有在用 agent 的老師，之後也可以直接請 AI 幫你上架。</div>
+<div class="note info r">今天不用 AI agent，上架的每一步都自己來。平常有在用 agent 的老師，也可以直接請 AI 幫你上架，但很消耗 token。</div>
 </div></section>
 
 <section id="u2"><div class="wrap">
@@ -196,28 +323,32 @@ section.in .r:nth-child(2){transition-delay:.12s}section.in .r:nth-child(3){tran
 </div></section>
 
 <section id="u3"><div class="wrap">
-<p class="eyebrow r">研習前先完成</p>
+<p class="eyebrow r">現場註冊 · 約 5 分鐘</p>
 <h2 class="r">註冊 GitHub 帳號</h2>
 <div class="grid g4">
-<div class="card r"><div class="no">01</div><h3>打開 github.com</h3><p>按右上角 Sign up。</p></div>
+<div class="card r"><div class="no">01</div><h3>打開註冊頁</h3><p><a href="https://github.com/signup" target="_blank" rel="noopener">github.com/signup ↗</a></p></div>
 <div class="card r"><div class="no">02</div><h3>填 Email 與密碼</h3><p>用常用信箱，密碼要夠長。</p></div>
 <div class="card r"><div class="no">03</div><h3>取一個帳號名稱</h3><p>只能英數和「-」，會出現在網址裡，例如 <b>chrischou0807</b>.github.io。</p></div>
 <div class="card r"><div class="no">04</div><h3>收驗證信</h3><p>輸入信裡的驗證碼，方案選 Free。</p></div>
 </div>
+<div class="note info r">驗證信沒收到：先看垃圾郵件，或改用 Gmail；學校信箱有時會擋。</div>
 <div class="note warn r">免費帳號的作品一定是公開的，任何人都看得到程式碼。答案、學生資料、不能公開的圖片都不要放上去。</div>
 </div></section>
 
 <section id="u4"><div class="wrap">
 <p class="eyebrow r">GitHub 上架 · 只用網頁</p>
-<h2 class="r">五個步驟，拿到網址</h2>
-<div class="tl r" style="grid-template-columns:90px 1fr">
-<div class="t">01</div><div>右上角「＋」→ <b>New repository</b>，名稱填英文（例如 <b>escape</b>），選 Public，按 Create。</div>
-<div class="t">02</div><div><b>Add file → Upload files</b>，把 HTML 檔拖進去，按 <b>Commit changes</b>。</div>
-<div class="t">03</div><div><b>Settings → Pages</b>：Source 選 Deploy from a branch，分支 <b>main</b>、資料夾 <b>/(root)</b>，按 Save。</div>
-<div class="t">04</div><div>等 1～2 分鐘，同一頁上方會出現網址：<b>帳號.github.io/escape/</b></div>
-<div class="t">05</div><div>完整網址要加上檔名，例如 <b>帳號.github.io/escape/lock.html</b>。用手機打開試試看。</div>
+<h2 class="r">四個步驟，拿到網址</h2>
+<div class="grid g4">
+<div class="card r"><div class="no">01</div><h3>建立 repository</h3><p>右上角「＋」→ New repository，名稱填英文，選 Public。</p>
+<div class="gh"><div class="t">Create a new repository</div>Repository name<div class="f hl">escape</div>◉ Public　○ Private<div style="margin-top:8px"><span class="gb">Create repository</span></div></div></div>
+<div class="card r"><div class="no">02</div><h3>上傳資料夾</h3><p>電腦上建一個資料夾（例如 lock），檔案改名 index.html 放進去；Add file → Upload files，把整個資料夾拖進去，Commit。</p>
+<div class="gh"><span class="f hl" style="display:inline-block">Add file ▾ · Upload files</span><div class="drop">📁 lock<br>└ 📄 index.html<br><span style="font-size:11px">Drag files here</span></div><span class="gb">Commit changes</span></div></div>
+<div class="card r"><div class="no">03</div><h3>開啟 Pages</h3><p>Settings → Pages，選 Deploy from a branch、main、/(root)，Save。</p>
+<div class="gh"><div class="tabs"><span>Code</span><span>Issues</span><span class="hl" style="color:#1f2328">Settings</span></div><b class="hl">Pages</b><div style="margin-top:6px">Source<div class="f">Deploy from a branch ▾</div>Branch<div class="f">main ▾　/(root) ▾　<b>Save</b></div></div></div></div>
+<div class="card r"><div class="no">04</div><h3>拿到網址</h3><p>等 1～2 分鐘，同一頁上方出現網址；後面加上資料夾名稱。</p>
+<div class="gh"><div class="live">Your site is live at<br><a>帳號.github.io/escape/</a></div><div style="margin-top:8px">這個機關的網址：<br><b>帳號.github.io/escape/lock/</b></div></div></div>
 </div>
-<p class="small r">檔名取成 index.html，網址就可以不寫檔名。一個 repo 可以放很多個機關，建議一個機關一個資料夾。</p>
+<p class="small r">畫面為示意，實際按鈕位置以 GitHub 為準。一個機關一個資料夾，檔名都用 index.html，網址就是資料夾名稱，又短又好記。</p>
 </div></section>
 
 <section id="u5"><div class="wrap">
@@ -225,42 +356,33 @@ section.in .r:nth-child(2){transition-delay:.12s}section.in .r:nth-child(3){tran
 <h2 class="r" style="margin-top:16px">密碼鎖：不只是一把鎖</h2>
 <div class="grid g2">
 <div class="card topb r"><span class="pill b">玩家看到的</span><h3>前台</h3><p>轉動轉盤對出密碼，按開鎖。答錯會提示還剩幾次，錯太多次會暫時鎖住；打開後出現道具圖片和文字。</p></div>
-<div class="card topo r"><span class="pill o">老師用的</span><h3>管理員後台</h3><p>長按右上角齒輪、輸入後台密碼進入。直接在網頁上改密碼位數與答案、上傳道具圖片、寫提示，不用改程式。</p></div>
+<div class="card topo r"><span class="pill o">出題的人用的</span><h3>設定頁</h3><p>長按右上角齒輪、輸入設定密碼打開。直接在網頁上改密碼位數與答案、上傳道具圖片、寫提示，不用改程式。</p></div>
 </div>
+<p class="small r">這不是伺服器上的「後台」：設定頁是藏在同一個網頁裡的畫面，改好的設定只存在這台瀏覽器，或下面的分享連結裡。</p>
 <div class="callout r"><span class="ic">▶</span>設定好之後按「產生分享連結」，就得到一把新的鎖。<br>同一個檔案，可以變成第一關的寶箱、第三關的抽屜、另一個班的遊戲。</div>
-<p class="small r">示範：chrischou0807.github.io/escape/lock/</p>
+<div class="row r" style="margin-top:16px"><a class="go-btn" href="https://chrischou0807.github.io/escape/lock/" target="_blank" rel="noopener">開啟密碼鎖 ↗</a></div>
 </div></section>
 
 <section id="u6"><div class="wrap">
 <h2 class="r">方便，但也有代價</h2>
 <div class="grid g2">
 <div class="card r"><div class="no b">01</div><h3>設定存在網址裡</h3><p>答案只是編碼，不是加密。懂的學生把網址拿去解碼，就看得到答案。</p></div>
-<div class="card r"><div class="no b">02</div><h3>後台密碼在原始碼裡</h3><p>預設密碼寫在公開的程式碼裡，要記得改掉；而且分享連結裡也帶著後台密碼。</p></div>
+<div class="card r"><div class="no b">02</div><h3>設定密碼看得到</h3><p>預設的設定密碼寫在公開的程式碼裡，要記得改掉；而且分享連結裡也帶著設定密碼。</p></div>
 <div class="card r"><div class="no b">03</div><h3>圖片越大，網址越長</h3><p>上傳的圖片也會塞進網址，太長時 LINE、QR code 可能放不下。</p></div>
-<div class="card r"><div class="no b">04</div><h3>只能改開放的項目</h3><p>想改流程、加新的反應，還是要請 AI 改程式，做成第二版。</p></div>
+<div class="card r"><div class="no b">04</div><h3>只能改開放的項目</h3><p>設定頁沒開放的，例如流程、新的反應，還是要請 AI 改程式，做成第二版。</p></div>
 </div>
 <div class="note info r">課堂練習、活動關卡很夠用；正式比賽或有成績的測驗，答案最好不要只靠前端檢查。</div>
 </div></section>
 
-<!-- 12 -->
-<section id="s12"><div class="wrap">
-<h2 class="r">兩個工具：範例庫與工作台</h2>
-<div class="grid g2">
-<div class="card r"><span class="pill o">發散</span><h3>機關範例庫（160 多款）</h3><p>看見「原來 AI 可以做出這麼多種機關」。每一款都能直接「複製提示詞」，換成你的內容就能用。不知道從哪開始，就按「先看這 10 款」。</p></div>
-<div class="card r"><span class="pill b">收斂</span><h3>機關設計工作台</h3><p>把模糊的想法一步一步拆開：知識點、玩家得到的改變、謎題與解法、答對答錯時機關發生什麼、意外操作，最後產生行為情境式的提示詞。</p></div>
-</div>
-<div class="note info r">第一版用範例庫：直接「下載 HTML」，或「複製提示詞」換成自己的內容。做第二版時，再用工作台把行為拆清楚。</div>
-</div></section>
-
 <section id="u7"><div class="wrap">
-<p class="eyebrow r">實作第一版 · 14:25–14:45</p>
+<p class="eyebrow r">實作第一版 · 14:40–15:00</p>
 <h2 class="r">兩條路，選一條上架</h2>
 <div class="vs">
-<div class="card good r"><span class="pill o">最快</span><h3>直接下載範例</h3><p>在範例庫按「下載 HTML」，上傳到 GitHub。5 分鐘就有網址。</p></div>
+<div class="card good r"><span class="pill o">最快</span><h3>直接下載範例</h3><p>從六大玩法的 12 個範例挑一款，或到範例庫看其他 160 多款，按「下載 HTML」，改名 index.html 放進資料夾，上傳到 GitHub。5 分鐘就有網址。</p></div>
 <div class="card good r"><span class="pill b">練習</span><h3>請 AI 生成</h3><p>在範例庫按「複製提示詞」，換成你的內容，貼給 AI，把它給的 HTML 存成檔案再上傳。</p></div>
 </div>
 <div class="grid g3" style="margin-top:18px">
-<div class="card topo r"><div class="no">01</div><h3>上架</h3><p>照五個步驟拿到網址。</p></div>
+<div class="card topo r"><div class="no">01</div><h3>上架</h3><p>照四個步驟拿到網址。</p></div>
 <div class="card topo r"><div class="no">02</div><h3>貼上 Padlet</h3><p>標註「第一版」，先發佈再說。</p></div>
 <div class="card topo r"><div class="no">03</div><h3>自己玩一次</h3><p>記下來：哪裡不是你要的？</p></div>
 </div>
@@ -273,13 +395,14 @@ section.in .r:nth-child(2){transition-delay:.12s}section.in .r:nth-child(3){tran
 <div class="card r"><div class="no b">實體</div><h3>轉一組密碼要時間</h3><p>亂試很慢，玩家自然會先想。</p><h3 style="margin-top:16px">關主在旁邊</h3><p>看到卡關，會給提示。</p></div>
 <div class="card r" style="border-color:#efc8b4"><div class="no">線上</div><h3>幾秒就能猜很多次</h3><p>不想的人也可能矇到。</p><h3 style="margin-top:16px">沒有人在旁邊</h3><p>答錯時，畫面要自己說話。</p></div>
 </div>
-<div class="callout r"><span class="ic">？</span>實體世界自動幫你處理的事，轉成線上後，誰來寫？</div>
+<div class="callout r"><span class="ic">？</span>實體世界你處理的事，轉成線上後，誰來做？</div>
 </div></section>
 
 <!-- 07 -->
 <section id="s7"><div class="wrap">
-<p class="eyebrow r">AI 變了</p>
+<p class="eyebrow r">AI 進步太快了</p>
 <h2 class="r">幾個月前 vs 現在</h2>
+<p class="lead r">原本做不好的事，幾個月就克服了。</p>
 <div class="vs">
 <div class="card bad r"><span class="pill b">幾個月前</span><h3>規格要一次寫滿</h3><p>沒寫清楚，AI 就猜，還常混用不同的程式語言。要來回很多次、明確講出錯在哪，才做得出能上線的機關。</p></div>
 <div class="card good r"><span class="pill o">現在</span><h3>寫程式很強，也會補你沒說的</h3><p>技術細節大多不用再交代。提示詞好像沒那麼重要了。</p></div>
@@ -288,6 +411,22 @@ section.in .r:nth-child(2){transition-delay:.12s}section.in .r:nth-child(3){tran
 </div></section>
 
 <!-- 08 -->
+<section id="q1"><div class="wrap">
+<p class="eyebrow r">規劃書範例</p>
+<h2 class="r">〈魁地奇的邀請〉的規劃書</h2>
+<p class="lead r">這是規劃書的基本架構，當然可以再寫更多。關鍵的解法，就是玩家的行為。</p>
+<table class="r tight" style="font-size:14px"><tr><th style="width:110px"></th><th>第一關：謎樣的邀請信</th><th>第二關：撥開未來的迷霧</th><th>第三關：展現天賦的時候</th></tr>
+<tr><td><b>前言故事</b></td><td>信只有一半，「具有魔法才能看見 AR 與聽見 VOICE」</td><td>張秋：時間有限，找到寶箱並打開它</td><td>「那是我們要考驗你的魔法能力」</td></tr>
+<tr><td><b>謎題內容</b></td><td>西追傳來校園照片，這是哪裡？</td><td>照著水晶球的畫面，找到寶箱</td><td>需要魔法天賦才看得出關鍵</td></tr>
+<tr><td><b>道具</b></td><td>校園照片</td><td>水晶球影片、寶箱</td><td>AR 邀請信、VOICE 錄音</td></tr>
+<tr><td><b>答案</b></td><td>至善201</td><td>穿越歷史的魁地奇</td><td>北一女中開展奇旅</td></tr>
+<tr><td><b>解法</b></td><td>教室門口的班牌</td><td>照影片路線找寶箱，影片裡有密碼</td><td>AR 看見隱藏文字，照 VOICE 的方向與步數找字</td></tr>
+<tr><td><b>提示</b></td><td>走到教室外看看／有明顯的班牌</td><td>（未寫）</td><td>（未寫）</td></tr>
+<tr><td><b>後續故事</b></td><td>前往該地看看有沒有其他線索</td><td>你有擔任搜捕手的潛力</td><td>跩哥：想加入可沒這麼簡單</td></tr>
+</table>
+<p class="small r">開頭故事「意外地收到邀請信」、結局「踏上魁地奇的旅程」另外寫在封面頁。</p>
+</div></section>
+
 <section id="s8"><div class="wrap">
 <h2 class="r">一份規劃書，其實只回答三個問題</h2>
 <div class="flow r">
@@ -301,28 +440,56 @@ section.in .r:nth-child(2){transition-delay:.12s}section.in .r:nth-child(3){tran
 </div></section>
 
 <!-- 09 -->
-<section id="s9"><div class="wrap">
-<h2 class="r">兩份規劃書，同一個缺口</h2>
-<table class="r"><tr><th></th><th>學生作品〈衣襬下的抗爭〉</th><th>汪老師〈自由花蕊〉</th></tr>
-<tr><td><b>出發點</b></td><td>議題與故事</td><td>場域與展件</td></tr>
-<tr><td><b>每關寫什麼</b></td><td>謎題內容、答案、答對時的內文、解法、提示</td><td>現場互動、題目、解法、提示、通關回饋、備註</td></tr>
-<tr><td><b>行為寫在哪</b></td><td>只有「答對時」</td><td>散在備註，事後補封測紀錄</td></tr>
-<tr><td><b>都沒寫的</b></td><td class="miss">答錯時會怎樣</td><td class="miss">選錯時會怎樣</td></tr>
-</table>
-<div class="callout r"><span class="ic">◆</span>學生規劃書裡有一格很關鍵：「玩完遊戲後，玩家得到的改變」。<br>行為情境，就是把這一格寫到每一關的操作上。</div>
-</div></section>
+
 
 <!-- 10 -->
-<section id="s10"><div class="wrap">
-<h2 class="r">三句話，寫出玩家的行為</h2>
-<div class="grid g3">
-<div class="card topb r"><div class="no b">假設</div><h3>玩家現在……</h3><p>開始前的狀態</p></div>
-<div class="card topb r"><div class="no b">當</div><h3>玩家做了……</h3><p>一個實際的動作</p></div>
-<div class="card topo r"><div class="no">那麼</div><h3>機關應該……</h3><p>畫面上看得到、聽得到的結果</p></div>
+<section id="q2"><div class="wrap">
+<span class="badge o r">現場體驗</span>
+<h2 class="r" style="margin-top:16px">〈找尋千島珍珠〉</h2>
+<p class="lead r">桃園市山豐國小劉宛純老師用 Genially 做的印尼文化解謎。Genially 的機關本來就是靠程式語法做出來的，這正是 AI 最擅長的事，所以請 AI 改成網頁版，讓大家體驗。</p>
+<div class="flow r">
+<div class="card"><span class="pill">寶箱</span><p>八個開關<br>上紅下白</p></div><div class="arr"><i></i></div>
+<div class="card"><span class="pill">蠟染</span><p>刮掉蠟<br>找出字母</p></div><div class="arr"><i></i></div>
+<div class="card"><span class="pill">搖竹</span><p>對照樂譜<br>開保險箱</p></div><div class="arr"><i></i></div>
+<div class="card"><span class="pill">克差</span><p>拼圖<br>密碼筒</p></div><div class="arr"><i></i></div>
+<div class="card"><span class="pill">皮影戲</span><p>手電筒<br>手提箱</p></div>
 </div>
-<div class="code r"><button class="copy" data-copy>複製</button><div class="hd">範例：學生作品第 2 關〈進入皇宮〉，答案是 SDGs5</div><span class="k">假設</span>玩家已經從燈謎找到答案，
-<span class="k">當</span>他輸入 SDGS5（第四個 s 打成大寫），
-<span class="k">那麼</span>機關不放行，並提示「再看一次洞窟裡的動物有多大」。</div>
+<div class="row r" style="margin-top:20px;display:flex;gap:12px;flex-wrap:wrap"><a class="go-btn" href="https://chrischou0807.github.io/escape/pearl/" target="_blank" rel="noopener">開始玩〈找尋千島珍珠〉↗</a> <a class="go-btn b" href="https://view.genially.com/631c2b9dfc26030011789876" target="_blank" rel="noopener">Genially 原作 ↗</a></div>
+<div class="note info r">玩的時候注意：每一關做錯時，機關怎麼反應？卡住時，你希望畫面給你什麼？</div>
+</div></section>
+
+<section id="q3"><div class="wrap">
+<p class="eyebrow r">回到規劃書</p>
+<h2 class="r">練習：寫出一個完整關卡</h2>
+<table class="r tight" style="font-size:15px"><tr><th style="width:210px">欄位</th><th>要寫什麼</th><th style="width:290px">以〈千島珍珠〉第一關寶箱為例</th></tr>
+<tr><td><span class="pill b">規格</span><b>關卡標題與前言</b></td><td>玩家進到這關時的情境</td><td>國際公務員失蹤，只留下一本訪查報告</td></tr>
+<tr><td><span class="pill b">規格</span><b>知識點</b></td><td>玩完這關，玩家得到什麼改變</td><td>認得印尼國旗：上紅下白</td></tr>
+<tr><td><span class="pill b">規格</span><b>謎題與道具</b></td><td>玩家看到什麼、用哪一種機關</td><td>寶箱上的八個開關（盲人鎖），面板有紅白格</td></tr>
+<tr><td><span class="pill b">規格</span><b>答案與解法</b></td><td>正確答案、推理步驟</td><td>讀報告一的「上紅下白」：紅格拉上、白格壓下</td></tr>
+<tr><td><span class="pill o">行為</span><b>答對時</b></td><td>機關發生什麼，接著呢</td><td>寶箱打開，出現第一顆珍珠</td></tr>
+<tr><td><span class="pill o">行為</span><b>答錯、亂試時</b></td><td>機關怎麼反應？能一直試嗎？</td><td>拉不開、晃一下，不說錯在哪</td></tr>
+<tr><td><span class="pill o">行為</span><b>提示</b></td><td>卡住多久給什麼，分幾層</td><td>先指向顏色，再指向報告一</td></tr>
+<tr><td><span class="pill">故事</span><b>後續故事</b></td><td>解開後的劇情與下一關的線索</td><td>訪查報告二：KERIS</td></tr>
+</table>
+<div class="note warn r">規格那幾格大家都會寫；行為那幾格，就是 AI 會替你決定的地方。</div>
+</div></section>
+
+<section id="s10"><div class="wrap">
+<h2 class="r">把「行為」那幾格，改寫成三句話</h2>
+<div class="grid g3">
+<div class="card topb r" style="padding:18px 22px"><div class="no b">假設</div><h3>玩家現在……</h3><p>開始前的狀態：讀過什麼、做到哪裡</p></div>
+<div class="card topb r" style="padding:18px 22px"><div class="no b">當</div><h3>玩家做了……</h3><p>一個實際的動作</p></div>
+<div class="card topo r" style="padding:18px 22px"><div class="no">那麼</div><h3>機關應該……</h3><p>規劃書「行為」那一格，寫成看得到、聽得到的結果</p></div>
+</div>
+<p class="small r" style="margin:16px 0 8px">範例：〈找尋千島珍珠〉第一關寶箱，接續上一頁的規劃書</p>
+<div class="grid g3"><div class="code r" style="margin-top:0;font-size:14px"><button class="copy" data-copy>複製</button><div class="hd">答對時</div><span class="k">假設</span>玩家已讀過訪查報告一，
+<span class="k">當</span>他把紅格的開關都拉上、白格都壓下，按「拉開」，
+<span class="k">那麼</span>寶箱打開，出現第一顆珍珠。</div><div class="code r" style="margin-top:0;font-size:14px"><button class="copy" data-copy>複製</button><div class="hd">答錯、亂試時</div><span class="k">假設</span>玩家已讀過訪查報告一，
+<span class="k">當</span>他有一個開關扳錯，按「拉開」，
+<span class="k">那麼</span>寶箱打不開、晃一下，不說錯在哪一個。</div><div class="code r" style="margin-top:0;font-size:14px"><button class="copy" data-copy>複製</button><div class="hd">提示</div><span class="k">假設</span>玩家拉了 3 次都打不開，
+<span class="k">當</span>他按「提示」，
+<span class="k">那麼</span>先顯示「面板上的格子有紅有白」；再按一次，才顯示「再讀一次報告一」。</div></div>
+</div>
 </div></section>
 
 <!-- 11 -->
@@ -337,111 +504,53 @@ section.in .r:nth-child(2){transition-delay:.12s}section.in .r:nth-child(3){tran
 <p class="small r">還可以再想：差一點就對（大小寫、空白）、第一次看到畫面不知道能做什麼、重新整理後會不會卡住。</p>
 </div></section>
 
-<!-- 六大玩法 -->
-<section id="p0"><div class="wrap">
-<p class="eyebrow r">挑戰＋玩法＝遊戲性</p>
-<h2 class="r">遊戲的六大玩法</h2>
-<p class="lead r">玩法，就是玩家為了完成挑戰所採取的行動。挑機關之前，先想：你要學生「做」什麼？</p>
-<div class="grid g3 six">
-<div class="card r"><div class="no">01</div><h3>操作</h3><p>動手和物體互動，得到藏起來的訊息</p><p style="margin-top:6px;font-size:14px">判定：獲得訊息</p></div>
-<div class="card r"><div class="no b">02</div><h3>探索</h3><p>在一定的範圍內，找到目標</p><p style="margin-top:6px;font-size:14px">判定：找到目標</p></div>
-<div class="card r"><div class="no">03</div><h3>解謎</h3><p>找到「鑰匙」，解開「鎖」</p><p style="margin-top:6px;font-size:14px">判定：鎖被解開</p></div>
-<div class="card r"><div class="no b">04</div><h3>選擇</h3><p>沒有標準答案，在兩個以上的選項中做選擇</p><p style="margin-top:6px;font-size:14px">判定：趨向想要的結果，或獲得最終勝利</p></div>
-<div class="card r"><div class="no">05</div><h3>競爭</h3><p>和電腦或人類，在限制下較量</p><p style="margin-top:6px;font-size:14px">判定：贏過對手</p></div>
-<div class="card r"><div class="no b">06</div><h3>創造</h3><p>運用創造力，找出能通過考驗的方法</p><p style="margin-top:6px;font-size:14px">判定：通過考驗</p></div>
-</div>
-<p class="small r">分類參照聚樂邦。範例庫就是照這六種玩法分類，每一款都可以直接複製提示詞。</p>
-</div></section>
-
-<section id="p01"><div class="wrap">
-<p class="eyebrow r">六大玩法 01</p>
-<h2 class="r">操作：動手和物體互動，得到藏起來的訊息</h2>
-<div class="def r"><b>判定</b><span>獲得訊息</span></div>
-<div class="play r"><span>按鈕</span><span>摺紙</span><span>編織</span><span>隱形文字</span><span>放大隱藏文字</span><span>音樂盒</span><span>拼圖</span><span>Arduino</span></div>
-<div class="grid g2">
-<div class="card ex r"><span class="pill b">範例 06</span><h3>紫外線顯影</h3><p>用手指當紫外線燈，照出隱形墨水寫的選項，再點選答案。</p><p class="how"><b>可以這樣用：</b>把底圖換成教材圖：照出葉片的氣孔、地圖上的地名。對應案例：隱形文字（化學反應）。</p><a class="go" href="https://chrischou0807.github.io/escape/uv/" target="_blank" rel="noopener">開啟範例 ↗</a></div>
-<div class="card ex r"><span class="pill b">範例 14</span><h3>放大鏡</h3><p>拖動放大鏡，找出畫面上藏得很小的字，拼起來就是答案。</p><p class="how"><b>可以這樣用：</b>換成顯微鏡下的切片、古地圖、標本照片。對應案例：放大隱藏文字（物理反應）。</p><a class="go" href="https://chrischou0807.github.io/escape/workbench/ex/zoom.html" target="_blank" rel="noopener">開啟範例 ↗</a></div>
-</div>
-</div></section>
-
-<section id="p02"><div class="wrap">
-<p class="eyebrow r">六大玩法 02</p>
-<h2 class="r">探索：在一定的範圍內，找到目標</h2>
-<div class="def r"><b>判定</b><span>找到目標</span></div>
-<div class="play r"><span>捉迷藏</span><span>差異挑戰</span><span>範圍挑戰</span><span>條件挑戰</span></div>
-<div class="grid g2">
-<div class="card ex r"><span class="pill b">範例 17</span><h3>大家來找碴</h3><p>左右兩張圖有幾處不同，點出來。</p><p class="how"><b>可以這樣用：</b>比對兩個分子結構、兩張標本、兩版地圖，練細微差異的辨別。對應案例：差異挑戰。</p><a class="go" href="https://chrischou0807.github.io/escape/workbench/ex/diff.html" target="_blank" rel="noopener">開啟範例 ↗</a></div>
-<div class="card ex r"><span class="pill b">範例 19</span><h3>條件挑戰</h3><p>找出所有符合條件的物品，多選或漏選都不算過。</p><p class="how"><b>可以這樣用：</b>分類判斷：酸或鹼、導體或絕緣體、哪些是哺乳類。對應案例：條件挑戰。</p><a class="go" href="https://chrischou0807.github.io/escape/workbench/ex/cond.html" target="_blank" rel="noopener">開啟範例 ↗</a></div>
-</div>
-</div></section>
-
-<section id="p03"><div class="wrap">
-<p class="eyebrow r">六大玩法 03</p>
-<h2 class="r">解謎：找到「鑰匙」，解開「鎖」</h2>
-<div class="def r"><b>判定</b><span>鎖被解開</span></div>
-<div class="play r"><span>猜燈謎</span><span>摩斯密碼</span><span>凱薩密碼</span><span>電報碼</span><span>豬圈密碼</span><span>解碼盤</span></div>
-<div class="grid g2">
-<div class="card ex r"><span class="pill b">範例 20</span><h3>燈謎</h3><p>猜對每個燈謎得到一個字，湊成通關詞。</p><p class="how"><b>可以這樣用：</b>每一題的答案就是鑰匙：字謎、成語、名詞解釋都能放進去。對應案例：猜燈謎。</p><a class="go" href="https://chrischou0807.github.io/escape/workbench/ex/riddle.html" target="_blank" rel="noopener">開啟範例 ↗</a></div>
-<div class="card ex r"><span class="pill b">範例 21</span><h3>凱撒密碼</h3><p>用轉盤找出位移量，把密文翻回原文。</p><p class="how"><b>可以這樣用：</b>數學的模運算、資訊的編碼與解碼。對應案例：解碼盤。</p><a class="go" href="https://chrischou0807.github.io/escape/workbench/ex/caesar.html" target="_blank" rel="noopener">開啟範例 ↗</a></div>
-</div>
-</div></section>
-
-<section id="p04"><div class="wrap">
-<p class="eyebrow r">六大玩法 04</p>
-<h2 class="r">選擇：沒有標準答案，在兩個以上的選項中做選擇</h2>
-<div class="def r"><b>判定</b><span>趨向想要的結果，或獲得最終勝利</span></div>
-<div class="play r"><span>策略選擇</span></div>
-<div class="grid g2">
-<div class="card ex r"><span class="pill b">範例 23</span><h3>策略選擇</h3><p>每回合選一個行動，三項資源的變化決定結局。</p><p class="how"><b>可以這樣用：</b>資源分配、環境議題、公民決策：讓學生看見每個選擇的代價。對應案例：策略選擇。</p><a class="go" href="https://chrischou0807.github.io/escape/workbench/ex/strategy.html" target="_blank" rel="noopener">開啟範例 ↗</a></div>
-<div class="card ex r"><span class="pill b">範例 24</span><h3>劇情分支</h3><p>依選擇走不同的故事線，選的路會影響最後的結果。</p><p class="how"><b>可以這樣用：</b>安全守則、歷史抉擇、倫理兩難：用故事帶出「如果當時這樣選」。</p><a class="go" href="https://chrischou0807.github.io/escape/workbench/ex/branch.html" target="_blank" rel="noopener">開啟範例 ↗</a></div>
-</div>
-</div></section>
-
-<section id="p05"><div class="wrap">
-<p class="eyebrow r">六大玩法 05</p>
-<h2 class="r">競爭：和電腦或人類，在限制下較量</h2>
-<div class="def r"><b>判定</b><span>贏過對手</span></div>
-<div class="play r"><span>剪刀石頭布</span><span>合作碰撞</span><span>個人競賽</span><span>計時挑戰</span><span>完成度挑戰</span><span>戰鬥</span></div>
-<div class="grid g2">
-<div class="card ex r"><span class="pill b">範例 25</span><h3>計時賽</h3><p>限時內答完全部題目，答錯加罰時間，記錄最佳成績。</p><p class="how"><b>可以這樣用：</b>已經學過的內容拿來練熟：元素符號、單字、公式。對應案例：計時挑戰。</p><a class="go" href="https://chrischou0807.github.io/escape/workbench/ex/timer.html" target="_blank" rel="noopener">開啟範例 ↗</a></div>
-<div class="card ex r"><span class="pill b">範例 55</span><h3>雙人同機對戰</h3><p>兩人共用一台裝置，誰先答對誰得分，答錯會被鎖住一下。</p><p class="how"><b>可以這樣用：</b>同學之間的即時較量，適合下課前的複習。對應案例：戰鬥。</p><a class="go" href="https://chrischou0807.github.io/escape/workbench/ex/duel.html" target="_blank" rel="noopener">開啟範例 ↗</a></div>
-</div>
-</div></section>
-
-<section id="p06"><div class="wrap">
-<p class="eyebrow r">六大玩法 06</p>
-<h2 class="r">創造：運用創造力，找出能通過考驗的方法</h2>
-<div class="def r"><b>判定</b><span>通過考驗</span></div>
-<div class="play r"><span>當個創世神</span><span>你畫我猜</span></div>
-<div class="grid g2">
-<div class="card ex r"><span class="pill b">範例 28</span><h3>建造挑戰</h3><p>用積木蓋出符合條件的結構：高度、預算、必須用到的零件。</p><p class="how"><b>可以這樣用：</b>橋、房子、塔的設計：判定的是有沒有符合條件，不是好不好看。對應案例：當個創世神。</p><a class="go" href="https://chrischou0807.github.io/escape/workbench/ex/build.html" target="_blank" rel="noopener">開啟範例 ↗</a></div>
-<div class="card ex r"><span class="pill b">範例 29</span><h3>你畫我猜</h3><p>一個人看題目畫，另一個人猜。</p><p class="how"><b>可以這樣用：</b>用畫面說明概念：真的理解才畫得出來，例如光合作用、槓桿原理。對應案例：你畫我猜。</p><a class="go" href="https://chrischou0807.github.io/escape/workbench/ex/draw.html" target="_blank" rel="noopener">開啟範例 ↗</a></div>
-</div>
-</div></section>
-
 <!-- 13 -->
 <section id="s13"><div class="wrap">
 <span class="badge r">示範</span>
-<h2 class="r" style="margin-top:16px">第 2 關〈進入皇宮〉</h2>
-<p class="lead r">五個燈謎串成一條路線，答案是 <b>SDGs5</b>：洞窟裡的動物小小的，所以第四個 s 要小寫。</p>
-<div class="grid g2">
-<div class="card r"><span class="pill b">規劃書有寫</span><h3>謎題、路線、答案、解法</h3><p>規格很完整。</p></div>
-<div class="card r" style="border-color:#efc8b4"><span class="pill o">規劃書沒寫</span><h3>輸入 SDGS5 或 sdgs5 算不算對？</h3><p>提示欄寫「無」，卡關時怎麼辦？AI 多半會忽略大小寫，學生的巧思就被吃掉了。</p></div>
+<h2 class="r" style="margin-top:16px">〈找尋千島珍珠〉拼圖這一關</h2>
+<p class="lead r">規劃書寫了：克差的圖切成 3×3，拼回來讀出 <b>KECAK</b>。沒寫的是：玩家要怎麼拼？</p>
+<div class="flow r">
+<div class="card"><span class="pill">第一版</span><p style="color:var(--ink)">AI 做成「點兩塊碎片，交換位置」</p><p style="font-size:14px;margin-top:8px">我想要：打散，讓玩家自己移動拼回去</p></div>
+<div class="arr"><i></i></div>
+<div class="card"><span class="pill">第二版</span><p style="color:var(--ink)">拖到固定格子才吸附，碎片還會旋轉</p><p style="font-size:14px;margin-top:8px">我想要：兩片接得上就黏住，只平移</p></div>
+<div class="arr"><i></i></div>
+<div class="card" style="border:2px solid var(--orange)"><span class="pill o">第三版</span><p style="color:var(--ink)">相鄰的碎片互相吸附，黏住後一起移動</p><p style="font-size:14px;margin-top:8px">這才是我要的玩法</p></div>
 </div>
-<div class="callout r"><span class="ic">▶</span>先照規劃書做出第一版 → 試玩看 AI 怎麼處理 → 補三句話，做第二版。</div>
+<div class="callout r"><span class="ic">▶</span>規格沒變，變的都是行為。先照規劃書做出第一版 → 試玩找出落差 → 補上行為，做第二版。</div>
 </div></section>
 
 <!-- 14 -->
+<section id="w1"><div class="wrap">
+<span class="badge r">示範</span>
+<h2 class="r" style="margin-top:16px">用工作台，把知識點拆成機關</h2>
+<p class="lead r" style="margin-bottom:14px">以自然科「紫色高麗菜汁遇酸變紅、遇鹼變綠」為例，跟著工作台的五個步驟。</p>
+<table class="r tight" style="font-size:15px"><tr><th style="width:150px">步驟</th><th style="width:300px">工作台問你</th><th>這個例子怎麼填</th></tr>
+<tr><td><b>① 選一條線</b></td><td>做成單一機關，還是整個密室？</td><td>單一機關：一個 HTML 檔</td></tr>
+<tr><td><b>② 基本資料</b></td><td>知識點、教學定位、玩家得到的改變（三項必填）</td><td>菜汁指示劑的顏色變化；練習應用；能看顏色判斷溶液是酸還是鹼</td></tr>
+<tr><td><b>③ 設計細節</b></td><td>用六問挑玩法：「這個原理，能讓什麼隱藏的訊息現形？」</td><td>操作：五杯透明溶液，滴菜汁後變色，依序點出酸性的杯子</td></tr>
+<tr><td><span class="pill o">行為</span><b>答對／答錯時</b></td><td>機關本身怎麼動？</td><td>答對：保險箱打開。答錯：那一杯閃紅，提示「再對照一次顏色表」</td></tr>
+<tr><td><span class="pill o">行為</span><b>意外操作</b></td><td>用三句話寫你擔心的亂玩</td><td>假設玩家沒滴菜汁，當他直接猜杯子，那麼不給判定，提示「先滴滴看」</td></tr>
+<tr><td><b>④ 產生提示詞</b></td><td>選 BDD 情境式，複製</td><td>貼給你用的 AI，拿到 HTML</td></tr>
+<tr><td><b>⑤ 貼回檢查</b></td><td>貼回程式碼，預覽、檢查</td><td>自己玩一遍，沒問題就上傳到 GitHub</td></tr>
+</table>
+<div class="row r" style="margin-top:16px"><a class="go-btn b" href="https://chrischou0807.github.io/escape/workbench/" target="_blank" rel="noopener">開啟工作台 ↗</a></div>
+</div></section>
+
 <section id="s14"><div class="wrap">
-<p class="eyebrow r">實作第二版 · 15:20–16:00</p>
-<h2 class="r">寫出行為，做第二版</h2>
+<p class="eyebrow r">實作第二版 · 15:35–16:05</p>
+<h2 class="r">寫出行為，更新到 GitHub</h2>
+<p class="lead r" style="margin-bottom:14px">把三句話和第一版的程式碼一起貼給 AI，拿到新的檔案後，上傳同一個檔名取代舊的。網址不變，玩家重新整理就是第二版。</p>
 <div class="grid g4">
-<div class="card topo r"><div class="no">01</div><h3>寫三句話</h3><span class="tag you">你自己來</span><p>答對、答錯、亂猜、成功後再操作，機關各要怎麼反應？</p></div>
-<div class="card topb r"><div class="no b">02</div><h3>請 AI 修改</h3><span class="tag ai">交給 AI</span><p>把第一版的程式碼和三句話一起貼給 AI。</p></div>
-<div class="card topo r"><div class="no">03</div><h3>更新到 GitHub</h3><span class="tag you">你自己來</span><p>點開檔案、按鉛筆，整份貼上新程式碼，Commit。</p></div>
-<div class="card topo r"><div class="no">04</div><h3>比對兩版</h3><span class="tag you">你自己來</span><p>按 History 看第一版和第二版差在哪裡。</p></div>
+<div class="card r" style="padding:18px"><div class="no">01</div><h3>還是存成 index.html</h3><p>新程式碼存成 index.html，放回同一個資料夾。電腦自動存成 index (1).html 的話，先改回來。</p>
+<div class="gh"><div class="t">📁 lock</div><span class="hl">📄 index.html</span> <span style="color:#1f883d">（第二版）</span><div style="margin-top:6px;font-size:11px;color:#59636e">檔名一樣，才會取代</div></div></div>
+<div class="card r" style="padding:18px"><div class="no">02</div><h3>進到資料夾，Upload files</h3><p>在 repo 點進 lock 資料夾，再按 Add file → Upload files。</p>
+<div class="gh"><div class="t">escape / lock</div><span class="f hl" style="display:inline-block">Add file ▾ · Upload files</span><div style="margin-top:6px">📄 index.html</div></div></div>
+<div class="card r" style="padding:18px"><div class="no">03</div><h3>拖進去，Commit</h3><p>拖進新檔案，寫一句這版改了什麼，按 Commit changes。</p>
+<div class="gh"><div class="drop" style="margin-top:0">📄 index.html</div>Commit message<div class="f hl">第二版：答錯時寶箱晃一下</div><span class="gb">Commit changes</span></div></div>
+<div class="card r" style="padding:18px"><div class="no">04</div><h3>看歷程、比兩版</h3><p>點開檔案按 History，點一筆紀錄，看改了哪幾行。</p>
+<div class="gh"><b class="hl" style="padding:0 4px">🕘 History</b><div style="margin-top:6px;border-top:1px solid #d0d7de;padding-top:4px">● 第二版：答錯時寶箱晃一下<br>● 第一版</div><div style="font-family:monospace;font-size:11px;margin-top:6px"><span style="background:#ffebe9">- alert("錯誤")</span><br><span style="background:#dafbe1">+ box.classList.add("shake")</span></div></div></div>
 </div>
-<div class="note warn r">網址不變，玩家重新整理就是第二版。貼上 Padlet 時，把「第一版」改成「第二版」。</div>
+<p class="small r">另一種做法：點開檔案、按右上角鉛筆，全選刪除後貼上新程式碼再 Commit。畫面為示意；貼上 Padlet 時把「第一版」改成「第二版」。</p>
 </div></section>
 
 <!-- 15 -->
@@ -450,7 +559,7 @@ section.in .r:nth-child(2){transition-delay:.12s}section.in .r:nth-child(3){tran
 <div class="grid g3">
 <div class="card r"><div class="no b">01</div><h3>手機拖不動</h3><p>觸控要另外處理，記得用手機實測。</p></div>
 <div class="card r"><div class="no b">02</div><h3>一打開沒有聲音</h3><p>瀏覽器規定要先點一下才會出聲。</p></div>
-<div class="card r"><div class="no b">03</div><h3>GitHub 網址 404</h3><p>等 1～2 分鐘；檢查檔名大小寫，網址要加上檔名。</p></div>
+<div class="card r"><div class="no b">03</div><h3>GitHub 網址 404</h3><p>等 1～2 分鐘；檢查檔名是不是 index.html，網址最後是資料夾名稱加「/」。</p></div>
 <div class="card r"><div class="no b">04</div><h3>語音辨識失靈</h3><p>需要 https，Chrome 或 Edge 比較穩。</p></div>
 <div class="card r"><div class="no b">05</div><h3>重新整理後卡住</h3><p>確認能回到可以開始的狀態。</p></div>
 <div class="card r"><div class="no b">06</div><h3>答錯沒反應</h3><p>答錯一定要有看得到的回饋。</p></div>
@@ -459,40 +568,44 @@ section.in .r:nth-child(2){transition-delay:.12s}section.in .r:nth-child(3){tran
 
 <!-- 16 -->
 <section id="s16"><div class="wrap">
-<p class="eyebrow r">驗收除錯與實際上架 · 16:00–16:30</p>
+<p class="eyebrow r">驗收除錯 · 16:05–16:30</p>
 <h2 class="r">用具體現象回報問題</h2>
 <div class="vs">
 <div class="card bad r"><span class="pill">不好回報</span><h3>「怪怪的」「不能玩」</h3><p>AI 和你自己都不知道要改哪裡。</p></div>
-<div class="card good r"><span class="pill o">好回報</span><h3>寫成三句話</h3><p>假設玩家已經找到答案，當他輸入 sdgs5（全小寫），那麼畫面只說「錯誤」，沒說哪裡不對。我希望提示「大小寫再看一次」。</p></div>
+<div class="card good r"><span class="pill o">好回報</span><h3>做了什麼 → 出現什麼</h3><p>我用手機把搖竹拖到最右邊，搖竹跑出畫面拉不回來。我預期它停在畫面邊緣。</p></div>
 </div>
-<div class="code r"><button class="copy" data-copy>複製</button><div class="hd">封測紀錄格式（互換試玩時用）</div>卡住位置：
-玩家實際行為：
-修改方向：
-改寫成：<span class="k">假設</span>……，<span class="k">當</span>……，<span class="k">那麼</span>……</div>
-<p class="small r">修好後，網址加上 ?test=1 看自動測試結果，再用手機人工試玩，最後把第二版貼上 Padlet。</p>
+<div class="code r"><button class="copy" data-copy>複製</button><div class="hd">試玩回報格式（互相試玩時用）</div>裝置與瀏覽器：
+我做了什麼（一步一步）：
+實際出現什麼：
+我原本預期：</div>
+<p class="small r">把這份回報整份貼給 AI 修改；修好後用手機再玩一次，最後把第二版貼上 Padlet。</p>
 </div></section>
 
 <!-- 17 -->
-<section id="s17"><div class="wrap">
-<h2 class="r">線上參與小提醒</h2>
-<div class="grid g3">
-<div class="card r"><div class="no">01</div><h3>開兩個視窗</h3><p>一個開 AI，一個開範例庫或工作台。有雙螢幕更好。</p></div>
-<div class="card r"><div class="no b">02</div><h3>卡關打在聊天室</h3><p>用三句話描述你看到的狀況，大家都能幫忙。</p></div>
-<div class="card r"><div class="no">03</div><h3>分組討論室試玩</h3><p>兩三人一組，從 Padlet 點開彼此的機關來玩。</p></div>
-</div>
-</div></section>
+
 
 <!-- 18 -->
 <section class="dark" id="s18"><div class="wrap">
 <p class="eyebrow r">總結</p>
-<h1 class="r" style="font-size:clamp(34px,4.6vw,60px)"><span class="hl-b">AI 負責寫程式</span>，<br><span class="hl-o">你負責想玩家。</span></h1>
+<h1 class="r" style="font-size:clamp(34px,4.6vw,60px)"><span class="hl-b">AI 負責寫程式</span>，<br><span class="hl-o">你負責想玩家怎麼玩。</span></h1>
 <div class="grid g3" style="margin-top:40px">
-<div class="card r" style="background:#26252d;border-color:#38373f"><div class="no b" style="color:#7fa4e3">規格</div><p style="color:#bdb7ad">說清楚「機關是什麼」</p></div>
-<div class="card r" style="background:#26252d;border-color:#38373f"><div class="no">行為</div><p style="color:#bdb7ad">想清楚「玩家這樣做時，機關怎麼反應」</p></div>
-<div class="card r" style="background:#26252d;border-color:#38373f"><div class="no" style="color:#e9e4da">驗證</div><p style="color:#bdb7ad">試玩、記錄、改寫成三句話</p></div>
+<div class="card r" style="background:#26252d;border-color:#38373f"><div class="no b" style="color:#7fa4e3">規格</div><p style="color:#bdb7ad">也是提示詞，注重技術：機關是什麼、怎麼做。範例庫有很多現成的案例。</p></div>
+<div class="card r" style="background:#26252d;border-color:#38373f"><div class="no">行為</div><p style="color:#bdb7ad">也是提示詞，但設計者應該從這裡出發：玩家這樣做時，機關怎麼反應。</p></div>
+<div class="card r" style="background:#26252d;border-color:#38373f"><div class="no" style="color:#e9e4da">驗證</div><p style="color:#bdb7ad">自己玩、找人玩，記下做了什麼、出現什麼，再請 AI 修。</p></div>
 </div>
 <p class="small r" style="color:#8d877d;margin-top:30px"><a href="#s1" style="color:#8d877d">回到開頭</a></p>
 </div></section>
+
+<section class="dark" id="z1"><div class="wrap">
+<p class="eyebrow r">進階</p>
+<h2 class="r">從一個機關，到一整間密室</h2>
+<p class="lead r">今天做的是單一機關。把好幾個機關放進同一個空間、串成一個故事，就是完整的線上密室。</p>
+<div class="grid g2">
+<div class="card r" style="background:#26252d;border-color:#38373f"><span class="pill o">全 3D 密室逃脫</span><h3 style="color:#f3efe8">放學後的謎案：消失的金鳶獎盃</h3><p style="color:#bdb7ad">在 3D 的校園空間裡自由走動，調查、找線索、解開一個個機關，追出獎盃的下落。</p><a class="go-btn" style="margin-top:14px" href="https://claude.ai/artifact/GNBvLUqdNtw6XAqDunuFiN" target="_blank" rel="noopener">開啟全 3D 密室 ↗</a></div>
+<div class="card r" style="background:#26252d;border-color:#38373f"><span class="pill b">等角 3D 密室逃脫</span><h3 style="color:#f3efe8">小房間逃脫 3D</h3><p style="color:#bdb7ad">從斜上方俯視一個小房間，點物件找線索，牆上的面板就是今天做的機關。</p><a class="go-btn b" style="margin-top:14px" href="https://claude.ai/artifact/4j9D8JyspG9naJ75aaKyGk" target="_blank" rel="noopener">開啟等角 3D 密室 ↗</a></div>
+</div>
+</div></section>
+
 
 </main>
 <script>

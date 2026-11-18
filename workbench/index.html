@@ -714,7 +714,7 @@ function renderEx(){var plays=["全部","操作","探索","解謎","競爭","選
   var url=x.loc?(HOSTED?"ex/"+x.id+".html":U+"workbench/ex/"+x.id+".html"):U+x.id+"/index.html",name=x.id+".html";
   var msg=b.parentNode.querySelector(".cpmsg");msg.textContent="下載中……";
   fetch(url).then(function(r){if(!r.ok)throw 0;return r.blob()}).then(function(bl){var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([bl],{type:"text/html"}));a.download=name;document.body.appendChild(a);a.click();a.remove();
-    msg.textContent="已下載 "+name+(EXTRA[x.id]?"（這款還要另外下載："+EXTRA[x.id]+"）":"")+"。上傳到 GitHub 就能用。"})
+    msg.textContent="已下載 "+name+(EXTRA[x.id]?"（這款還要另外下載："+EXTRA[x.id]+"）":"")+"。改名成 index.html，放進資料夾 "+x.id+"/ 再上傳到 GitHub，網址就是 …/"+x.id+"/。"})
   .catch(function(e){if(e)console.error(e);msg.textContent="下載失敗，請改按「新分頁開啟」，再用瀏覽器「另存網頁」。"})}});
  Array.prototype.forEach.call($("exList").querySelectorAll("[data-new]"),function(b){b.onclick=function(){var x=EX.filter(function(e){return e.id===b.dataset["new"]})[0];
   if(!x.loc){window.open(U+x.id+"/","_blank");return}
@@ -733,6 +733,7 @@ function renderBase(){var c=$("baseChip"),x=EX.filter(function(e){return e.id===
 function exBind(){if(exBind.done)return;exBind.done=1;$("exQ").oninput=function(){exQ=this.value.trim();exPick=false;renderEx()};$("exPickBtn").onclick=function(){exPick=!exPick;if(exPick){exQ="";$("exQ").value="";exFilter="全部";formFilter=""}renderEx()}}
 function showView(v){$("exView").style.display=v==="ex"?"block":"none";$("wizard").style.display=v==="ex"?"none":"block";$("tabEx").className=v==="ex"?"on":"";$("tabWork").className=v==="ex"?"":"on";if(v==="ex"){exBind();renderEx()}window.scrollTo(0,0)}
 $("tabWork").onclick=function(){showView("work")};$("tabEx").onclick=function(){showView("ex")};
+if(/^#ex/.test(location.hash))setTimeout(function(){showView("ex")},0);
 function init(){renderBase();S.step=Math.min(+S.step||0,4);bind();renderLines();renderPos();renderPlay();renderSelf();show()}
 load();init();
 })();
