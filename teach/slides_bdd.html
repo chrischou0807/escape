@@ -89,6 +89,7 @@ section.in .r{opacity:1;transform:none}
 section.in .r:nth-child(2){transition-delay:.12s}section.in .r:nth-child(3){transition-delay:.24s}section.in .r:nth-child(4){transition-delay:.36s}section.in .r:nth-child(5){transition-delay:.48s}section.in .r:nth-child(6){transition-delay:.6s}
 .grid>.r:nth-child(2){transition-delay:.15s!important}.grid>.r:nth-child(3){transition-delay:.3s!important}.grid>.r:nth-child(4){transition-delay:.45s!important}
 .me-grid{grid-template-columns:minmax(200px,300px) 1fr;align-items:center;gap:34px}@media(max-width:820px){.me-grid{grid-template-columns:1fr}}
+.hide-date::selection{background:var(--orange);color:#fff}
 @media(prefers-reduced-motion:reduce){.r{opacity:1;transform:none;transition:none}#deck{scroll-behavior:auto}}
 .small{font-size:14px;color:var(--dim);margin-top:14px}
 .gh{background:#fff;border:1px solid #d0d7de;border-radius:10px;font:13px/1.5 -apple-system,"Segoe UI",Helvetica,Arial,sans-serif;color:#1f2328;padding:12px;margin-top:12px;text-align:left}
@@ -131,8 +132,8 @@ section.in .r:nth-child(2){transition-delay:.12s}section.in .r:nth-child(3){tran
 <p class="eyebrow r">解鎖 AI 解謎遊戲創新設計工作坊</p>
 <h1 class="r" style="font-size:clamp(34px,4.8vw,62px)">AI 協作設計：<br>從發想到做出一個<br>能玩的<span class="hl-o">線上密室機關</span></h1>
 <p class="lead r" style="margin-top:22px">讓 AI 做出你真正想要的機關</p>
-<p class="r" style="font-family:var(--mono);font-size:clamp(15px,1.4vw,18px);letter-spacing:.05em;color:#bdb7ad;margin:-6px 0 24px">2026 年 11 月 19 日（四）14:00–16:30</p>
-<div class="lockdemo r"><div class="dial" data-d>0</div><div class="dial" data-d>0</div><div class="dial" data-d>0</div><div class="dial" data-d>0</div><span class="lockmsg" id="lockmsg">打開密碼鎖，才能往下看。提示：今天的研習從幾點開始？</span></div>
+<p style="font-family:var(--mono);font-size:clamp(15px,1.4vw,18px);letter-spacing:.05em;color:var(--dark);margin:-6px 0 24px" class="r hide-date">2026 年 11 月 19 日（四）14:00–16:30</p>
+<div class="lockdemo r"><div class="dial" data-d>0</div><div class="dial" data-d>0</div><div class="dial" data-d>0</div><div class="dial" data-d>0</div><span class="lockmsg" id="lockmsg">打開密碼鎖，才能往下看。提示：今天的研習幾點下課？</span></div>
 </div><a class="scrollhint" id="shint" href="#sme">🔒 先打開密碼鎖</a></section>
 
 <!-- 自我介紹 -->
@@ -648,10 +649,10 @@ document.addEventListener("keydown",function(e){if(locked()&&/^[0-9]$/.test(e.ke
 [].slice.call(document.querySelectorAll('a[href^="#s"]')).forEach(function(a){a.addEventListener("click",function(e){e.preventDefault();if(locked()&&a.getAttribute("href")!=="#s1"){nudge();return}var t=document.getElementById(a.getAttribute("href").slice(1));if(t)t.scrollIntoView({behavior:"smooth"})})});
 setCur(0);S[0].classList.add("in");
 [].slice.call(document.querySelectorAll("[data-copy]")).forEach(function(b){b.onclick=function(){var box=b.parentNode.cloneNode(true);[].slice.call(box.querySelectorAll(".copy,.hd")).forEach(function(x){x.remove()});var t=box.textContent.replace(/^\s+|\s+$/g,"");var done=function(ok){b.textContent=ok?"已複製":"請手動選取";b.classList.toggle("ok",ok);setTimeout(function(){b.textContent="複製";b.classList.remove("ok")},1600)};try{navigator.clipboard.writeText(t).then(function(){done(true)},function(){done(false)})}catch(e){done(false)}}});
-var dials=[].slice.call(document.querySelectorAll("[data-d]")),msg=document.getElementById("lockmsg"),tries=0,ti=0,CODE="1400";
+var dials=[].slice.call(document.querySelectorAll("[data-d]")),msg=document.getElementById("lockmsg"),tries=0,ti=0,CODE="1630";
 try{if(sessionStorage.getItem("lockOpen")==="1")openLock(true)}catch(e){}
 function check(){if(!locked())return;var code=dials.map(function(x){return x.textContent}).join("");tries++;
- if(code===CODE){openLock(false)}else{msg.style.color="";msg.textContent=tries>24?"提示：四位數，就是今天研習開始的時間（14:00）。":tries>12?"提示：看看第 2 頁會出現的時間表……不對，那要先打開才看得到。是今天幾點開始？":"打開密碼鎖，才能往下看。提示：今天的研習從幾點開始？"}}
+ if(code===CODE){openLock(false)}else{msg.style.color="";msg.textContent=tries>24?"提示：四位數，就是今天的下課時間（16:30）。":tries>12?"提示：封面上有一行看不見的字，用滑鼠反白看看。":"打開密碼鎖，才能往下看。提示：今天的研習幾點下課？"}}
 function openLock(quiet){document.body.classList.remove("locked");dials.forEach(function(d,k){d.textContent=CODE[k];d.classList.add("open")});msg.textContent="🔓 打開了！這就是一個最簡單的線上密碼鎖。往下捲動繼續。";msg.style.color="#f0a37e";
  var h=document.getElementById("shint");h.innerHTML="往下捲動<br>﹀";try{sessionStorage.setItem("lockOpen","1")}catch(e){}
  if(!quiet)setTimeout(function(){S[1].scrollIntoView({behavior:"smooth"})},1400)}
