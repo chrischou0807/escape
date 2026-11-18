@@ -90,6 +90,16 @@ section.in .r:nth-child(2){transition-delay:.12s}section.in .r:nth-child(3){tran
 .grid>.r:nth-child(2){transition-delay:.15s!important}.grid>.r:nth-child(3){transition-delay:.3s!important}.grid>.r:nth-child(4){transition-delay:.45s!important}
 @media(prefers-reduced-motion:reduce){.r{opacity:1;transform:none;transition:none}#deck{scroll-behavior:auto}}
 .small{font-size:14px;color:var(--dim);margin-top:14px}
+.play{display:flex;flex-wrap:wrap;gap:8px;margin:-6px 0 22px}
+.play span{font-size:14px;padding:4px 12px;border-radius:999px;background:#ece6dc;color:#6d675e}
+.def{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:18px;line-height:1.6;margin:0 0 20px}
+.def b{color:var(--orange)}
+.ex{display:flex;flex-direction:column;align-items:flex-start}
+.ex .how{margin-top:10px!important;color:var(--ink)!important}
+.ex a.go{align-self:flex-start;margin-top:14px;font-size:14px;font-weight:700;color:#fff;background:var(--blue);padding:8px 16px;border-radius:999px;text-decoration:none}
+.six .card{padding:20px 20px 18px}
+.six .card h3{margin-bottom:4px}
+
 </style>
 </head>
 <body class="locked">
@@ -233,10 +243,92 @@ section.in .r:nth-child(2){transition-delay:.12s}section.in .r:nth-child(3){tran
 <section id="s12"><div class="wrap">
 <h2 class="r">兩個工具：範例庫與工作台</h2>
 <div class="grid g2">
-<div class="card r"><span class="pill o">發散</span><h3>機關範例庫（150 多款）</h3><p>看見「原來 AI 可以做出這麼多種機關」。每一款都能直接「複製提示詞」，換成你的內容就能用。不知道從哪開始，就按「先看這 10 款」。</p></div>
+<div class="card r"><span class="pill o">發散</span><h3>機關範例庫（160 多款）</h3><p>看見「原來 AI 可以做出這麼多種機關」。每一款都能直接「複製提示詞」，換成你的內容就能用。不知道從哪開始，就按「先看這 10 款」。</p></div>
 <div class="card r"><span class="pill b">收斂</span><h3>機關設計工作台</h3><p>把模糊的想法一步一步拆開：知識點、玩家得到的改變、謎題與解法、答對答錯時機關發生什麼、意外操作，最後產生行為情境式的提示詞。</p></div>
 </div>
 <div class="note info r">今天大多數人走「從範例改」：挑一款範例 → 複製提示詞 → 換成自己的內容。已經有明確想法的，再用工作台從頭拆。</div>
+</div></section>
+
+<!-- 六大玩法 -->
+<section id="p0"><div class="wrap">
+<p class="eyebrow r">挑戰＋玩法＝遊戲性</p>
+<h2 class="r">遊戲的六大玩法</h2>
+<p class="lead r">玩法，就是玩家為了完成挑戰所採取的行動。挑機關之前，先想：你要學生「做」什麼？</p>
+<div class="grid g3 six">
+<div class="card r"><div class="no">01</div><h3>操作</h3><p>動手和物體互動，得到藏起來的訊息</p><p style="margin-top:6px;font-size:14px">判定：獲得訊息</p></div>
+<div class="card r"><div class="no b">02</div><h3>探索</h3><p>在一定的範圍內，找到目標</p><p style="margin-top:6px;font-size:14px">判定：找到目標</p></div>
+<div class="card r"><div class="no">03</div><h3>解謎</h3><p>找到「鑰匙」，解開「鎖」</p><p style="margin-top:6px;font-size:14px">判定：鎖被解開</p></div>
+<div class="card r"><div class="no b">04</div><h3>選擇</h3><p>沒有標準答案，在兩個以上的選項中做選擇</p><p style="margin-top:6px;font-size:14px">判定：趨向想要的結果，或獲得最終勝利</p></div>
+<div class="card r"><div class="no">05</div><h3>競爭</h3><p>和電腦或人類，在限制下較量</p><p style="margin-top:6px;font-size:14px">判定：贏過對手</p></div>
+<div class="card r"><div class="no b">06</div><h3>創造</h3><p>運用創造力，找出能通過考驗的方法</p><p style="margin-top:6px;font-size:14px">判定：通過考驗</p></div>
+</div>
+<p class="small r">分類參照聚樂邦。範例庫就是照這六種玩法分類，每一款都可以直接複製提示詞。</p>
+</div></section>
+
+<section id="p01"><div class="wrap">
+<p class="eyebrow r">六大玩法 01</p>
+<h2 class="r">操作：動手和物體互動，得到藏起來的訊息</h2>
+<div class="def r"><b>判定</b><span>獲得訊息</span></div>
+<div class="play r"><span>按鈕</span><span>摺紙</span><span>編織</span><span>隱形文字</span><span>放大隱藏文字</span><span>音樂盒</span><span>拼圖</span><span>Arduino</span></div>
+<div class="grid g2">
+<div class="card ex r"><span class="pill b">範例 06</span><h3>紫外線顯影</h3><p>用手指當紫外線燈，照出隱形墨水寫的選項，再點選答案。</p><p class="how"><b>可以這樣用：</b>把底圖換成教材圖：照出葉片的氣孔、地圖上的地名。對應案例：隱形文字（化學反應）。</p><a class="go" href="https://chrischou0807.github.io/escape/uv/" target="_blank" rel="noopener">開啟範例 ↗</a></div>
+<div class="card ex r"><span class="pill b">範例 14</span><h3>放大鏡</h3><p>拖動放大鏡，找出畫面上藏得很小的字，拼起來就是答案。</p><p class="how"><b>可以這樣用：</b>換成顯微鏡下的切片、古地圖、標本照片。對應案例：放大隱藏文字（物理反應）。</p><a class="go" href="https://chrischou0807.github.io/escape/workbench/ex/zoom.html" target="_blank" rel="noopener">開啟範例 ↗</a></div>
+</div>
+</div></section>
+
+<section id="p02"><div class="wrap">
+<p class="eyebrow r">六大玩法 02</p>
+<h2 class="r">探索：在一定的範圍內，找到目標</h2>
+<div class="def r"><b>判定</b><span>找到目標</span></div>
+<div class="play r"><span>捉迷藏</span><span>差異挑戰</span><span>範圍挑戰</span><span>條件挑戰</span></div>
+<div class="grid g2">
+<div class="card ex r"><span class="pill b">範例 17</span><h3>大家來找碴</h3><p>左右兩張圖有幾處不同，點出來。</p><p class="how"><b>可以這樣用：</b>比對兩個分子結構、兩張標本、兩版地圖，練細微差異的辨別。對應案例：差異挑戰。</p><a class="go" href="https://chrischou0807.github.io/escape/workbench/ex/diff.html" target="_blank" rel="noopener">開啟範例 ↗</a></div>
+<div class="card ex r"><span class="pill b">範例 19</span><h3>條件挑戰</h3><p>找出所有符合條件的物品，多選或漏選都不算過。</p><p class="how"><b>可以這樣用：</b>分類判斷：酸或鹼、導體或絕緣體、哪些是哺乳類。對應案例：條件挑戰。</p><a class="go" href="https://chrischou0807.github.io/escape/workbench/ex/cond.html" target="_blank" rel="noopener">開啟範例 ↗</a></div>
+</div>
+</div></section>
+
+<section id="p03"><div class="wrap">
+<p class="eyebrow r">六大玩法 03</p>
+<h2 class="r">解謎：找到「鑰匙」，解開「鎖」</h2>
+<div class="def r"><b>判定</b><span>鎖被解開</span></div>
+<div class="play r"><span>猜燈謎</span><span>摩斯密碼</span><span>凱薩密碼</span><span>電報碼</span><span>豬圈密碼</span><span>解碼盤</span></div>
+<div class="grid g2">
+<div class="card ex r"><span class="pill b">範例 20</span><h3>燈謎</h3><p>猜對每個燈謎得到一個字，湊成通關詞。</p><p class="how"><b>可以這樣用：</b>每一題的答案就是鑰匙：字謎、成語、名詞解釋都能放進去。對應案例：猜燈謎。</p><a class="go" href="https://chrischou0807.github.io/escape/workbench/ex/riddle.html" target="_blank" rel="noopener">開啟範例 ↗</a></div>
+<div class="card ex r"><span class="pill b">範例 21</span><h3>凱撒密碼</h3><p>用轉盤找出位移量，把密文翻回原文。</p><p class="how"><b>可以這樣用：</b>數學的模運算、資訊的編碼與解碼。對應案例：解碼盤。</p><a class="go" href="https://chrischou0807.github.io/escape/workbench/ex/caesar.html" target="_blank" rel="noopener">開啟範例 ↗</a></div>
+</div>
+</div></section>
+
+<section id="p04"><div class="wrap">
+<p class="eyebrow r">六大玩法 04</p>
+<h2 class="r">選擇：沒有標準答案，在兩個以上的選項中做選擇</h2>
+<div class="def r"><b>判定</b><span>趨向想要的結果，或獲得最終勝利</span></div>
+<div class="play r"><span>策略選擇</span></div>
+<div class="grid g2">
+<div class="card ex r"><span class="pill b">範例 23</span><h3>策略選擇</h3><p>每回合選一個行動，三項資源的變化決定結局。</p><p class="how"><b>可以這樣用：</b>資源分配、環境議題、公民決策：讓學生看見每個選擇的代價。對應案例：策略選擇。</p><a class="go" href="https://chrischou0807.github.io/escape/workbench/ex/strategy.html" target="_blank" rel="noopener">開啟範例 ↗</a></div>
+<div class="card ex r"><span class="pill b">範例 24</span><h3>劇情分支</h3><p>依選擇走不同的故事線，選的路會影響最後的結果。</p><p class="how"><b>可以這樣用：</b>安全守則、歷史抉擇、倫理兩難：用故事帶出「如果當時這樣選」。</p><a class="go" href="https://chrischou0807.github.io/escape/workbench/ex/branch.html" target="_blank" rel="noopener">開啟範例 ↗</a></div>
+</div>
+</div></section>
+
+<section id="p05"><div class="wrap">
+<p class="eyebrow r">六大玩法 05</p>
+<h2 class="r">競爭：和電腦或人類，在限制下較量</h2>
+<div class="def r"><b>判定</b><span>贏過對手</span></div>
+<div class="play r"><span>剪刀石頭布</span><span>合作碰撞</span><span>個人競賽</span><span>計時挑戰</span><span>完成度挑戰</span><span>戰鬥</span></div>
+<div class="grid g2">
+<div class="card ex r"><span class="pill b">範例 25</span><h3>計時賽</h3><p>限時內答完全部題目，答錯加罰時間，記錄最佳成績。</p><p class="how"><b>可以這樣用：</b>已經學過的內容拿來練熟：元素符號、單字、公式。對應案例：計時挑戰。</p><a class="go" href="https://chrischou0807.github.io/escape/workbench/ex/timer.html" target="_blank" rel="noopener">開啟範例 ↗</a></div>
+<div class="card ex r"><span class="pill b">範例 55</span><h3>雙人同機對戰</h3><p>兩人共用一台裝置，誰先答對誰得分，答錯會被鎖住一下。</p><p class="how"><b>可以這樣用：</b>同學之間的即時較量，適合下課前的複習。對應案例：戰鬥。</p><a class="go" href="https://chrischou0807.github.io/escape/workbench/ex/duel.html" target="_blank" rel="noopener">開啟範例 ↗</a></div>
+</div>
+</div></section>
+
+<section id="p06"><div class="wrap">
+<p class="eyebrow r">六大玩法 06</p>
+<h2 class="r">創造：運用創造力，找出能通過考驗的方法</h2>
+<div class="def r"><b>判定</b><span>通過考驗</span></div>
+<div class="play r"><span>當個創世神</span><span>你畫我猜</span></div>
+<div class="grid g2">
+<div class="card ex r"><span class="pill b">範例 28</span><h3>建造挑戰</h3><p>用積木蓋出符合條件的結構：高度、預算、必須用到的零件。</p><p class="how"><b>可以這樣用：</b>橋、房子、塔的設計：判定的是有沒有符合條件，不是好不好看。對應案例：當個創世神。</p><a class="go" href="https://chrischou0807.github.io/escape/workbench/ex/build.html" target="_blank" rel="noopener">開啟範例 ↗</a></div>
+<div class="card ex r"><span class="pill b">範例 29</span><h3>你畫我猜</h3><p>一個人看題目畫，另一個人猜。</p><p class="how"><b>可以這樣用：</b>用畫面說明概念：真的理解才畫得出來，例如光合作用、槓桿原理。對應案例：你畫我猜。</p><a class="go" href="https://chrischou0807.github.io/escape/workbench/ex/draw.html" target="_blank" rel="noopener">開啟範例 ↗</a></div>
+</div>
 </div></section>
 
 <!-- 13 -->
