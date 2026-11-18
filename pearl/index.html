@@ -268,17 +268,34 @@ report({base:[["625c34165bc367001879284f/46594575-bc43-4665-9a2b-3441f73b9642.pn
   [P.pKeris,217,276,123,123,0,20],[P.pBatik,146,364,130,130,-10.1,21],[P.pAngk,50,222,136,136,0,22],[P.pKecak,147,103,138,138,0,23]],
   cover:[["625c34165bc367001879284f/e6171c6d-0fa5-4e20-a4de-53d46db5b519.png",329,-29,409,695],["625c34165bc367001879284f/8eaab656-2147-4a65-b5e9-da9ad2be4d9a.png",732,2,362,633]]});
 
-/* ===== 11 皮影戲：手電筒 ===== */
+/* ===== 11 皮影戲：拿手電筒照，找出藏起來的字 ===== */
 scene((sc,api)=>{
-  const dark=img(sc,"625c34165bc367001879284f/f8e5bf89-bd52-4c21-b743-9ed8bb7289ea.png",4,4,1196,673,0,2);
-  const lit=img(sc,"625c34165bc367001879284f/575d978c-00be-4ecd-a9db-24b972e35a46.png",4,4,1196,673,0,3);
-  img(sc,"625c34165bc367001879284f/96c98657-92cb-4b79-940d-1b60ba2a9de6.png",802,264,374,374,11.9,4);
-  let on=false;const set=()=>{dark.classList.toggle("hide",on);lit.classList.toggle("hide",!on)};
-  hit(sc,880,20,190,170,()=>{on=!on;set()},"手電筒");
+  img(sc,"625c34165bc367001879284f/f8e5bf89-bd52-4c21-b743-9ed8bb7289ea.png",4,4,1196,673,0,2);
+  mk("div","","position:absolute;inset:0;z-index:3;background:rgba(8,6,20,.55);pointer-events:none",sc);
+  // 亮的那張圖（幕上有字）只在光圈裡看得到
+  const lit=img(sc,"625c34165bc367001879284f/575d978c-00be-4ecd-a9db-24b972e35a46.png",4,4,1196,673,0,4);
+  img(sc,"625c34165bc367001879284f/96c98657-92cb-4b79-940d-1b60ba2a9de6.png",802,264,374,374,11.9,6);
   hit(sc,820,300,340,300,next,"打開手提箱");
-  api.enter=()=>{on=false;set()};
+  // 手電筒道具：右邊是手電筒，左邊是照出去的光
+  const R=95,BX=110,BY=110;
+  const tool=mk("div","","position:absolute;width:400px;height:220px;z-index:520;touch-action:none;cursor:grab",sc);
+  tool.innerHTML='<svg width="400" height="220" viewBox="0 0 400 220" style="position:absolute;inset:0;overflow:visible">'
+   +'<defs><radialGradient id="bm"><stop offset="0" stop-color="#fff6c0" stop-opacity=".35"/><stop offset="1" stop-color="#fff6c0" stop-opacity="0"/></radialGradient>'
+   +'<linearGradient id="cn" x1="1" x2="0"><stop offset="0" stop-color="#fff3a0" stop-opacity=".55"/><stop offset="1" stop-color="#fff3a0" stop-opacity=".05"/></linearGradient></defs>'
+   +'<polygon points="262,92 262,128 '+BX+','+(BY+R)+' '+BX+','+(BY-R)+'" fill="url(#cn)"/>'
+   +'<circle cx="'+BX+'" cy="'+BY+'" r="'+R+'" fill="url(#bm)" stroke="#fff6c0" stroke-opacity=".35" stroke-width="2"/>'
+   +'<rect x="262" y="84" width="34" height="52" rx="6" fill="#d9d9d9" stroke="#555" stroke-width="3"/>'
+   +'<rect x="294" y="94" width="96" height="32" rx="10" fill="#c0392b" stroke="#555" stroke-width="3"/>'
+   +'<rect x="330" y="100" width="18" height="10" rx="3" fill="#333"/></svg>';
+  let tx=700,ty=0,d=null;const k=()=>stage.getBoundingClientRect().width/1200;
+  function place(){tool.style.left=tx+"px";tool.style.top=ty+"px";const cx=tx+BX-4,cy=ty+BY-4,m="radial-gradient(circle "+R+"px at "+cx+"px "+cy+"px,#000 70%,transparent 100%)";lit.style.webkitMaskImage=m;lit.style.maskImage=m}
+  tool.addEventListener("pointerdown",e=>{e.preventDefault();tool.setPointerCapture(e.pointerId);d={x:e.clientX/k()-tx,y:e.clientY/k()-ty};tool.style.cursor="grabbing"});
+  tool.addEventListener("pointermove",e=>{if(!d)return;tx=Math.max(-BX,Math.min(1200-BX,e.clientX/k()-d.x));ty=Math.max(-BY,Math.min(675-BY,e.clientY/k()-d.y));place()});
+  const up=()=>{d=null;tool.style.cursor="grab"};tool.addEventListener("pointerup",up);tool.addEventListener("pointercancel",up);
+  mk("div","","position:absolute;left:0;right:0;top:14px;text-align:center;font-size:22px;color:#fff;z-index:5;text-shadow:0 1px 4px #000",sc).textContent="拿著手電筒移動，照照看幕上藏了什麼。";
+  api.enter=()=>{tx=700;ty=0;place()};
   navBack(sc);
-  hintBtn(sc,["皮影戲要有光，才看得到影子。","點右上角的手電筒，看看幕上多了什麼。","手提箱的密碼是三個數字。"]);
+  hintBtn(sc,["皮影戲要有光，才看得到影子。","拖著右上角的手電筒，讓光圈在幕上慢慢移動。","幕上某個地方藏著三個數字，就是手提箱的密碼。"]);
 });
 
 /* ===== 12 手提箱：三位數 ===== */
