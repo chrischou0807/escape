@@ -462,15 +462,15 @@ section.in .r:nth-child(2){transition-delay:.12s}section.in .r:nth-child(3){tran
 <section id="q3"><div class="wrap">
 <p class="eyebrow r">回到規劃書</p>
 <h2 class="r">練習：寫出一個完整關卡</h2>
-<table class="r tight" style="font-size:15px"><tr><th style="width:210px">欄位</th><th>要寫什麼</th><th style="width:270px">以〈千島珍珠〉拼圖為例</th></tr>
-<tr><td><span class="pill b">規格</span><b>關卡標題與前言</b></td><td>玩家進到這關時的情境</td><td>第四顆珍珠，藏在峇里島的舞蹈裡</td></tr>
-<tr><td><span class="pill b">規格</span><b>知識點</b></td><td>玩完這關，玩家得到什麼改變</td><td>認識峇里島傳統舞蹈克差（Kecak）</td></tr>
-<tr><td><span class="pill b">規格</span><b>謎題與道具</b></td><td>玩家看到什麼、用哪一種機關</td><td>克差的圖切成 3×3 拼圖</td></tr>
-<tr><td><span class="pill b">規格</span><b>答案與解法</b></td><td>正確答案、可以接受的寫法、推理步驟</td><td>拼回圖、讀出 KECAK，轉開密碼筒</td></tr>
-<tr><td><span class="pill o">行為</span><b>答對時</b></td><td>機關發生什麼，接著呢</td><td>九塊連成一整片，出現密碼筒</td></tr>
-<tr><td><span class="pill o">行為</span><b>答錯、亂試時</b></td><td>機關怎麼反應？能一直試嗎？</td><td>接不起來的碎片不會黏，可以再拖開</td></tr>
-<tr><td><span class="pill o">行為</span><b>操作的方式</b></td><td>拖曳、點擊、會不會旋轉</td><td>拖著平移，黏住的碎片一起移動</td></tr>
-<tr><td><span class="pill">故事</span><b>後續故事</b></td><td>解開後的劇情與下一關的線索</td><td>訪查報告五：克差</td></tr>
+<table class="r tight" style="font-size:15px"><tr><th style="width:210px">欄位</th><th>要寫什麼</th><th style="width:290px">以〈千島珍珠〉第一關寶箱為例</th></tr>
+<tr><td><span class="pill b">規格</span><b>關卡標題與前言</b></td><td>玩家進到這關時的情境</td><td>國際公務員失蹤，只留下一本訪查報告</td></tr>
+<tr><td><span class="pill b">規格</span><b>知識點</b></td><td>玩完這關，玩家得到什麼改變</td><td>認得印尼國旗：上紅下白</td></tr>
+<tr><td><span class="pill b">規格</span><b>謎題與道具</b></td><td>玩家看到什麼、用哪一種機關</td><td>寶箱上的八個開關（盲人鎖），面板有紅白格</td></tr>
+<tr><td><span class="pill b">規格</span><b>答案與解法</b></td><td>正確答案、推理步驟</td><td>讀報告一的「上紅下白」：紅格拉上、白格壓下</td></tr>
+<tr><td><span class="pill o">行為</span><b>答對時</b></td><td>機關發生什麼，接著呢</td><td>寶箱打開，出現第一顆珍珠</td></tr>
+<tr><td><span class="pill o">行為</span><b>答錯、亂試時</b></td><td>機關怎麼反應？能一直試嗎？</td><td>拉不開、晃一下，不說錯在哪</td></tr>
+<tr><td><span class="pill o">行為</span><b>提示</b></td><td>卡住多久給什麼，分幾層</td><td>先指向顏色，再指向報告一</td></tr>
+<tr><td><span class="pill">故事</span><b>後續故事</b></td><td>解開後的劇情與下一關的線索</td><td>訪查報告二：KERIS</td></tr>
 </table>
 <div class="note warn r">規格那幾格大家都會寫；行為那幾格，就是 AI 會替你決定的地方。</div>
 </div></section>
@@ -482,14 +482,14 @@ section.in .r:nth-child(2){transition-delay:.12s}section.in .r:nth-child(3){tran
 <div class="card topb r" style="padding:18px 22px"><div class="no b">當</div><h3>玩家做了……</h3><p>一個實際的動作</p></div>
 <div class="card topo r" style="padding:18px 22px"><div class="no">那麼</div><h3>機關應該……</h3><p>規劃書「行為」那一格，寫成看得到、聽得到的結果</p></div>
 </div>
-<p class="small r" style="margin:16px 0 8px">範例：〈找尋千島珍珠〉拼圖，接續上一頁的規劃書</p>
-<div class="grid g3"><div class="code r" style="margin-top:0;font-size:14px"><button class="copy" data-copy>複製</button><div class="hd">答對時</div><span class="k">假設</span>九塊碎片散在桌上，
-<span class="k">當</span>玩家把最後一塊接上，
-<span class="k">那麼</span>整張圖滑到左邊，右邊出現密碼筒。</div><div class="code r" style="margin-top:0;font-size:14px"><button class="copy" data-copy>複製</button><div class="hd">答錯、亂試時</div><span class="k">假設</span>玩家拿著一塊碎片，
-<span class="k">當</span>他把它放到接不起來的碎片旁邊，
-<span class="k">那麼</span>兩塊不會黏住，可以再拖開。</div><div class="code r" style="margin-top:0;font-size:14px"><button class="copy" data-copy>複製</button><div class="hd">操作的方式</div><span class="k">假設</span>兩塊碎片已經黏在一起，
-<span class="k">當</span>玩家拖其中一塊，
-<span class="k">那麼</span>兩塊一起移動，只平移、不旋轉。</div></div>
+<p class="small r" style="margin:16px 0 8px">範例：〈找尋千島珍珠〉第一關寶箱，接續上一頁的規劃書</p>
+<div class="grid g3"><div class="code r" style="margin-top:0;font-size:14px"><button class="copy" data-copy>複製</button><div class="hd">答對時</div><span class="k">假設</span>玩家已讀過訪查報告一，
+<span class="k">當</span>他把紅格的開關都拉上、白格都壓下，按「拉開」，
+<span class="k">那麼</span>寶箱打開，出現第一顆珍珠。</div><div class="code r" style="margin-top:0;font-size:14px"><button class="copy" data-copy>複製</button><div class="hd">答錯、亂試時</div><span class="k">假設</span>玩家已讀過訪查報告一，
+<span class="k">當</span>他有一個開關扳錯，按「拉開」，
+<span class="k">那麼</span>寶箱打不開、晃一下，不說錯在哪一個。</div><div class="code r" style="margin-top:0;font-size:14px"><button class="copy" data-copy>複製</button><div class="hd">提示</div><span class="k">假設</span>玩家拉了 3 次都打不開，
+<span class="k">當</span>他按「提示」，
+<span class="k">那麼</span>先顯示「面板上的格子有紅有白」；再按一次，才顯示「再讀一次報告一」。</div></div>
 </div>
 </div></section>
 
@@ -521,21 +521,37 @@ section.in .r:nth-child(2){transition-delay:.12s}section.in .r:nth-child(3){tran
 </div></section>
 
 <!-- 14 -->
+<section id="w1"><div class="wrap">
+<span class="badge r">示範</span>
+<h2 class="r" style="margin-top:16px">用工作台，把知識點拆成機關</h2>
+<p class="lead r" style="margin-bottom:14px">以自然科「紫色高麗菜汁遇酸變紅、遇鹼變綠」為例，跟著工作台的五個步驟。</p>
+<table class="r tight" style="font-size:15px"><tr><th style="width:150px">步驟</th><th style="width:300px">工作台問你</th><th>這個例子怎麼填</th></tr>
+<tr><td><b>① 選一條線</b></td><td>做成單一機關，還是整個密室？</td><td>單一機關：一個 HTML 檔</td></tr>
+<tr><td><b>② 基本資料</b></td><td>知識點、教學定位、玩家得到的改變（三項必填）</td><td>菜汁指示劑的顏色變化；練習應用；能看顏色判斷溶液是酸還是鹼</td></tr>
+<tr><td><b>③ 設計細節</b></td><td>用六問挑玩法：「這個原理，能讓什麼隱藏的訊息現形？」</td><td>操作：五杯透明溶液，滴菜汁後變色，依序點出酸性的杯子</td></tr>
+<tr><td><span class="pill o">行為</span><b>答對／答錯時</b></td><td>機關本身怎麼動？</td><td>答對：保險箱打開。答錯：那一杯閃紅，提示「再對照一次顏色表」</td></tr>
+<tr><td><span class="pill o">行為</span><b>意外操作</b></td><td>用三句話寫你擔心的亂玩</td><td>假設玩家沒滴菜汁，當他直接猜杯子，那麼不給判定，提示「先滴滴看」</td></tr>
+<tr><td><b>④ 產生提示詞</b></td><td>選 BDD 情境式，複製</td><td>貼給你用的 AI，拿到 HTML</td></tr>
+<tr><td><b>⑤ 貼回檢查</b></td><td>貼回程式碼，預覽、檢查</td><td>自己玩一遍，沒問題就上傳到 GitHub</td></tr>
+</table>
+<div class="row r" style="margin-top:16px"><a class="go-btn b" href="https://chrischou0807.github.io/escape/workbench/" target="_blank" rel="noopener">開啟工作台 ↗</a></div>
+</div></section>
+
 <section id="s14"><div class="wrap">
 <p class="eyebrow r">實作第二版 · 15:35–16:05</p>
 <h2 class="r">寫出行為，更新到 GitHub</h2>
-<p class="lead r" style="margin-bottom:14px">先把三句話和第一版的程式碼一起貼給 AI，拿到新的程式碼後，照下面四步更新。網址不變，玩家重新整理就是第二版。</p>
+<p class="lead r" style="margin-bottom:14px">把三句話和第一版的程式碼一起貼給 AI，拿到新的檔案後，上傳同一個檔名取代舊的。網址不變，玩家重新整理就是第二版。</p>
 <div class="grid g4">
-<div class="card r" style="padding:18px"><div class="no">01</div><h3>點開檔案</h3><p>進到 repo，點要改的檔案。</p>
-<div class="gh"><div class="t">escape</div><div style="border-top:1px solid #d0d7de;padding-top:6px">📁 pearl<br><span class="hl">📄 lock.html</span><br>📄 README.md</div></div></div>
-<div class="card r" style="padding:18px"><div class="no">02</div><h3>按鉛筆編輯</h3><p>檔案右上角的鉛筆圖示。</p>
-<div class="gh"><div style="display:flex;justify-content:space-between;align-items:center"><b>lock.html</b><span class="hl" style="padding:0 4px">✏️</span></div><div class="f" style="font-family:monospace;font-size:11px;margin-top:8px">&lt;!DOCTYPE html&gt;<br>&lt;html lang="zh-Hant"&gt;…</div></div></div>
-<div class="card r" style="padding:18px"><div class="no">03</div><h3>整份換掉，Commit</h3><p>全選刪除，貼上新程式碼，按 Commit changes，寫一句這版改了什麼。</p>
-<div class="gh"><div class="f" style="font-family:monospace;font-size:11px">（貼上新的程式碼）</div>Commit message<div class="f hl">第二版：答錯時寶箱晃一下</div><span class="gb">Commit changes</span></div></div>
-<div class="card r" style="padding:18px"><div class="no">04</div><h3>看歷程、比兩版</h3><p>按 History，點一筆紀錄，看改了哪幾行。</p>
+<div class="card r" style="padding:18px"><div class="no">01</div><h3>存成同一個檔名</h3><p>新程式碼存檔時，檔名和第一版一模一樣。電腦自動存成 lock (1).html 的話，先改回來。</p>
+<div class="gh"><div class="t">下載</div>📄 lock.html <span style="color:#59636e">（第一版）</span><br><span class="hl">📄 lock.html</span> <span style="color:#1f883d">（第二版）</span><div style="margin-top:6px;font-size:11px;color:#59636e">檔名一樣，才會取代</div></div></div>
+<div class="card r" style="padding:18px"><div class="no">02</div><h3>Upload files</h3><p>進到 repo，按 Add file → Upload files。</p>
+<div class="gh"><div class="t">escape</div><span class="f hl" style="display:inline-block">Add file ▾ · Upload files</span><div style="margin-top:6px">📄 lock.html</div></div></div>
+<div class="card r" style="padding:18px"><div class="no">03</div><h3>拖進去，Commit</h3><p>拖進新檔案，寫一句這版改了什麼，按 Commit changes。</p>
+<div class="gh"><div class="drop" style="margin-top:0">📄 lock.html</div>Commit message<div class="f hl">第二版：答錯時寶箱晃一下</div><span class="gb">Commit changes</span></div></div>
+<div class="card r" style="padding:18px"><div class="no">04</div><h3>看歷程、比兩版</h3><p>點開檔案按 History，點一筆紀錄，看改了哪幾行。</p>
 <div class="gh"><b class="hl" style="padding:0 4px">🕘 History</b><div style="margin-top:6px;border-top:1px solid #d0d7de;padding-top:4px">● 第二版：答錯時寶箱晃一下<br>● 第一版</div><div style="font-family:monospace;font-size:11px;margin-top:6px"><span style="background:#ffebe9">- alert("錯誤")</span><br><span style="background:#dafbe1">+ box.classList.add("shake")</span></div></div></div>
 </div>
-<p class="small r">另一種做法：Add file → Upload files，上傳同檔名的新檔案，會直接取代舊的。畫面為示意，貼上 Padlet 時把「第一版」改成「第二版」。</p>
+<p class="small r">另一種做法：點開檔案、按右上角鉛筆，全選刪除後貼上新程式碼再 Commit。畫面為示意；貼上 Padlet 時把「第一版」改成「第二版」。</p>
 </div></section>
 
 <!-- 15 -->
