@@ -255,7 +255,7 @@ var SELF=[
  ["玩家卡住時，有辦法在不破壞遊戲的情況下得到幫助嗎？","答「有」才通過","pos"],
  ["玩家進來時不會這個知識的話，有任何管道得到它嗎？（練習應用可答「不適用」）","答「有」或「不適用」才通過","pos"]];
 var MANUAL=["用手機實際點一遍，每個按鈕都能按到、不會誤觸。","故意答錯幾次，看回饋有沒有說明哪裡不對。","亂點、連點、亂拖，看能不能不懂就過關。","重新開始一次，看狀態有沒有清乾淨。","請一位沒看過的人玩，不要先講規則，看他卡在哪。"];
-var HOSTED=/github\.io$/.test(location.hostname);var U=HOSTED?"../":"https://chrischou0807.github.io/escape/";
+var EXTRA={arscan:"arscan_target.jpg 辨識圖，要放在同一個資料夾"};var HOSTED=/github\.io$/.test(location.hostname);var U=HOSTED?"../":"https://chrischou0807.github.io/escape/";
 var EX=[
 {id:"lock",no:"01",name:"密碼鎖",play:"解謎",gate:"零門檻",ok:1,what:"轉動 3～4 個轉盤對出密碼，按開鎖。錯 3 次鎖定 60 秒。",suit:"當「出口」：密碼由別的知識機關產出。轉盤字集可自訂（數字、英文、東西南北、★●▲），所以能做方向鎖、字母鎖、符號鎖。",care:"它只檢查「知道密碼」，本身不測任何能力。密碼若直接寫在海報上，知識就只是裝飾。",up:"讓密碼的每一位，都要靠不同的知識機關才拿得到。",struct:"3 或 4 個轉盤；每個轉盤可選數字／英文／數字加英文／自訂字集；各轉盤的答案；開鎖後揭示圖片與說明文字；錯誤次數上限與鎖定；音效；提示；後台密碼；分享連結。"},
 {id:"morse",kw:"摩斯",no:"02",name:"摩斯密碼燈",play:"解謎",gate:"一般",ok:1,what:"燈或聲音閃出摩斯碼，玩家解碼後輸入答案。",suit:"編碼與解碼、長短信號的比例（點 1：劃 3）、查對照表的規則。關掉對照表，就變成「要先會摩斯」。",care:"對照表開著時，只是查表抄寫。訊息只支援 A–Z 與 0–9。",up:"把對照表當成另一個機關的獎勵，讓玩家先去取得。",struct:"一段訊息（英數字）；播放方式（閃光、聲音或兩者）；速度；是否循環；對照表按鈕開關；成功後文字或圖片；提示；分享連結。"},
@@ -703,13 +703,19 @@ function renderEx(){var plays=["全部","操作","探索","解謎","競爭","選
   var q=x.ok===1?"":"";
   h+='<div class="card ex" id="ex_'+x.id+'"><h3>'+x.no+' '+esc(x.name)+'<span class="tag">'+esc(x.play)+'</span><span class="tag">'+esc(x.form||"")+'</span><span class="tag">門檻：'+esc(x.gate)+'</span>'+(x.loc?'<span class="tag">新增</span>':(x.ok?'':'<span class="tag">依說明整理</span>'))+'</h3>'
    +'<p class="note" style="margin:4px 0 0">'+esc(x.what)+'</p><dl><dt>適合承載什麼</dt><dd>'+esc(x.suit)+'</dd><dt>要小心</dt><dd>'+esc(x.care)+'</dd><dt>怎麼升級成「判定等於能力」</dt><dd>'+esc(x.up)+'</dd></dl>'
-   +'<div class="acts"><button class="btn" data-play="'+x.id+'">▶ 在這裡試玩</button><button class="btn g" data-new="'+x.id+'">新分頁開啟 ↗</button><button class="btn" data-copy="'+x.id+'">複製提示詞</button><button class="btn g" data-base="'+x.id+'">用它當基礎</button><span class="note cpmsg" style="align-self:center;margin:0"></span></div></div>'});
+   +'<div class="acts"><button class="btn" data-play="'+x.id+'">▶ 在這裡試玩</button><button class="btn g" data-new="'+x.id+'">新分頁開啟 ↗</button><button class="btn" data-copy="'+x.id+'">複製提示詞</button><button class="btn g" data-base="'+x.id+'">用它當基礎</button><button class="btn g" data-dl="'+x.id+'">下載 HTML</button><span class="note cpmsg" style="align-self:center;margin:0"></span></div></div>'});
  $("exQN").textContent=exPick?"精選 10 款：涵蓋六大玩法，研習時先看這些。再按一次回到全部。":(exQ?"找到 "+cnt+" 款。":"共 "+EX.length+" 款。不知道從哪開始，就按「先看這 10 款」。");$("exPickBtn").className=exPick?"btn":"btn g";
  var pd=PLAY.filter(function(q){return q.name===exFilter})[0];
  $("exDef").innerHTML=pd?'<b>'+esc(pd.name)+'</b>：'+esc(pd.d)+'<div class="note" style="margin:6px 0 0">判定：'+esc(pd.j)+'</div><div class="note" style="margin:6px 0 0">例：'+exChips(pd.ex)+'</div>':'<b>全部</b>：六種玩法由「玩家要做什麼」區分。點上面任一種，看它的定義與判定。一款機關可以同時是兩種玩法（例如拆炸彈＝競爭＋解謎）。';
  var fd=FORMS.filter(function(f){return f.n===formFilter})[0];if(fd){$("exDef").innerHTML+='<div class="note" style="margin:8px 0 0;border-top:1px solid var(--line);padding-top:8px"><b>形式：'+esc(fd.n)+'</b>　'+esc(fd.d)+'</div>'}
  if(formFilter&&!h)h='<div class="card note">這個形式目前還沒有範例。</div>';
  $("exList").innerHTML=h;
+ Array.prototype.forEach.call($("exList").querySelectorAll("[data-dl]"),function(b){b.onclick=function(){var x=EX.filter(function(e){return e.id===b.dataset.dl})[0];
+  var url=x.loc?(HOSTED?"ex/"+x.id+".html":U+"workbench/ex/"+x.id+".html"):U+x.id+"/index.html",name=x.id+".html";
+  var msg=b.parentNode.querySelector(".cpmsg");msg.textContent="下載中……";
+  fetch(url).then(function(r){if(!r.ok)throw 0;return r.blob()}).then(function(bl){var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([bl],{type:"text/html"}));a.download=name;document.body.appendChild(a);a.click();a.remove();
+    msg.textContent="已下載 "+name+(EXTRA[x.id]?"（這款還要另外下載："+EXTRA[x.id]+"）":"")+"。上傳到 GitHub 就能用。"})
+  .catch(function(e){if(e)console.error(e);msg.textContent="下載失敗，請改按「新分頁開啟」，再用瀏覽器「另存網頁」。"})}});
  Array.prototype.forEach.call($("exList").querySelectorAll("[data-new]"),function(b){b.onclick=function(){var x=EX.filter(function(e){return e.id===b.dataset["new"]})[0];
   if(!x.loc){window.open(U+x.id+"/","_blank");return}
   if(HOSTED){window.open("ex/"+x.id+".html","_blank");return}
