@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>相鄰吸附拼圖</title>
+<style>
+:root{--bg:#1c2128;--card:#242a32;--line:#ffffff18;--ink:#e7e3da;--dim:#9aa1a9;--brass:#d9b878;--ok:#7fce9b;--bad:#e8857a}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;min-height:100%;background:radial-gradient(120% 90% at 50% 10%,#29313a,var(--bg) 50%,#161a20);color:var(--ink);font-family:"PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;user-select:none;-webkit-user-select:none}
+.wrap{max-width:560px;margin:0 auto;padding:18px 14px 40px;display:flex;flex-direction:column;align-items:center;gap:12px}
+.eb{color:var(--brass);font-size:12px;letter-spacing:3px}
+h1{margin:0;font-size:22px}
+.intro{color:var(--dim);font-size:14px;line-height:1.7;text-align:center;max-width:470px}
+.msg{min-height:24px;font-size:16px;text-align:center}
+.msg.ok{color:var(--ok)}.msg.bad{color:var(--bad)}
+button{font:inherit;font-weight:700;border:0;border-radius:999px;padding:10px 18px;background:var(--brass);color:#2b2010;cursor:pointer}
+button.g{background:#ffffff1a;color:var(--ink)}
+input{font:inherit;font-size:18px;padding:9px 12px;border-radius:10px;border:1px solid var(--line);background:#0f1216;color:var(--ink);width:150px;text-align:center;letter-spacing:4px}
+.row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;align-items:center}
+.shake{animation:shk .4s}@keyframes shk{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
+.note{font-size:12px;color:var(--dim);text-align:center;line-height:1.6;max-width:470px}
+
+.table{position:relative;width:340px;height:440px;border-radius:14px;background:#2f4a3f;overflow:hidden;touch-action:none}
+.pc{position:absolute;cursor:grab;touch-action:none;box-shadow:0 3px 8px #0007;background-repeat:no-repeat}
+.pc.sel{box-shadow:0 0 0 3px #ffd54a}
+
+</style>
+</head>
+<body><div class="wrap">
+<div class="eb">機關範例</div>
+<h1>相鄰吸附拼圖</h1>
+<div class="intro">碎片散在桌上，不用放到指定位置。兩塊本來相鄰的碎片靠近時會自動黏在一起，之後整組一起移動；全部連成一塊就完成。</div>
+
+<div class="table" id="tb"></div>
+<div class="row"><button class="g" id="again">重新打散</button></div>
+<div class="msg" id="msg"></div>
+<div class="note">老師設定：CONFIG.img 換成自己的圖片網址，CONFIG.n 是切成幾乘幾，CONFIG.snap 是吸附距離（像素）。（示範圖用程式畫的）</div>
+
+</div>
+<script>
+const $=id=>document.getElementById(id);
+function say(t,c){const m=$("msg");m.textContent=t;m.className="msg "+(c||"")}
+function shake(e){e.classList.remove("shake");void e.offsetWidth;e.classList.add("shake")}
+
+const CONFIG={img:"",n:3,snap:22};
+const N=CONFIG.n,SZ=240,S=SZ/N;
+function demoImg(){const c=document.createElement("canvas");c.width=c.height=SZ;const g=c.getContext("2d");const gr=g.createLinearGradient(0,0,SZ,SZ);gr.addColorStop(0,"#f6c453");gr.addColorStop(1,"#e0603c");g.fillStyle=gr;g.fillRect(0,0,SZ,SZ);
+  g.fillStyle="#fff";g.beginPath();g.arc(SZ/2,SZ/2-10,58,0,7);g.fill();g.fillStyle="#2f4a3f";g.font="bold 46px sans-serif";g.textAlign="center";g.fillText("珍珠",SZ/2,SZ/2+6);g.font="bold 22px sans-serif";g.fillStyle="#fff";g.fillText("PEARL",SZ/2,SZ-26);return c.toDataURL()}
+const url=CONFIG.img||demoImg(),tb=$("tb"),pcs=[],pos=[],grp=[];let z=10,drag=null,done=false;
+const col=i=>i%N,row=i=>Math.floor(i/N),mem=g=>pcs.map((_,i)=>i).filter(i=>grp[i]===g);
+const set=(i,x,y)=>{pos[i]=[x,y];pcs[i].style.left=x+"px";pcs[i].style.top=y+"px"};
+for(let i=0;i<N*N;i++){const p=document.createElement("div");p.className="pc";p.style.cssText+="width:"+S+"px;height:"+S+"px;background-image:url("+url+");background-size:"+SZ+"px "+SZ+"px;background-position:-"+col(i)*S+"px -"+row(i)*S+"px";tb.appendChild(p);pcs.push(p);
+  p.addEventListener("pointerdown",e=>{if(done)return;e.preventDefault();p.setPointerCapture(e.pointerId);const ms=mem(grp[i]);z++;ms.forEach(m=>{pcs[m].style.zIndex=z;pcs[m].classList.add("sel")});drag={i,ms,sx:e.clientX,sy:e.clientY,st:ms.map(m=>pos[m].slice())}});
+  p.addEventListener("pointermove",e=>{if(!drag||drag.i!==i)return;const dx=e.clientX-drag.sx,dy=e.clientY-drag.sy;drag.ms.forEach((m,j)=>set(m,drag.st[j][0]+dx,drag.st[j][1]+dy))});
+  const drop=()=>{if(!drag||drag.i!==i)return;drag.ms.forEach(m=>pcs[m].classList.remove("sel"));drag=null;let again=true;
+    while(again){again=false;const g=grp[i],mine=mem(g);
+      out:for(const m of mine)for(let q=0;q<N*N;q++){if(grp[q]===g)continue;const dc=col(q)-col(m),dr=row(q)-row(m);if(Math.abs(dc)+Math.abs(dr)!==1)continue;
+        const ex=pos[m][0]+dc*S,ey=pos[m][1]+dr*S;if(Math.hypot(pos[q][0]-ex,pos[q][1]-ey)<CONFIG.snap){const ox=pos[q][0]-ex,oy=pos[q][1]-ey;mine.forEach(t=>set(t,pos[t][0]+ox,pos[t][1]+oy));const og=grp[q];grp.forEach((v,t)=>{if(v===og)grp[t]=g});again=true;break out}}}
+    const n=mem(grp[i]).length;if(n===N*N){done=true;say("拼好了！","ok")}else if(n>1)say("黏住了（"+n+" 塊一組）");};
+  p.addEventListener("pointerup",drop);p.addEventListener("pointercancel",drop)}
+function shuffle(){done=false;say("");const W=340-S,H=440-S;pcs.forEach((p,i)=>{grp[i]=i;p.style.zIndex=1;set(i,Math.random()*W,Math.random()*H)})}
+$("again").onclick=shuffle;shuffle();
+
+</script>
+</body></html>
