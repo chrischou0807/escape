@@ -26,6 +26,7 @@ input{font:inherit;font-size:18px;padding:9px 12px;border-radius:10px;border:1px
 .dark{position:absolute;inset:0;background:rgba(5,5,12,.93);pointer-events:none}
 .lit{position:absolute;inset:0;pointer-events:none}
 .torch{position:absolute;width:90px;height:40px;cursor:grab;touch-action:none;z-index:5}
+.ring{position:absolute;border-radius:50%;border:2px solid #fff6c055;cursor:grab;touch-action:none;z-index:4}
 
 </style>
 </head>
@@ -38,11 +39,12 @@ input{font:inherit;font-size:18px;padding:9px 12px;border-radius:10px;border:1px
  <svg class="scene" id="s1" viewBox="0 0 340 440"></svg>
  <div class="dark"></div>
  <svg class="lit" id="s2" viewBox="0 0 340 440"></svg>
+ <div class="ring" id="ring"></div>
  <svg class="torch" id="torch" viewBox="0 0 90 40"><rect x="0" y="8" width="18" height="24" rx="4" fill="#ddd" stroke="#555" stroke-width="2"/><rect x="16" y="12" width="70" height="16" rx="6" fill="#c0392b" stroke="#555" stroke-width="2"/></svg>
 </div>
 <div class="row"><input id="ans" placeholder="數字" inputmode="numeric"><button id="go">送出</button></div>
 <div class="msg" id="msg"></div>
-<div class="note">老師設定：把場景圖換成自己的（亮、暗各一張，或同一張圖加暗色遮罩），CONFIG.answer 填答案、CONFIG.r 調光圈大小。光圈在手電筒前方。（示範答案：364）</div>
+<div class="note">老師設定：把場景圖換成自己的（亮、暗各一張，或同一張圖加暗色遮罩），CONFIG.answer 填答案、CONFIG.r 調光圈大小。拖手電筒或光圈都可以移動，光圈可以照到畫面每個角落。（示範答案：364）</div>
 
 </div>
 <script>
@@ -62,11 +64,16 @@ const hidden='<text x="170" y="34" font-size="34" font-weight="700" fill="#fff8d
  +'<text x="40" y="390" font-size="34" font-weight="700" fill="#fff8d0">4</text>'
  +'<text x="180" y="300" font-size="12" fill="#fff8d0" text-anchor="middle">由上往下讀</text>';
 $("s1").innerHTML=scene;$("s2").innerHTML=scene+hidden;
-const room=$("room"),t=$("torch");let tx=240,ty=380,d=null;
-function place(){t.style.left=tx+"px";t.style.top=ty+"px";const cx=tx-CONFIG.r+4,cy=ty+20,m="radial-gradient(circle "+CONFIG.r+"px at "+cx+"px "+cy+"px,#000 65%,transparent 100%)";$("s2").style.webkitMaskImage=m;$("s2").style.maskImage=m}
-t.addEventListener("pointerdown",e=>{e.preventDefault();t.setPointerCapture(e.pointerId);const r=room.getBoundingClientRect();d={x:e.clientX-r.left-tx,y:e.clientY-r.top-ty}});
-t.addEventListener("pointermove",e=>{if(!d)return;const r=room.getBoundingClientRect();tx=Math.max(0,Math.min(340-90,e.clientX-r.left-d.x));ty=Math.max(0,Math.min(440-40,e.clientY-r.top-d.y));place()});
-const up=()=>d=null;t.addEventListener("pointerup",up);t.addEventListener("pointercancel",up);place();
+const room=$("room"),t=$("torch"),ring=$("ring");let bx=250,by=360,d=null;
+// 光圈中心 (bx,by) 可以到房間任何地方；手電筒自動放在光圈靠房間中央的那一側
+function place(){const R=CONFIG.r,left=bx>170;
+  ring.style.cssText="left:"+(bx-R)+"px;top:"+(by-R)+"px;width:"+(2*R)+"px;height:"+(2*R)+"px";
+  t.style.left=(left?bx-R-86:bx+R-4)+"px";t.style.top=(by-20)+"px";t.style.transform=left?"scaleX(-1)":"";
+  const m="radial-gradient(circle "+R+"px at "+bx+"px "+by+"px,#000 65%,transparent 100%)";$("s2").style.webkitMaskImage=m;$("s2").style.maskImage=m}
+[t,ring].forEach(el=>{el.addEventListener("pointerdown",e=>{e.preventDefault();el.setPointerCapture(e.pointerId);const r=room.getBoundingClientRect();d={el,x:e.clientX-r.left-bx,y:e.clientY-r.top-by}});
+  el.addEventListener("pointermove",e=>{if(!d||d.el!==el)return;const r=room.getBoundingClientRect();bx=Math.max(0,Math.min(340,e.clientX-r.left-d.x));by=Math.max(0,Math.min(440,e.clientY-r.top-d.y));place()});
+  const up=()=>d=null;el.addEventListener("pointerup",up);el.addEventListener("pointercancel",up)});
+place();
 $("go").onclick=()=>{if($("ans").value.replace(/\s/g,"")===CONFIG.answer)say("答對了！","ok");else{shake($("ans"));say("不對，再照照看。","bad")}};
 
 </script>
