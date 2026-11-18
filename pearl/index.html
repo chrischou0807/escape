@@ -149,7 +149,7 @@ scene((sc,api)=>{
   const CX=69,CY=129,CW=507,CH=438;
   const cv=mk("canvas","scratch","left:"+CX+"px;top:"+CY+"px;width:"+CW+"px;height:"+CH+"px",sc);cv.width=CW;cv.height=CH;const g=cv.getContext("2d");
   g.fillStyle="#3f5a4c";g.fillRect(0,0,CW,CH);
-  const cloth=new Image();cloth.onload=()=>{const k=cloth.naturalWidth/1200;g.globalCompositeOperation="source-over";g.drawImage(cloth,(CX-2)*k,CY*k,CW*k,CH*k,0,0,CW,CH)};
+  const cloth=new Image();cloth.onload=()=>{const k=cloth.naturalWidth/1200;g.globalCompositeOperation="source-atop";g.drawImage(cloth,(CX-2)*k,CY*k,CW*k,CH*k,0,0,CW,CH)};
   cloth.src=src("625c34165bc367001879284f/a9e9bb79-ba6b-4fc1-9493-07d98cd5c1e5.png");
   mk("div","","position:absolute;left:69px;top:88px;font-size:22px;color:#444;z-index:5",sc).textContent="用手指刮刮看布上的銅壺筆。";
   let down=false;const pt=e=>{const r=cv.getBoundingClientRect(),t=e.touches?e.touches[0]:e;return[(t.clientX-r.left)*CW/r.width,(t.clientY-r.top)*CH/r.height]};
