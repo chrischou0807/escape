@@ -48,7 +48,7 @@ button{font:inherit;font-size:16px;font-weight:700;border:0;border-radius:999px;
 <li>按下方按鈕，允許使用相機。</li>
 <li>讓整封信都進入鏡頭，看看具有魔法的人能看見什麼。</li>
 </ol>
-<p style="font-size:13px">第一次開啟時，手機要先「學會」這封信，需要幾秒鐘。</p>
+<p style="font-size:13px">第一次開啟時，手機要先「學會」這封信，大約需要半分鐘；之後同一支手機會記住，不用再等。</p>
 <button class="main" id="start">開啟魔法 AR</button>
 </div></div>
 
@@ -84,8 +84,15 @@ $("help").onclick=()=>showFallback(started?"看不到嗎？這是信紙在魔法
 
 function loadImg(src){return new Promise((ok,no)=>{const i=new Image();i.onload=()=>ok(i);i.onerror=()=>no(new Error("圖片載入失敗："+src));i.src=src})}
 
+const DB="mindar-cache",KEY="letter-v1";
+function idb(mode,fn){return new Promise((ok,no)=>{let r;try{r=indexedDB.open(DB,1)}catch(e){return no(e)}r.onupgradeneeded=()=>r.result.createObjectStore("t");r.onerror=()=>no(r.error);r.onsuccess=()=>{const tx=r.result.transaction("t",mode),st=tx.objectStore("t"),q=fn(st);tx.oncomplete=()=>ok(q&&q.result);tx.onerror=()=>no(tx.error)}})}
+const cacheGet=()=>idb("readonly",st=>st.get(KEY)).catch(()=>null);
+const cachePut=buf=>idb("readwrite",st=>st.put(buf,KEY)).catch(()=>null);
+let compiled=null;
 async function getTargetUrl(){
   try{const r=await fetch(CONFIG.mind);if(r.ok)return URL.createObjectURL(await r.blob())}catch(e){}
+  const cached=await cacheGet();
+  if(cached){compiled=cached;return URL.createObjectURL(new Blob([cached]))}
   say("第一次使用，正在學習這封邀請信……");
   const m=await import("https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image.prod.js");
   const Compiler=m.Compiler||(window.MINDAR&&window.MINDAR.IMAGE&&window.MINDAR.IMAGE.Compiler);
@@ -94,6 +101,8 @@ async function getTargetUrl(){
   const c=new Compiler();
   await c.compileImageTargets([img],p=>say("正在學習這封邀請信…… "+Math.round(p)+"%"));
   const buf=await c.exportData();
+  compiled=buf;cachePut(buf);
+  if(/[?&]export=1/.test(location.search)){const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([buf]));a.download="letter.mind";a.textContent="下載 letter.mind";a.style.cssText="position:fixed;left:50%;top:40%;transform:translateX(-50%);z-index:40;background:#d9b878;color:#2b2010;padding:14px 22px;border-radius:999px;font-weight:700;text-decoration:none";document.body.appendChild(a)}
   return URL.createObjectURL(new Blob([buf]));
 }
 
