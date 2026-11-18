@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>找尋千島珍珠</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;background:#1d1a17;overflow:hidden;font-family:"PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif}
+#wrap{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+#stage{position:relative;width:1200px;height:675px;transform-origin:center center;background:#fff;overflow:hidden;flex:none;user-select:none;-webkit-user-select:none}
+.scene{position:absolute;inset:0;display:none}
+.scene.on{display:block}
+.scene img{position:absolute;pointer-events:none;-webkit-user-drag:none}
+.hit{position:absolute;cursor:pointer;z-index:500}
+.btn{position:absolute;z-index:600;border:0;border-radius:999px;background:#3e4347e6;color:#fff;font:700 22px/1 inherit;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 10px #0004}
+.btn:active{transform:scale(.95)}
+.hide{display:none!important}
+.pop{animation:pop .6s ease-out}
+@keyframes pop{0%{transform:scale(.3);opacity:0}70%{transform:scale(1.08)}100%{transform:scale(1);opacity:1}}
+.glow{filter:drop-shadow(0 0 18px #fff6b0)}
+.shake{animation:shk .4s}
+@keyframes shk{20%,60%{translate:-10px 0}40%,80%{translate:10px 0}}
+.toast{position:absolute;left:50%;top:22px;translate:-50% 0;z-index:900;background:#000c;color:#fff;font-size:22px;padding:10px 22px;border-radius:999px;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
+.toast.on{opacity:1}
+.hint{position:absolute;right:16px;bottom:16px;z-index:700;background:#ffffffd9;color:#333;border:0;border-radius:999px;padding:8px 16px;font-size:18px;cursor:pointer}
+.hintbox{position:absolute;right:16px;bottom:64px;z-index:700;max-width:420px;background:#fffbe6;border:2px solid #e6c766;border-radius:14px;padding:12px 16px;font-size:20px;line-height:1.6;color:#4a3a10;display:none}
+/* laptop */
+.key{position:absolute;z-index:520;border-radius:10px;border:1px solid silver;background:linear-gradient(135deg,#c9c9c9,#8d8d8d);color:#fff;font:700 24px/44px Arial,sans-serif;text-align:center;cursor:pointer}
+.key:active{filter:brightness(1.2)}
+.screen{position:absolute;z-index:520;display:flex;align-items:center;justify-content:center;font:700 30px/1 "Courier New",monospace;letter-spacing:6px;color:#f3c443;text-shadow:0 0 8px #f3c44388}
+.pad{position:absolute;z-index:520;width:36px;height:36px;border-radius:7px;border:1px solid silver;background:linear-gradient(135deg,#d0d0d0,#8d8d8d);color:#fff;font:700 20px/36px Arial,sans-serif;text-align:center;cursor:pointer}
+.pad:active{filter:brightness(1.2)}
+canvas.scratch{position:absolute;z-index:300;touch-action:none;cursor:crosshair}
+/* jigsaw */
+.pc{position:absolute;z-index:400;background-repeat:no-repeat;cursor:pointer;outline:1px solid #fff8;transition:left .25s,top .25s}
+.pc.sel{outline:4px solid #ffd54a;z-index:410}
+.wheel{position:absolute;z-index:450;cursor:pointer;overflow:hidden}
+.wheel img{position:static!important;width:100%;height:100%}
+#rot{position:fixed;inset:0;z-index:99;background:#1d1a17;color:#f1e8d8;display:none;align-items:center;justify-content:center;text-align:center;font-size:20px;line-height:1.8;padding:30px}
+@media (orientation:portrait) and (max-width:700px){#rot{display:flex}}
+#rot button{margin-top:10px;font:inherit;border:0;border-radius:999px;padding:8px 18px;background:#d9b878}
+.modal{position:absolute;inset:0;z-index:950;background:#000a;display:none;align-items:center;justify-content:center}
+.modal.on{display:flex}
+.modal .box{background:#fff;padding:20px;border-radius:12px;max-width:80%;max-height:85%;overflow:auto;text-align:center}
+.modal img{position:static!important;max-width:100%;max-height:520px}
+</style>
+</head>
+<body>
+<div id="rot"><div>建議把手機<b>轉成橫向</b>，或用電腦遊玩。<br><button onclick="this.parentNode.parentNode.style.display='none'">直接玩</button></div></div>
+<div id="wrap"><div id="stage"><div class="toast" id="toast"></div><div class="modal" id="modal"><div class="box" id="mbox"></div></div></div></div>
+<script>
+/* 原作：劉宛純〈找尋千島珍珠〉（Genially）。圖片沿用原作素材。 */
+const G="https://compressed-images.genially.com/img/";
+const P={ // 素材路徑
+ cover:"625c34165bc367001879284f/9e8abfe5-830a-4f0b-9ce9-09622b844418.png",
+ grid:"625c34165bc367001879284f/8c0f3783-5f63-4644-bc0b-585bcc79164b.jpeg",
+ pKeris:"625c34165bc367001879284f/018fc5a8-1e81-4ccb-b8f7-e9c478586b93.png",
+ pBatik:"625c34165bc367001879284f/8544f0d7-3d9e-456b-a95d-d7fc199d0996.png",
+ pAngk:"625c34165bc367001879284f/c3433f1d-fb9c-4123-a6f9-ebb29a63ffc7.png",
+ pKecak:"625c34165bc367001879284f/63d470bc-e09d-4a64-b554-1750c284392e.png",
+ swDown:"6218e9d051341d0011a34e0e/e3b71289-1e4e-4605-9c22-801e732333ea.png",
+ swUp:"6218e9d051341d0011a34e0e/5945f9fa-cf64-4831-ab64-edc8c9dc8499.png"
+};
+const LET=["f51826a6-8982-43b5-b987-9101fb667d65","d59dec7f-227a-44ef-826a-c8ae224328e7","6bd5e133-7596-4f4f-9746-4cf6e745fbdc","9397b286-a8e2-4feb-852d-cd7e342deec0","9894e132-ed00-404f-b9e6-0331378b0085","513684a3-f293-4ba5-b471-a84fae6b574b","5fc38f42-7ec7-4be0-bd74-be34f481bab6","d687388d-2f59-4cc8-baf5-c7d779b1e27a","13913aa0-c8c4-4214-b6cb-2f9190abb356","f4a7f6d8-6ac4-499c-96b4-34f53ab2eea9","2afa0963-0f3d-4f90-9448-92312c59f530","b5bc6b58-f295-4ad6-8a9e-288ab5412e4b","d84e7a53-a816-497e-9449-dcfd0655aa5d","d29ba81f-59f6-416e-bed6-4a0bcc33ba63","4c2cc7c8-e9d4-4810-81a7-9f59ca5dba08","2ad7ac1e-d788-4b09-be04-a860fb6cab50","badf0b32-dbcf-4446-bd12-746cba134490","a58c0a82-6bfb-45c4-82df-287fa6d67ab4","e4db1420-cca4-4df2-9394-fb38de627d6b","4ffeba22-2982-457a-b114-61038b33fcbf","3cb3d415-2e76-453d-a0b8-1ec2476d3157","83827032-cda9-4717-be0b-476984b6e5bb","49af978f-38d9-4a24-8c79-88f02653b46a","806b3462-0732-4f25-a1df-ddfb5e33e978","be7efe9b-d637-4633-abad-4b098ed04d1b","af3cbcf8-cc2e-4551-8851-57c40686612b"].map(s=>"5de3e5f6d118ca0fa8bc48ac/"+s+".png");
+const DIG=["d0f1fe55-c965-4cbc-864f-7c2b149d5666","e2b62921-6c9d-447c-8eac-35844ce94c04","a50a1b4c-b675-4468-9490-5fc9279fe562","247c1c0d-cbdd-4741-8ad3-262782942c61","5ecc7437-3844-4914-9eb1-72b0b3b6c666","513bd551-c987-41e0-a717-ecc85adab143","c263fbb3-8903-40ef-b0af-bd3e2d951926","c6444ddb-cd4d-48a9-afdf-aaf3aecafa4c","b8752180-3a80-4a76-b25d-e8d5ec5813b1"].map(s=>"5de3e5f6d118ca0fa8bc48ac/"+s+".png");
+const src=p=>p.startsWith("http")?p:G+p+"/format=webp";
+
+/* ===== 工具 ===== */
+const stage=document.getElementById("stage");
+function fit(){const s=Math.min(innerWidth/1200,innerHeight/675);stage.style.transform="scale("+s+")"}
+addEventListener("resize",fit);fit();
+let T=null;function toast(t,ms){const e=document.getElementById("toast");e.textContent=t;e.classList.add("on");clearTimeout(T);T=setTimeout(()=>e.classList.remove("on"),ms||1600)}
+function modal(html){document.getElementById("mbox").innerHTML=html;document.getElementById("modal").classList.add("on")}
+document.getElementById("modal").onclick=()=>document.getElementById("modal").classList.remove("on");
+function mk(tag,cls,css,parent){const e=document.createElement(tag);if(cls)e.className=cls;if(css)e.style.cssText=css;(parent||stage).appendChild(e);return e}
+function img(sc,p,x,y,w,h,r,z){const e=mk("img","","left:"+x+"px;top:"+y+"px;width:"+w+"px;height:"+h+"px;"+(r?"transform:rotate("+r+"deg);":"")+"z-index:"+(z||1),sc);e.src=src(p);e.alt="";e.draggable=false;return e}
+function hit(sc,x,y,w,h,fn,title){const e=mk("div","hit","left:"+x+"px;top:"+y+"px;width:"+w+"px;height:"+h+"px",sc);e.onclick=fn;if(title)e.title=title;return e}
+function btn(sc,x,y,w,h,label,fn,extra){const e=mk("button","btn","left:"+x+"px;top:"+y+"px;width:"+w+"px;height:"+h+"px;"+(extra||""),sc);e.innerHTML=label;e.onclick=fn;return e}
+function hintBtn(sc,lines){const b=mk("button","hint","",sc);b.textContent="💡 提示";const box=mk("div","hintbox","",sc);let n=0;b.onclick=()=>{n=Math.min(n+1,lines.length);box.innerHTML=lines.slice(0,n).map((l,i)=>"<div>"+(i+1)+". "+l+"</div>").join("");box.style.display="block";b.textContent=n<lines.length?"💡 再一個提示":"💡 提示"}}
+
+const scenes=[];let cur=0;
+function scene(build){const sc=mk("div","scene");const api={el:sc,enter:null};build(sc,api);scenes.push(api);return scenes.length-1}
+function go(i){scenes[cur].el.classList.remove("on");cur=i;scenes[i].el.classList.add("on");if(scenes[i].enter)scenes[i].enter();try{sessionStorage.setItem("pearl-scene",i)}catch(e){}}
+const next=()=>go(cur+1), back=()=>go(Math.max(0,cur-1));
+const navBack=sc=>btn(sc,12,558,52,52,"‹",back,"font-size:34px");
+const navNext=(sc,label)=>btn(sc,156,513,60,60,label||"›",next,"font-size:34px");
+
+/* 調查報告（筆記本）：先看到封面，點一下翻開 */
+function report(L){return scene((sc,api)=>{
+  L.base.forEach(a=>img(sc,...a));
+  const cover=L.cover.map(a=>img(sc,...a));
+  cover.forEach(e=>e.style.zIndex=300);
+  const open=hit(sc,300,0,820,675,()=>{cover.forEach(e=>e.classList.add("hide"));open.classList.add("hide")},"翻開報告");
+  api.enter=()=>{cover.forEach(e=>e.classList.remove("hide"));open.classList.remove("hide")};
+  if(L.back!==false)navBack(sc);navNext(sc,L.nextLabel);
+})}
+
+/* ===== 0 封面 ===== */
+scene(sc=>{img(sc,P.cover,-14,-6,1225,689);
+  btn(sc,519,470,160,52,"START&nbsp;›",next,"border-radius:8px;font-size:22px;letter-spacing:1px");
+  mk("div","","position:absolute;right:30px;bottom:22px;color:#e8b23a;font-size:18px",sc).textContent="製作 / 劉宛純";
+});
+
+/* ===== 1 訪查報告一 ===== */
+report({base:[["625c34165bc367001879284f/5b4167f5-f336-4783-8b25-1cae1a31d37a.png",725,9,376,634,0,2],
+  ["625c34165bc367001879284f/f85a19cc-beb4-4a73-be37-6dc7f628a46f.png",327,-24,398,675,0,3],
+  ["625c34165bc367001879284f/9e44ec51-fe3d-4aa6-a5cd-5dd93e2e9e72.png",17,157,340,340,0,4]],
+  cover:[["5ea4b72c1f18b00fbf2889bd/31365fe9-13e7-4c88-8e72-cf500e9d1f4e.png",348,24,377,630],["625c34165bc367001879284f/0099cbd8-3250-4160-a453-38d3a5d1a87d.png",725,-31,386,674]],
+  back:false,nextLabel:"🔒"});
+
+/* ===== 2 寶箱：八個開關 ===== */
+scene((sc,api)=>{
+  img(sc,P.grid,0,0,1200,675);
+  const closed=img(sc,"625c34165bc367001879284f/a10916a4-c435-46aa-9d05-abbfe4f91e06.png",423,320,608,335,0,2);
+  const lid=img(sc,"625c34165bc367001879284f/a614f58d-6b31-40e9-83d9-aa78f892e8d9.png",421,59,608,608,0,31);
+  const arrow=img(sc,"625c34165bc367001879284f/0c6c9d71-a4c9-43a5-9aed-fbdd9666c95c.png",118,370,193,198,-10.5,33);
+  const pearl=img(sc,"625c34165bc367001879284f/62f31fb3-6ffe-4b3f-9efe-de43c84dbffb.png",260,164,352,352,-34.2,47);
+  // 開關：0=壓下(白格) 1=拉起(紅格)；解答依面板顏色「上紅下白」
+  const POS=[[691,460],[691,499],[691,537],[691,578],[750,460],[750,499],[750,537],[750,578]];
+  const SOL=[0,1,0,1,1,0,0,1];
+  const st=POS.map(()=>0), sw=POS.map(([x,y])=>img(sc,P.swDown,x,y,32,27,0,20));
+  img(sc,"625c34165bc367001879284f/583e2d63-272d-4c01-aa5d-de61ac265059.png",666,436,133,186,0,36);
+  let solved=false;
+  POS.forEach(([x,y],i)=>hit(sc,x-6,y-5,44,38,()=>{if(solved)return;st[i]^=1;sw[i].src=src(st[i]?P.swUp:P.swDown);
+    if(st.every((v,k)=>v===SOL[k])){solved=true;closed.classList.add("hide");[lid,arrow,pearl].forEach(e=>{e.classList.remove("hide");e.classList.add("pop")});ph.classList.remove("hide");toast("寶箱打開了！點珍珠收下它")}}));
+  const ph=hit(sc,250,150,370,370,next,"收下珍珠");
+  api.enter=()=>{if(!solved){[lid,arrow,pearl,ph].forEach(e=>e.classList.add("hide"))}};
+  navBack(sc);
+  hintBtn(sc,["開關有兩種狀態：拉起來、壓下去。","面板上的格子有紅、有白。","再讀一次訪查報告一：國旗「上紅下白」。","紅格拉起來，白格壓下去。"]);
+});
+
+/* ===== 3 訪查報告二 ===== */
+report({base:[["625c34165bc367001879284f/8741a4b6-d206-4428-9c02-f02a020b5205.png",725,4,373,629,0,1],
+  ["625c34165bc367001879284f/fffa56d7-e9b1-4198-a678-f3c54e6132d2.png",295,-20,478,677,0,16],
+  [P.pKeris,158,199,123,123,0,20]],
+  cover:[["625c34165bc367001879284f/edc7758a-53bb-4480-85c4-d40a2c2cd95e.png",332,-23,404,686],["625c34165bc367001879284f/736229e1-d30a-469a-9968-2fb950b4019d.png",725,4,362,633]]});
+
+/* ===== 4 蠟染：刮開 + 筆電輸入 ===== */
+scene((sc,api)=>{
+  img(sc,"625c34165bc367001879284f/a9e9bb79-ba6b-4fc1-9493-07d98cd5c1e5.png",2,0,1200,675,0,2);
+  img(sc,"625c34165bc367001879284f/bf24d97a-6176-4230-a832-9805a44ca563.png",595,178,594,471,0,10);
+  // 刮刮層：蓋住左邊的蠟染布
+  const cv=mk("canvas","scratch","left:60px;top:120px;width:530px;height:450px",sc);cv.width=530;cv.height=450;const g=cv.getContext("2d");
+  function wax(){g.globalCompositeOperation="source-over";const gr=g.createLinearGradient(0,0,530,450);gr.addColorStop(0,"#e9c24a");gr.addColorStop(1,"#c9962a");g.fillStyle=gr;g.fillRect(0,0,530,450);
+    for(let i=0;i<260;i++){g.fillStyle="rgba(255,240,180,"+(Math.random()*.25)+")";g.beginPath();g.arc(Math.random()*530,Math.random()*450,4+Math.random()*16,0,7);g.fill()}
+    g.fillStyle="#6b4a10";g.font="bold 30px sans-serif";g.textAlign="center";g.fillText("用手指刮掉蠟",265,225)}
+  wax();
+  let down=false;const pt=e=>{const r=cv.getBoundingClientRect(),t=e.touches?e.touches[0]:e;return[(t.clientX-r.left)*530/r.width,(t.clientY-r.top)*450/r.height]};
+  const rub=e=>{if(!down)return;e.preventDefault();const[x,y]=pt(e);g.globalCompositeOperation="destination-out";g.beginPath();g.arc(x,y,26,0,7);g.fill()};
+  cv.addEventListener("pointerdown",e=>{down=true;rub(e)});addEventListener("pointerup",()=>down=false);cv.addEventListener("pointermove",rub);
+  // 螢幕與鍵盤
+  const scr=mk("div","screen","left:794px;top:200px;width:174px;height:48px",sc);
+  const pearl=img(sc,"625c34165bc367001879284f/83b4dcd7-36b6-4ba9-a0ae-d9bcf83ca103.png",913,35,151,151,0,40);
+  const ph=hit(sc,913,35,151,151,next,"收下珍珠");
+  let typed="",solved=false;
+  const show=()=>{scr.textContent=typed||"_____";scr.style.color=""};
+  "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").forEach((c,i)=>{const col=i%7,row=Math.floor(i/7);const k=mk("div","key","left:"+(722+col*48)+"px;top:"+(331+row*48)+"px;width:44px;height:44px",sc);k.textContent=c;
+    k.onclick=()=>{if(solved||typed.length>=5)return;typed+=c;show();if(typed.length===5){
+      if(typed==="BATIK"){solved=true;scr.textContent="BATIK 正確";scr.style.color="#7fe39a";pearl.classList.remove("hide");pearl.classList.add("pop","glow");ph.classList.remove("hide");toast("答對了！點右上角的珍珠")}
+      else{scr.textContent="錯誤";scr.style.color="#ff7a6a";scr.classList.add("shake");setTimeout(()=>{scr.classList.remove("shake");typed="";show()},900)}}}});
+  const bk=mk("div","key","left:"+(722+5*48)+"px;top:"+(331+3*48)+"px;width:92px;height:44px;font-size:18px",sc);bk.textContent="⌫";bk.onclick=()=>{if(solved)return;typed=typed.slice(0,-1);show()};
+  api.enter=()=>{if(!solved){pearl.classList.add("hide");ph.classList.add("hide");typed="";show()}};
+  navBack(sc);
+  hintBtn(sc,["先把左邊的蠟刮掉，看看底下是什麼布。","布上的工具是畫蠟用的銅壺筆，這是印尼的「蠟染」。","蠟染的印尼語是五個英文字母，答案用鍵盤打在螢幕上。","答案：BATIK"]);
+});
+
+/* ===== 5 訪查報告三 ===== */
+report({base:[["625c34165bc367001879284f/0fa07f31-e236-4dee-9a3b-8a82100ba25b.png",725,4,373,629,0,1],
+  ["625c34165bc367001879284f/ee5fba09-9bdd-47d2-8812-d8876d422482.png",295,-20,478,677,0,16],
+  [P.pKeris,202,260,123,123,0,20],[P.pBatik,51,156,166,166,0,21]],
+  cover:[["625c34165bc367001879284f/c6ccb645-f357-4608-afbc-21c747f27657.png",329,-29,409,695],["625c34165bc367001879284f/119d5420-e6d0-45df-b825-85756a908e58.png",727,2,362,633]]});
+
+/* ===== 6 搖竹：保險箱密碼 ===== */
+scene((sc,api)=>{
+  img(sc,"625c34165bc367001879284f/ed5faa1e-2580-40ff-b27b-a64865ff2adb.jpeg",0,0,1204,677,0,1);
+  img(sc,"625c34165bc367001879284f/e2bb252c-327c-4e69-ba13-fb785e901306.png",125,350,195,276,31.1,2);
+  img(sc,"625c34165bc367001879284f/e2bb252c-327c-4e69-ba13-fb785e901306.png",526,50,195,276,-33.8,3);
+  const safe=img(sc,"625c34165bc367001879284f/e0f473b0-2a48-41d0-9a06-cefffddb37bf.png",801,267,379,399,0,4);
+  const opened=img(sc,"625c34165bc367001879284f/d72d2e55-7e94-4618-9699-4a8f2bd61c21.png",754,232,438,447,0,5);
+  const scr=mk("div","screen","left:930px;top:296px;width:120px;height:34px;font-size:24px;background:#10202a;border-radius:4px",sc);
+  let typed="",solved=false;const show=()=>{scr.textContent=typed;scr.style.color=""};
+  const keys=[];[["1",910,377],["2",960,377],["3",1009,377],["4",910,431],["5",960,431],["6",1009,431],["7",910,484],["8",960,484],["9",1009,484],["<",910,537],["0",960,537],["C",1009,537]].forEach(([c,x,y])=>{const k=mk("div","pad","left:"+x+"px;top:"+y+"px",sc);k.textContent=c;keys.push(k);
+    k.onclick=()=>{if(solved)return;if(c==="<")typed=typed.slice(0,-1);else if(c==="C")typed="";else if(typed.length<3)typed+=c;show();
+      if(typed.length===3){if(typed==="817"){solved=true;scr.textContent="開啟";scr.style.color="#7fe39a";setTimeout(()=>{safe.classList.add("hide");keys.forEach(k=>k.classList.add("hide"));scr.classList.add("hide");opened.classList.remove("hide");opened.classList.add("pop");ph.classList.remove("hide");toast("保險箱打開了！點珍珠收下它")},500)}
+        else{scr.textContent="錯誤";scr.style.color="#ff7a6a";scr.classList.add("shake");setTimeout(()=>{scr.classList.remove("shake");typed="";show()},900)}}}});
+  const ph=hit(sc,860,320,320,280,next,"收下珍珠");
+  api.enter=()=>{if(!solved){opened.classList.add("hide");ph.classList.add("hide");typed="";show()}};
+  navBack(sc);
+  hintBtn(sc,["這種竹製樂器叫「搖竹（Angklung）」，印尼國家慶典會演奏。","印尼的國家慶典是哪一天？","印尼的獨立紀念日是 8 月 17 日。","答案：817"]);
+});
+
+/* ===== 7 訪查報告四 ===== */
+report({base:[["625c34165bc367001879284f/84dc6271-4c92-4cfd-b870-dac1f02d9d0e.png",721,0,373,629,0,1],
+  ["625c34165bc367001879284f/669218ad-8170-4d82-836a-4402f38185f3.png",295,-20,478,677,0,16],
+  [P.pKeris,202,260,123,123,0,20],[P.pBatik,84,336,130,130,-10.1,21],[P.pAngk,65,167,136,136,0,22]],
+  cover:[["625c34165bc367001879284f/6e9f819a-4fc1-4fe8-969e-2c25a10cde1a.png",329,-29,409,695],["625c34165bc367001879284f/b1a66ef5-8197-4fe6-bacc-b1cf360772b0.png",727,0,362,633]]});
+
+/* ===== 8 拼圖：克差 ===== */
+scene((sc,api)=>{
+  img(sc,P.grid,0,0,1201,676,0,1);
+  const done=img(sc,"625c34165bc367001879284f/f4bcdc1c-d4ff-402f-9527-422619996ca7.png",601,203,586,331,0,2);
+  const ph=hit(sc,601,203,586,331,next,"拿起這個密碼筒");
+  const X=132,Y=123,W=453,N=3,S=W/N,url=src("625c34165bc367001879284f/c5e4c6e5-a75c-4bba-8eb0-4a2563e4cd58.jpeg");
+  const pcs=[];let order=[],sel=-1,solved=false;
+  for(let i=0;i<N*N;i++){const p=mk("div","pc","width:"+S+"px;height:"+S+"px;background-image:url('"+url+"');background-size:"+W+"px "+W+"px;background-position:-"+(i%N)*S+"px -"+Math.floor(i/N)*S+"px",sc);pcs.push(p);
+    p.onclick=()=>{if(solved)return;const slot=order.indexOf(i);if(sel<0){sel=slot;p.classList.add("sel");return}
+      const a=sel;sel=-1;pcs.forEach(q=>q.classList.remove("sel"));if(a===slot)return;[order[a],order[slot]]=[order[slot],order[a]];place();
+      if(order.every((v,k)=>v===k)){solved=true;pcs.forEach(q=>q.style.outline="none");setTimeout(()=>{done.classList.remove("hide");done.classList.add("pop");ph.classList.remove("hide");toast("拼好了！點右邊的密碼筒")},350)}}}
+  function place(){order.forEach((pi,slot)=>{pcs[pi].style.left=(X+(slot%N)*S)+"px";pcs[pi].style.top=(Y+Math.floor(slot/N)*S)+"px"})}
+  function shuffle(){do{order=[...Array(N*N).keys()].sort(()=>Math.random()-.5)}while(order.every((v,k)=>v===k));place()}
+  mk("div","","position:absolute;left:132px;top:84px;font-size:22px;color:#444;z-index:5",sc).textContent="點兩塊拼圖，交換位置。";
+  api.enter=()=>{if(!solved){done.classList.add("hide");ph.classList.add("hide");shuffle()}};
+  navBack(sc);
+});
+
+/* ===== 9 密碼筒：五個字母 ===== */
+scene((sc,api)=>{
+  img(sc,P.grid,0,1,1200,675,0,1);
+  img(sc,"625c34165bc367001879284f/5dfea01b-cbee-43fe-82c9-9625c88c0a03.png",144,71,201,201,-10.1,2);
+  const pearl=img(sc,"625c34165bc367001879284f/f3d354a6-ccb7-4df7-a532-c5be760b9093.png",736,188,157,157,0,60);
+  const ph=hit(sc,736,188,157,157,next,"收下珍珠");
+  const XS=[420,478,536,593,651],SOL=[10,4,2,0,10],st=[0,0,0,0,0];let solved=false;
+  const wheels=XS.map((x,i)=>{const w=mk("div","wheel","left:"+x+"px;top:307px;width:58px;height:263px",sc);const im=mk("img","","",w);im.src=src(LET[0]);im.draggable=false;
+    w.onclick=e=>{if(solved)return;const r=w.getBoundingClientRect();const up=(e.clientY-r.top)<r.height/2;st[i]=(st[i]+(up?25:1))%26;im.src=src(LET[st[i]]);
+      if(st.every((v,k)=>v===SOL[k])){solved=true;pearl.classList.remove("hide");pearl.classList.add("pop","glow");ph.classList.remove("hide");toast("密碼筒打開了！點珍珠收下它")}};return im});
+  mk("div","","position:absolute;left:400px;top:582px;width:330px;text-align:center;font-size:20px;color:#444;z-index:5",sc).textContent="點上半部往前、下半部往後轉";
+  api.enter=()=>{if(!solved){pearl.classList.add("hide");ph.classList.add("hide")}};
+  LET.forEach(p=>{const i=new Image();i.src=src(p)});
+  navBack(sc);
+  hintBtn(sc,["拼圖上寫的是什麼？","答案：KECAK"]);
+});
+
+/* ===== 10 訪查報告五 ===== */
+report({base:[["625c34165bc367001879284f/46594575-bc43-4665-9a2b-3441f73b9642.png",721,0,373,629,0,1],
+  ["625c34165bc367001879284f/d41a8d3c-8d54-4b86-a8a0-ed09e640ca1b.png",295,-20,478,677,0,16],
+  [P.pKeris,217,276,123,123,0,20],[P.pBatik,146,364,130,130,-10.1,21],[P.pAngk,50,222,136,136,0,22],[P.pKecak,147,103,138,138,0,23]],
+  cover:[["625c34165bc367001879284f/e6171c6d-0fa5-4e20-a4de-53d46db5b519.png",329,-29,409,695],["625c34165bc367001879284f/8eaab656-2147-4a65-b5e9-da9ad2be4d9a.png",732,2,362,633]]});
+
+/* ===== 11 皮影戲：手電筒 ===== */
+scene((sc,api)=>{
+  const dark=img(sc,"625c34165bc367001879284f/f8e5bf89-bd52-4c21-b743-9ed8bb7289ea.png",4,4,1196,673,0,2);
+  const lit=img(sc,"625c34165bc367001879284f/575d978c-00be-4ecd-a9db-24b972e35a46.png",4,4,1196,673,0,3);
+  img(sc,"625c34165bc367001879284f/96c98657-92cb-4b79-940d-1b60ba2a9de6.png",802,264,374,374,11.9,4);
+  let on=false;const set=()=>{dark.classList.toggle("hide",on);lit.classList.toggle("hide",!on)};
+  hit(sc,880,20,190,170,()=>{on=!on;set()},"手電筒");
+  hit(sc,820,300,340,300,next,"打開手提箱");
+  api.enter=()=>{on=false;set()};
+  navBack(sc);
+  hintBtn(sc,["皮影戲要有光，才看得到影子。","點右上角的手電筒，看看幕上多了什麼。","手提箱的密碼是三個數字。"]);
+});
+
+/* ===== 12 手提箱：三位數 ===== */
+scene((sc,api)=>{
+  const open=img(sc,"625c34165bc367001879284f/f55ac4c0-2832-413f-b7ea-80b9ec311e36.png",204,-4,765,672,0,36);
+  const pearl=img(sc,"625c34165bc367001879284f/74d62988-c721-484f-888f-f3bced6c775e.png",529,293,303,303,40.2,52);
+  const front=img(sc,"625c34165bc367001879284f/7df8b45f-7c28-4156-804f-103c606beb86.png",244,468,680,190,0,40);
+  const ph=hit(sc,540,300,280,280,next,"收下珍珠");
+  // 三個數字輪，放大顯示
+  const st=[0,0,0],SOL=[8,8,5];let solved=false;
+  const box=mk("div","","position:absolute;left:470px;top:150px;width:260px;height:250px;z-index:450;display:flex;gap:16px;justify-content:center;align-items:center;background:#3b2a1ccc;border-radius:16px;padding:10px",sc);
+  const ims=[0,1,2].map(i=>{const w=mk("div","wheel","position:relative;width:62px;height:224px;border-radius:6px",box);const im=mk("img","","",w);im.src=src(DIG[0]);
+    w.onclick=e=>{if(solved)return;const r=w.getBoundingClientRect();st[i]=(st[i]+((e.clientY-r.top)<r.height/2?8:1))%9;im.src=src(DIG[st[i]]);
+      if(st.every((v,k)=>v===SOL[k])){solved=true;setTimeout(()=>{box.classList.add("hide");front.classList.add("hide");open.classList.remove("hide");pearl.classList.remove("hide");pearl.classList.add("pop","glow");ph.classList.remove("hide");toast("手提箱打開了！點珍珠收下它")},400)}};return im});
+  mk("div","","position:absolute;left:400px;top:410px;width:400px;text-align:center;font-size:20px;color:#444;z-index:450",sc).textContent="手提箱的鎖：點上半部往前、下半部往後轉";
+  api.enter=()=>{if(!solved){open.classList.add("hide");pearl.classList.add("hide");ph.classList.add("hide")}};
+  DIG.forEach(p=>{const i=new Image();i.src=src(p)});
+  navBack(sc);
+  hintBtn(sc,["回到上一頁，打開手電筒。","答案：885"]);
+});
+
+/* ===== 13 大成功 ===== */
+scene((sc,api)=>{
+  img(sc,"625c34165bc367001879284f/8da2328c-1af8-48e1-9014-fbda8c061dbb.png",266,71,851,519,6.6,2);
+  [["00b9e1dd-6ca6-4899-8a7f-468b97b7fd9c",-27,221,467,467,0],["c362859c-dcc9-4460-9ba3-0e2622621a54",265,446,70,70,0],["0d346161-0471-4e1f-ad9b-52fe5163c31b",198,390,79,79,8.3],["1198eaa4-c4fb-4e35-a5a6-a5cd4f7a2422",195,472,70,70,0],["ace10cf3-9df5-41f9-8371-55e726444959",140,408,58,58,0],["4ea6b3f2-414c-4742-ba64-add8f7ff2d79",137,468,61,61,-16.8]].forEach(a=>img(sc,"625c34165bc367001879284f/"+a[0]+".png",a[1],a[2],a[3],a[4],a[5],10));
+  [["524227fc-2b0c-420d-bfb1-b2e536e11ce9",719,549,82,82,-14],["e732d79b-4bdd-4be9-898f-f5bbb9c397ff",607,561,75,75,0],["51a48e49-f4d9-4800-b7a4-88f5935f9564",489,530,94,76,0],["834ec1c9-aa93-4d17-b1bf-d370f8b901e2",656,514,92,82,12.9],["7bcac5f4-a11f-4397-8d94-d150e84c6a81",557,477,80,80,-14.3]].forEach(a=>img(sc,"625c34165bc367001879284f/"+a[0]+".png",a[1],a[2],a[3],a[4],a[5],20));
+  img(sc,"625c34165bc367001879284f/b289c378-fe80-4f58-bf41-ce67dbb1eac5.png",526,214,137,137,0,25);
+  img(sc,"625c34165bc367001879284f/9661b2fd-fd72-405b-ae8a-1d74a99d5b79.png",914,321,76,75,6.2,25);
+  img(sc,"625c34165bc367001879284f/d86f7700-583d-45f9-9f52-5919f3212496.png",974,348,59,59,0,26);
+  img(sc,"625c34165bc367001879284f/4e3dcad8-cf94-4582-be6c-08934cf7e739.png",46,38,275,275,-7.9,30);
+  img(sc,"625c34165bc367001879284f/c07f4829-8175-46ad-814a-37f6d4d31dc9.png",941,22,220,220,214.4,31);
+  const LINK="https://twh.boch.gov.tw/taiwan/index.aspx?lang=zh_tw";
+  const pop=u=>()=>modal('<img src="'+u+'" alt="">');
+  hit(sc,0,300,420,370,pop(G+"625c34165bc367001879284f/1662783673303-30.jpg/format=webp"),"看看珍珠寶盒");
+  hit(sc,484,470,330,190,pop(G+"625c34165bc367001879284f%2F1662783878536-29.jpg/format=webp"),"看看郵票");
+  hit(sc,46,38,275,275,()=>open(LINK,"_blank"),"臺灣世界遺產潛力點");
+  hit(sc,956,330,94,70,()=>open(LINK,"_blank"),"臺灣世界遺產潛力點");
+  api.enter=()=>{try{new Audio("https://audios.genially.com/59e059d30b9c21060cb4c2ec/f3d70c11-61ec-4765-923d-6d9c30c9a3ae.wav").play().catch(()=>{})}catch(e){}};
+  btn(sc,1080,600,100,52,"重玩",()=>location.reload(),"border-radius:10px;font-size:20px");
+});
+
+/* 每一頁的背景（原作設定） */
+const DESK="5ea4b72c1f18b00fbf2889bd/b903c75d-be7a-437a-a62c-9eea003aa66a.jpeg",WALL="625c34165bc367001879284f/745ea93e-f52c-4696-b433-bce823ea441e.jpeg";
+Object.entries({1:DESK,3:DESK,4:"625c34165bc367001879284f/53935933-54a9-484e-91cd-ed1fb3bd7a16.jpeg",5:DESK,7:DESK,10:DESK,11:WALL,12:WALL,13:WALL}).forEach(([i,p])=>{scenes[i].el.style.background="url('"+src(p)+"') center/1200px 675px no-repeat"});
+go(0);
+const T1=/[?&]test=1/.test(location.search);
+if(T1){const b=mk("div","","position:absolute;left:8px;top:8px;z-index:999;display:flex;gap:4px;flex-wrap:wrap;max-width:600px");scenes.forEach((s,i)=>{const x=mk("button","","font-size:14px",b);x.textContent=i;x.onclick=()=>go(i)})}
+</script>
+</body>
+</html>
