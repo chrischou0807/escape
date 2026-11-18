@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>盲人鎖</title>
+<style>
+:root{--bg:#1c2128;--card:#242a32;--line:#ffffff18;--ink:#e7e3da;--dim:#9aa1a9;--brass:#d9b878;--ok:#7fce9b;--bad:#e8857a}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;min-height:100%;background:radial-gradient(120% 90% at 50% 10%,#29313a,var(--bg) 50%,#161a20);color:var(--ink);font-family:"PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;user-select:none;-webkit-user-select:none}
+.wrap{max-width:560px;margin:0 auto;padding:18px 14px 40px;display:flex;flex-direction:column;align-items:center;gap:12px}
+.eb{color:var(--brass);font-size:12px;letter-spacing:3px}
+h1{margin:0;font-size:22px}
+.intro{color:var(--dim);font-size:14px;line-height:1.7;text-align:center;max-width:470px}
+.msg{min-height:24px;font-size:16px;text-align:center}
+.msg.ok{color:var(--ok)}.msg.bad{color:var(--bad)}
+button{font:inherit;font-weight:700;border:0;border-radius:999px;padding:10px 18px;background:var(--brass);color:#2b2010;cursor:pointer}
+button.g{background:#ffffff1a;color:var(--ink)}
+input{font:inherit;font-size:18px;padding:9px 12px;border-radius:10px;border:1px solid var(--line);background:#0f1216;color:var(--ink);width:150px;text-align:center;letter-spacing:4px}
+.row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;align-items:center}
+.shake{animation:shk .4s}@keyframes shk{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
+.note{font-size:12px;color:var(--dim);text-align:center;line-height:1.6;max-width:470px}
+
+.lockbox{position:relative;margin-top:70px;width:300px;padding:70px 18px 22px;border-radius:18px;background:linear-gradient(#5b636d,#3a4048);box-shadow:0 10px 30px #0008}
+.shackle{position:absolute;left:50%;top:-60px;width:150px;height:130px;margin-left:-75px;border:22px solid #b7bec6;border-bottom:0;border-radius:80px 80px 0 0;transition:transform .5s}
+.lockbox.open .shackle{transform:translateY(-34px)}
+.sws{display:flex;gap:10px;justify-content:center;background:#20252b;border-radius:10px;padding:14px 10px;position:relative;z-index:2}
+.sw{width:34px;height:90px;border-radius:8px;background:#11151a;position:relative;cursor:pointer;border:3px solid transparent}
+.sw i{position:absolute;left:4px;right:4px;height:40px;border-radius:6px;background:linear-gradient(#f2f2f2,#a9a9a9);transition:top .15s;box-shadow:0 2px 4px #0008}
+.sw.up i{top:4px}.sw:not(.up) i{top:42px}
+.sw.c-red{border-color:#d33}.sw.c-white{border-color:#fff}
+.pull{margin-top:14px}
+
+</style>
+</head>
+<body><div class="wrap">
+<div class="eb">機關範例</div>
+<h1>盲人鎖</h1>
+<div class="intro">鎖上有一排開關，每個開關可以扳上或扳下。全部扳對了，拉一下鎖才會開；扳錯不會告訴你錯在哪一個。</div>
+
+<div class="lockbox" id="box"><div class="shackle"></div><div class="sws" id="sws"></div></div>
+<div class="row pull"><button id="go">拉開鎖</button><button class="g" id="color">示範：加上顏色謎題</button></div>
+<div class="msg" id="msg"></div>
+<div class="note" id="clue"></div>
+<div class="note">老師設定：CONFIG.answer 決定每個開關要「上」或「下」。原本的盲人鎖沒有顏色；顏色是另外加上去的謎題，例如在開關外框塗紅、白色，再給線索「上紅下白」。</div>
+
+</div>
+<script>
+const $=id=>document.getElementById(id);
+function say(t,c){const m=$("msg");m.textContent=t;m.className="msg "+(c||"")}
+function shake(e){e.classList.remove("shake");void e.offsetWidth;e.classList.add("shake")}
+
+const CONFIG={answer:["上","下","上","上","下","下"],colors:["red","white","red","red","white","white"],clue:"線索：上紅下白"};
+const st=CONFIG.answer.map(()=>false);let colorOn=false,opened=false;
+const sws=CONFIG.answer.map((_,i)=>{const d=document.createElement("div");d.className="sw";d.innerHTML="<i></i>";d.onclick=()=>{if(opened)return;st[i]=!st[i];d.classList.toggle("up",st[i]);say("")};$("sws").appendChild(d);return d});
+$("go").onclick=()=>{if(opened)return;if(st.every((v,i)=>v===(CONFIG.answer[i]==="上"))){opened=true;$("box").classList.add("open");say("喀！鎖打開了。","ok")}else{shake($("box"));say("拉不開。","bad")}};
+$("color").onclick=()=>{colorOn=!colorOn;sws.forEach((d,i)=>{d.classList.toggle("c-"+CONFIG.colors[i],colorOn)});$("clue").textContent=colorOn?CONFIG.clue:"";$("color").textContent=colorOn?"拿掉顏色":"示範：加上顏色謎題"};
+
+</script>
+</body></html>
