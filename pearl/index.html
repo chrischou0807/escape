@@ -146,12 +146,13 @@ report({base:[["625c34165bc367001879284f/8741a4b6-d206-4428-9c02-f02a020b5205.pn
 scene((sc,api)=>{
   img(sc,"625c34165bc367001879284f/bf24d97a-6176-4230-a832-9805a44ca563.png",595,178,594,471,0,10);
   // 刮刮層：原作畫著銅壺筆的蠟染布；刮掉後露出背景布上的字母
-  const cv=mk("canvas","scratch","left:60px;top:120px;width:530px;height:450px",sc);cv.width=530;cv.height=450;const g=cv.getContext("2d");
-  g.fillStyle="#3f5a4c";g.fillRect(0,0,530,450);
-  const cloth=new Image();cloth.onload=()=>{const k=cloth.naturalWidth/1200;g.globalCompositeOperation="source-over";g.drawImage(cloth,(60-2)*k,120*k,530*k,450*k,0,0,530,450)};
+  const CX=69,CY=129,CW=507,CH=438;
+  const cv=mk("canvas","scratch","left:"+CX+"px;top:"+CY+"px;width:"+CW+"px;height:"+CH+"px",sc);cv.width=CW;cv.height=CH;const g=cv.getContext("2d");
+  g.fillStyle="#3f5a4c";g.fillRect(0,0,CW,CH);
+  const cloth=new Image();cloth.onload=()=>{const k=cloth.naturalWidth/1200;g.globalCompositeOperation="source-over";g.drawImage(cloth,(CX-2)*k,CY*k,CW*k,CH*k,0,0,CW,CH)};
   cloth.src=src("625c34165bc367001879284f/a9e9bb79-ba6b-4fc1-9493-07d98cd5c1e5.png");
-  mk("div","","position:absolute;left:60px;top:80px;font-size:22px;color:#444;z-index:5",sc).textContent="用手指刮刮看布上的銅壺筆。";
-  let down=false;const pt=e=>{const r=cv.getBoundingClientRect(),t=e.touches?e.touches[0]:e;return[(t.clientX-r.left)*530/r.width,(t.clientY-r.top)*450/r.height]};
+  mk("div","","position:absolute;left:69px;top:88px;font-size:22px;color:#444;z-index:5",sc).textContent="用手指刮刮看布上的銅壺筆。";
+  let down=false;const pt=e=>{const r=cv.getBoundingClientRect(),t=e.touches?e.touches[0]:e;return[(t.clientX-r.left)*CW/r.width,(t.clientY-r.top)*CH/r.height]};
   const rub=e=>{if(!down)return;e.preventDefault();const[x,y]=pt(e);g.globalCompositeOperation="destination-out";g.beginPath();g.arc(x,y,26,0,7);g.fill()};
   cv.addEventListener("pointerdown",e=>{down=true;rub(e)});addEventListener("pointerup",()=>down=false);cv.addEventListener("pointermove",rub);
   // 螢幕與鍵盤
