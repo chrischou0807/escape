@@ -90,6 +90,8 @@ section.in .r:nth-child(2){transition-delay:.12s}section.in .r:nth-child(3){tran
 .grid>.r:nth-child(2){transition-delay:.15s!important}.grid>.r:nth-child(3){transition-delay:.3s!important}.grid>.r:nth-child(4){transition-delay:.45s!important}
 .me-grid{grid-template-columns:minmax(200px,300px) 1fr;align-items:center;gap:34px}@media(max-width:820px){.me-grid{grid-template-columns:1fr}}
 .hide-date::selection{background:var(--orange);color:#fff}
+.hide-date{-webkit-user-select:text;user-select:text;-webkit-touch-callout:default;padding:6px 0;cursor:text}
+.hide-date.show{background:var(--orange);color:#fff!important;display:inline-block;padding:6px 10px;border-radius:6px}
 @media(prefers-reduced-motion:reduce){.r{opacity:1;transform:none;transition:none}#deck{scroll-behavior:auto}}
 .small{font-size:14px;color:var(--dim);margin-top:14px}
 .gh{background:#fff;border:1px solid #d0d7de;border-radius:10px;font:13px/1.5 -apple-system,"Segoe UI",Helvetica,Arial,sans-serif;color:#1f2328;padding:12px;margin-top:12px;text-align:left}
@@ -173,7 +175,7 @@ section.in .r:nth-child(2){transition-delay:.12s}section.in .r:nth-child(3){tran
 <section id="s17"><div class="wrap">
 <h2 class="r">線上參與小提醒</h2>
 <div class="grid g3">
-<div class="card r"><div class="no">01</div><h3>開兩個視窗</h3><p>一個開 AI，一個開範例庫或工作台。有雙螢幕更好。</p></div>
+<div class="card r"><div class="no">01</div><h3>歡迎隨時發問</h3><p>有問題歡迎隨時在聊天室留言發問喔！</p></div>
 <div class="card r"><div class="no b">02</div><h3>實作時先舉手</h3><p>開始實作時大家先舉手，做好了就放下。卡關打在聊天室：寫你做了什麼、出現什麼結果。</p></div>
 <div class="card r"><div class="no">03</div><h3>作品貼到 Padlet</h3><p>每一版都把網址貼上 Padlet，從 Padlet 點開彼此的機關來玩。</p></div>
 </div>
@@ -698,12 +700,21 @@ setCur(0);S[0].classList.add("in");
 var dials=[].slice.call(document.querySelectorAll("[data-d]")),msg=document.getElementById("lockmsg"),tries=0,ti=0,CODE="1630";
 try{if(sessionStorage.getItem("lockOpen")==="1")openLock(true)}catch(e){}
 function check(){if(!locked())return;var code=dials.map(function(x){return x.textContent}).join("");tries++;
- if(code===CODE){openLock(false)}else{msg.style.color="";msg.textContent=tries>24?"提示：四位數，就是今天的下課時間（16:30）。":tries>12?"提示：封面上有一行看不見的字，用滑鼠反白看看。":"打開密碼鎖，才能往下看。提示：今天的研習幾點下課？"}}
+ if(code===CODE){openLock(false)}else{msg.style.color="";msg.textContent=tries>24?"提示：四位數，就是今天的下課時間（16:30）。":tries>12?"提示：副標題下方有一行看不見的字。電腦用滑鼠反白，手機、平板長按那一行。":"打開密碼鎖，才能往下看。提示：今天的研習幾點下課？"}}
 function openLock(quiet){document.body.classList.remove("locked");dials.forEach(function(d,k){d.textContent=CODE[k];d.classList.add("open")});msg.textContent="🔓 打開了！這就是一個最簡單的線上密碼鎖。往下捲動繼續。";msg.style.color="#f0a37e";
  var h=document.getElementById("shint");h.innerHTML="往下捲動<br>﹀";try{sessionStorage.setItem("lockOpen","1")}catch(e){}
  if(!quiet)setTimeout(function(){S[1].scrollIntoView({behavior:"smooth"})},1400)}
 function typeDigit(k){dials[ti].textContent=k;ti=(ti+1)%dials.length;if(ti===0)check()}
 dials.forEach(function(d){d.onclick=function(){if(!locked())return;d.textContent=(+d.textContent+1)%10;check()}});
+})();
+</script>
+
+<script>
+(function(){var d=document.querySelector(".hide-date");if(!d)return;var t;
+function show(){d.classList.add("show")}
+d.addEventListener("touchstart",function(){t=setTimeout(show,450)},{passive:true});
+["touchend","touchmove","touchcancel"].forEach(function(e){d.addEventListener(e,function(){clearTimeout(t)},{passive:true})});
+d.addEventListener("contextmenu",function(e){if(matchMedia("(pointer:coarse)").matches){e.preventDefault();show()}});
 })();
 </script>
 </body>
