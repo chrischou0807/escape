@@ -557,10 +557,10 @@ section.in .r:nth-child(2){transition-delay:.12s}section.in .r:nth-child(3){tran
 <div class="row r" style="margin-top:16px"><a class="go-btn b" href="https://chrischou0807.github.io/escape/workbench/" target="_blank" rel="noopener">開啟工作台 ↗</a></div>
 </div></section>
 
-<section id="s14"><div class="wrap">
+<section id="s14" style="padding-top:36px;padding-bottom:56px"><div class="wrap">
 <p class="eyebrow r">實作第二版 · 15:35–16:05</p>
 <h2 class="r">寫出行為，更新到 GitHub</h2>
-<p class="lead r" style="margin-bottom:14px">把三句話和第一版的程式碼一起貼給 AI，拿到新的檔案後，上傳同一個檔名取代舊的。網址不變，玩家重新整理就是第二版。</p>
+<p class="lead r" style="margin-bottom:14px">三句話＋第一版程式碼貼給 AI，新檔案用同一個檔名上傳取代舊的。網址不變，重新整理就是第二版。</p>
 <div class="grid g4">
 <div class="card r" style="padding:18px"><div class="no">01</div><h3>還是存成 index.html</h3><p>新程式碼存成 index.html，放回同一個資料夾。電腦自動存成 index (1).html 的話，先改回來。</p>
 <div class="gh"><div class="t">📁 lock</div><span class="hl">📄 index.html</span> <span style="color:#1f883d">（第二版）</span><div style="margin-top:6px;font-size:11px;color:#59636e">檔名一樣，才會取代</div></div></div>
@@ -570,6 +570,11 @@ section.in .r:nth-child(2){transition-delay:.12s}section.in .r:nth-child(3){tran
 <div class="gh"><div class="drop" style="margin-top:0">📄 index.html</div>Commit message<div class="f hl">第二版：答錯時寶箱晃一下</div><span class="gb">Commit changes</span></div></div>
 <div class="card r" style="padding:18px"><div class="no">04</div><h3>看歷程、比兩版</h3><p>點開檔案按 History，點一筆紀錄，看改了哪幾行。</p>
 <div class="gh"><b class="hl" style="padding:0 4px">🕘 History</b><div style="margin-top:6px;border-top:1px solid #d0d7de;padding-top:4px">● 第二版：答錯時寶箱晃一下<br>● 第一版</div><div style="font-family:monospace;font-size:11px;margin-top:6px"><span style="background:#ffebe9">- alert("錯誤")</span><br><span style="background:#dafbe1">+ box.classList.add("shake")</span></div></div></div>
+</div>
+<div class="note warn r" style="margin-top:14px;display:grid;grid-template-columns:auto 1fr 1fr;gap:14px 22px;align-items:start;font-size:15px;line-height:1.6;padding:14px 20px">
+<b style="font-size:16px">⚠ Commit 時<br>選哪一個？</b>
+<div><b>◉ Commit directly to the main branch</b>　✅ 選這個<br>直接存進 main，一兩分鐘後網址就是新版。</div>
+<div><b>○ Create a new branch…pull request</b><br>先存成草稿，要再到 Pull requests 按 Merge 才會上線。選錯了就重新上傳一次。</div>
 </div>
 <p class="small r">另一種做法：點開檔案、按右上角鉛筆，全選刪除後貼上新程式碼再 Commit。畫面為示意；貼上 Padlet 時把「第一版」改成「第二版」。</p>
 </div></section>
