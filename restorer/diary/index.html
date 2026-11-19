@@ -118,7 +118,7 @@ var PZ={
  k:"紅外線影像可以看見被覆蓋的畫面。有一幅廟宇壁畫被長年的香火燻黑，就是靠紅外線才看見煙燻底下原作的樣貌。"},
 "18":{t:"兩種墨水",spec:"wood",fmt:"？？？（英文）",a:["XRF"],
  s:"日記前後的字跡顏色不太一樣。檢測單被墨水潑到，儀器的名稱看不清楚了。",
- h1:"看示範：塗了一半的圓點連起來是 K。",h2:"把每一格裡塗了一半的圓點想像成全黑，其他忽略，就會浮現字母。",
+ h1:"看示範：六個圓圈裡的墨跡連起來是 K。",h2:"每一格只剩六個圓圈裡的墨跡。把圓圈之間斷掉的筆畫補起來，就會浮現字母。",
  r:"XRF 測出兩種成分不同的墨水：前一百頁是一種，後五十二頁是另一種。中間隔了很多年。",
  k:"X 射線螢光光譜儀（XRF）是非破壞性的檢測方法，能快速分析文物所含的元素與含量高低，幫助判斷不同時期所用的材料。"},
 "19":{t:"褪色的頁首",spec:"paper",fmt:"？？？？？（英文）",a:["STORY"],
@@ -345,11 +345,14 @@ var RENDER={
   [["11","36","33","2"],["36","26","","4"],["14","35","30","4"]].forEach(function(g){ var t=g[3]; H("div","position:relative;padding-right:16px",g.slice(0,3).filter(Boolean).join("<br>")+'<span style="position:absolute;right:0;top:34%;font-size:15px">'+t+'</span>',r); });
   var tb=H("div","background:linear-gradient(180deg,#5b5ea6,#e9c98a);border-radius:8px;padding:10px;width:100%",null,el); H("div","text-align:center;color:#fff;font-size:14px;letter-spacing:3px;margin-bottom:6px","國語注音符號手冊",tb);
   var g=H("div","display:grid;grid-template-columns:repeat(7,1fr);gap:4px",null,tb); "ㄅㄆㄇㄈㄉㄊㄋㄌㄍㄎㄏㄐㄑㄒㄓㄔㄕㄖㄗㄘㄙㄚㄛㄜㄝㄞㄟㄠㄡㄢㄣㄤㄥㄦㄧㄨㄩ".split("").forEach(function(c){ H("div","background:rgba(255,255,255,.85);border-radius:5px;text-align:center;font-size:18px;font-weight:700;padding:3px 0;color:#2b2420",c,g); }); },
-"18":function(el){ var F={K:"10001,10010,10100,11000,10100,10010,10001",X:"10001,10001,01010,00100,01010,10001,10001",R:"11110,10001,10001,11110,10100,10010,10001",F:"11111,10000,10000,11110,10000,10000,10000"};
-  function grid(ch,parent){ var g=H("div","display:grid;grid-template-columns:repeat(5,13px);gap:4px;padding:8px;border:2px solid #9a8f80;border-radius:6px;background:#fff",null,parent);
-    F[ch].split(",").join("").split("").forEach(function(b,i){ var deg=[0,90,180,270,45,135][(i*7+ch.charCodeAt(0))%6]; H("div","width:13px;height:13px;border-radius:50%;border:1.5px solid #9a8f80;background:"+(b==="1"?"linear-gradient("+deg+"deg,#2b2420 50%,#fff 50%)":"#fff"),null,g); }); }
+"18":function(el){ var NS="http://www.w3.org/2000/svg", P={K:"M14 2V88M54 4L16 50M26 38L54 86",X:"M8 4L52 86M52 4L8 86",R:"M14 88V6H36Q54 6 54 26Q54 46 36 46H14M32 46L54 86",F:"M14 88V6H54M14 45H46"}, uid=0;
+  function grid(ch,parent){ var id="xc"+(uid++), s=document.createElementNS(NS,"svg"); s.setAttribute("viewBox","-3 -3 66 96"); s.setAttribute("width","70"); s.setAttribute("height","101"); s.style.cssText="background:#fff;border:2px solid #9a8f80;border-radius:6px;padding:3px";
+    var cp='<clipPath id="'+id+'">', ring="";
+    [15,45].forEach(function(x){ [15,45,75].forEach(function(y){ cp+='<circle cx="'+x+'" cy="'+y+'" r="14"/>'; ring+='<circle cx="'+x+'" cy="'+y+'" r="14" fill="none" stroke="#9a8f80" stroke-width="2"/>'; }); });
+    s.innerHTML='<defs>'+cp+'</clipPath></defs><path d="'+P[ch]+'" fill="none" stroke="#2b2420" stroke-width="15" stroke-linecap="square" stroke-linejoin="miter" clip-path="url(#'+id+')"/>'+ring;
+    parent.appendChild(s); }
   var ex=H("div","display:flex;align-items:center;gap:12px;font-size:30px;font-weight:900",null,el); H("span","font-size:14px;font-weight:700","補色復原字母 🖌️",ex); grid("K",ex); H("span",null,"＝ K",ex);
-  var r=H("div","display:flex;gap:10px",null,el); ["X","R","F"].forEach(function(c){grid(c,r);}); },
+  var r=H("div","display:flex;gap:12px",null,el); ["X","R","F"].forEach(function(c){grid(c,r);}); },
 "19":function(el){ var fr=H("div","position:relative;background:radial-gradient(circle at 30% 30%,#3b5fb0,#16234d 70%);border:10px solid #8a4b1c;border-radius:4px;padding:16px 22px 46px;color:#fff;font-size:22px;font-weight:700;line-height:1.7;min-width:200px",null,el);
   ["easy","&nbsp;teacher","hope","&nbsp;&nbsp;more","&nbsp;happy"].forEach(function(w){ H("div",null,w,fr); });
   var tag=H("div","position:absolute;left:50%;bottom:8px;transform:translateX(-50%) rotate(-3deg);font-family:var(--mono);font-size:22px;letter-spacing:4px;color:#c8a6ff;text-shadow:0 0 10px #a070ff;opacity:0;transition:opacity .4s","31235",fr);
