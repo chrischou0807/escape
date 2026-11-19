@@ -320,6 +320,18 @@ section.in .r:nth-child(2){transition-delay:.12s}section.in .r:nth-child(3){tran
 <div class="note info r">第一版用範例庫：直接「下載 HTML」，或「複製提示詞」換成自己的內容。做第二版時，再用工作台把行為拆清楚。</div>
 </div></section>
 
+<section id="ai3"><div class="wrap">
+<p class="eyebrow r">用 AI 生成程式碼</p>
+<h2 class="r">Claude、ChatGPT、Gemini 怎麼用？</h2>
+<table class="r tight" style="font-size:15px"><tr><th style="width:15%"></th><th>Claude</th><th>ChatGPT</th><th>Gemini</th></tr>
+<tr><td><b>預覽在哪裡</b></td><td>Artifacts：右側直接出現可以玩的畫面</td><td>回覆裡的程式碼區塊，切到「Preview」預覽</td><td>輸入框下方先選 <b>Canvas</b>，右側出現畫面</td></tr>
+<tr><td><b>要注意</b></td><td>先到設定 → 功能，打開「程式碼執行與檔案建立」才會出現預覽；免費版訊息額度少</td><td>有時只給片段或拆成好幾塊，就無法預覽，要請它給單一 HTML 檔；Canvas 已於 2026 年 5 月移除，網路教學多是舊畫面</td><td>沒選 Canvas 只會給程式碼；學校帳號的分享可能被管理員關閉</td></tr>
+<tr><td><b>分享</b></td><td>發布成公開連結，免費版也可以</td><td>部分程式碼區塊可分享唯讀連結，或分享整段對話</td><td>分享連結只能在 gemini.google.com 開；可一鍵「匯出 → Google 協作平台」</td></tr>
+</table>
+<div class="callout r"><span class="ic">◆</span>不管用哪一家，最後都請它「給我完整的單一 HTML 檔」，複製存成 index.html，再上傳 GitHub。<br>AI 的分享連結綁在帳號和對話上；放 GitHub，網址才是你的。</div>
+<p class="small r">各家功能更新很快，以上為 2026 年 11 月的狀況，實際畫面以各平台為準。</p>
+</div></section>
+
 <!-- 上架 -->
 <section id="u1"><div class="wrap">
 <p class="eyebrow r">上架</p>
@@ -333,14 +345,26 @@ section.in .r:nth-child(2){transition-delay:.12s}section.in .r:nth-child(3){tran
 
 <section id="u2"><div class="wrap">
 <h2 class="r">放在哪裡？平台比較</h2>
-<table class="r"><tr><th>平台</th><th>怎麼上架</th><th>免費版限制</th><th>版本歷程</th></tr>
+<table class="r tight" style="font-size:15px"><tr><th>平台</th><th>怎麼上架</th><th>免費版限制</th><th>版本歷程</th></tr>
 <tr><td><b>GitHub Pages</b><br><span class="pill o" style="margin-top:6px">今天用這個</span></td><td>網頁上傳檔案</td><td>必須公開；容量建議 1 GB 內</td><td>有，每次修改都留紀錄</td></tr>
 <tr><td><b>Google Apps Script</b></td><td>貼程式碼，部署成網頁應用程式</td><td>網頁包在 iframe 裡，鏡頭、麥克風可能受限；網址很長</td><td>有部署版本</td></tr>
 <tr><td><b>Vercel</b></td><td>連 GitHub 或拖曳上傳</td><td>只限個人、非商業使用</td><td>有部署紀錄</td></tr>
 <tr><td><b>Netlify Drop</b></td><td>把資料夾拖進網頁</td><td>每月點數有限，部署和流量都扣點</td><td>有部署紀錄</td></tr>
+<tr><td><b>Google 協作平台</b><br><span class="small" style="margin:0">Google Sites</span></td><td>插入 → 嵌入 → 嵌入程式碼，貼上 HTML；Gemini 可直接匯出</td><td>程式包在框裡，大小要手動拉；鏡頭、全螢幕可能受限。可設成只有學校帳號能看</td><td>有，協作平台的版本紀錄</td></tr>
 <tr><td><b>AI 網頁的分享</b><br><span class="small" style="margin:0">Gemini、ChatGPT、Claude……</span></td><td>AI 做完直接按分享</td><td>綁在帳號和對話上，各家規則不同</td><td>跟著對話走</td></tr>
 </table>
-<div class="callout r"><span class="ic">◆</span>單一 HTML 的機關，放 GitHub Pages：免費、有歷程，網址不會因為刪了對話就消失。<br>要記錄學生作答、接試算表，再考慮 Apps Script。</div>
+<div class="callout r"><span class="ic">◆</span>單一 HTML 的機關，放 GitHub Pages：免費、有歷程，網址不會因為刪了對話就消失。<br>只想讓校內看、不想公開，嵌進 Google 協作平台；要記錄作答、接試算表，再考慮 Apps Script。</div>
+</div></section>
+
+<section id="ghwhy" style="padding-top:40px;padding-bottom:60px"><div class="wrap">
+<p class="eyebrow r">GitHub 是什麼？</p>
+<h2 class="r">借用工程師的平台來上架</h2>
+<p class="lead r">GitHub 本來是工程師放程式碼、記錄每次修改、多人協作的地方。它附帶一個 <b>GitHub Pages</b> 功能，能把資料夾直接變成網站，我們借用的就是這個。</p>
+<div class="vs">
+<div class="card good r"><span class="pill o">優勢</span><h3>為什麼適合放機關</h3><ul style="margin:6px 0 0;padding-left:20px;line-height:1.6;font-size:15px;color:var(--dim)"><li><b>免費</b>：不用付費、不用信用卡，註冊就能用</li><li><b>有修改歷程</b>：每次上傳都留紀錄，可以比對兩版、退回舊版，這正是它的本業</li><li><b>網址穩定</b>：不綁 AI 帳號或對話，刪掉對話網址也還在</li><li><b>一個機關一個網址</b>：資料夾名稱就是網址，好記、好分享</li><li><b>單一 HTML 剛剛好</b>：機關都是靜態網頁，正是 Pages 能放的東西</li></ul></div>
+<div class="card r"><span class="pill b">不適合</span><h3>這些情況換別的平台</h3><ul style="margin:6px 0 0;padding-left:20px;line-height:1.6;font-size:15px;color:var(--dim)"><li><b>需要後端的功能</b>：記錄作答、登入、存資料都做不到，要另外接 Apps Script 等服務</li><li><b>不能公開的內容</b>：免費版程式碼一定公開，答案寫在程式裡也看得到</li><li><b>大流量或商業網站</b>：有容量與流量的軟上限，不適合架大型網站</li><li><b>全英文介面</b>：按鈕都是英文，第一次要花點時間熟悉</li><li><b>不是即時更新</b>：上傳後要等 1～2 分鐘，舊畫面可能要強制重新整理</li></ul></div>
+</div>
+<div class="callout r"><span class="ic">◆</span>一句話：GitHub 像「程式碼的雲端硬碟＋修改紀錄」，Pages 是它順便提供的「把資料夾變成網站」。</div>
 </div></section>
 
 <section id="u3"><div class="wrap">
@@ -370,6 +394,23 @@ section.in .r:nth-child(2){transition-delay:.12s}section.in .r:nth-child(3){tran
 <div class="gh"><div class="live">Your site is live at<br><a>帳號.github.io/escape/</a></div><div style="margin-top:8px">這個機關的網址：<br><b>帳號.github.io/escape/lock/</b></div></div></div>
 </div>
 <p class="small r">畫面為示意，實際按鈕位置以 GitHub 為準。一個機關一個資料夾，檔名都用 index.html，網址就是資料夾名稱，又短又好記。</p>
+</div></section>
+
+<section id="gs"><div class="wrap">
+<p class="eyebrow r">另一條路 · 不想公開時</p>
+<h2 class="r">手動上架到 Google 協作平台</h2>
+<div class="grid g4">
+<div class="card r" style="padding:18px"><div class="no">01</div><h3>建立網站</h3><p>打開 sites.google.com，按「空白」建立新網站，取個名字。</p>
+<div class="gh"><div class="t">Google 協作平台</div><span class="f hl" style="display:inline-block">＋ 空白</span><div style="margin-top:6px">未命名的網站</div></div></div>
+<div class="card r" style="padding:18px"><div class="no">02</div><h3>嵌入程式碼</h3><p>右側「插入」→「嵌入」→ 切到「嵌入程式碼」，貼上整份 HTML，按「下一步」→「插入」。</p>
+<div class="gh"><div class="tabs"><span>依網址</span><span class="hl" style="color:#1f2328">嵌入程式碼</span></div><div class="f" style="font-family:monospace;font-size:11px">&lt;!DOCTYPE html&gt;…</div><span class="gb" style="background:#1a73e8">下一步</span></div></div>
+<div class="card r" style="padding:18px"><div class="no">03</div><h3>把框拉大</h3><p>拖曳框的邊角拉到整頁寬、夠高，按右上角預覽，確認整個機關都看得到、能玩。</p>
+<div class="gh"><div style="border:2px solid var(--orange);border-radius:6px;height:58px;display:flex;align-items:center;justify-content:center;color:#59636e;position:relative">機關畫面<span style="position:absolute;right:-6px;bottom:-6px;width:12px;height:12px;background:var(--orange);border-radius:2px"></span></div><div style="margin-top:6px;font-size:11px;color:#59636e">拉右下角放大</div></div></div>
+<div class="card r" style="padding:18px"><div class="no">04</div><h3>發布</h3><p>右上角「發布」，設定網址名稱。可以只給學校帳號看，也可以公開。</p>
+<div class="gh">網址<div class="f">sites.google.com/view/<b class="hl">escape</b></div>誰可以查看<div class="f hl">學校網域內 ▾</div><span class="gb" style="background:#1a73e8">發布</span></div></div>
+</div>
+<div class="note info r" style="margin-top:16px">用 Gemini Canvas 做的機關：按「匯出 → Google 協作平台」，會自動完成 01～03，變成一份私人草稿，再按發布就好。</div>
+<p class="small r">要改版：編輯嵌入框、貼上新程式碼，再按發布。程式在框裡執行，鏡頭、全螢幕、下載檔案可能無法使用；畫面為示意。</p>
 </div></section>
 
 <section id="u5"><div class="wrap">
@@ -557,10 +598,10 @@ section.in .r:nth-child(2){transition-delay:.12s}section.in .r:nth-child(3){tran
 <div class="row r" style="margin-top:16px"><a class="go-btn b" href="https://chrischou0807.github.io/escape/workbench/" target="_blank" rel="noopener">開啟工作台 ↗</a></div>
 </div></section>
 
-<section id="s14"><div class="wrap">
+<section id="s14" style="padding-top:36px;padding-bottom:56px"><div class="wrap">
 <p class="eyebrow r">實作第二版 · 15:35–16:05</p>
 <h2 class="r">寫出行為，更新到 GitHub</h2>
-<p class="lead r" style="margin-bottom:14px">把三句話和第一版的程式碼一起貼給 AI，拿到新的檔案後，上傳同一個檔名取代舊的。網址不變，玩家重新整理就是第二版。</p>
+<p class="lead r" style="margin-bottom:14px">三句話＋第一版程式碼貼給 AI，新檔案用同一個檔名上傳取代舊的。網址不變，重新整理就是第二版。</p>
 <div class="grid g4">
 <div class="card r" style="padding:18px"><div class="no">01</div><h3>還是存成 index.html</h3><p>新程式碼存成 index.html，放回同一個資料夾。電腦自動存成 index (1).html 的話，先改回來。</p>
 <div class="gh"><div class="t">📁 lock</div><span class="hl">📄 index.html</span> <span style="color:#1f883d">（第二版）</span><div style="margin-top:6px;font-size:11px;color:#59636e">檔名一樣，才會取代</div></div></div>
@@ -570,6 +611,11 @@ section.in .r:nth-child(2){transition-delay:.12s}section.in .r:nth-child(3){tran
 <div class="gh"><div class="drop" style="margin-top:0">📄 index.html</div>Commit message<div class="f hl">第二版：答錯時寶箱晃一下</div><span class="gb">Commit changes</span></div></div>
 <div class="card r" style="padding:18px"><div class="no">04</div><h3>看歷程、比兩版</h3><p>點開檔案按 History，點一筆紀錄，看改了哪幾行。</p>
 <div class="gh"><b class="hl" style="padding:0 4px">🕘 History</b><div style="margin-top:6px;border-top:1px solid #d0d7de;padding-top:4px">● 第二版：答錯時寶箱晃一下<br>● 第一版</div><div style="font-family:monospace;font-size:11px;margin-top:6px"><span style="background:#ffebe9">- alert("錯誤")</span><br><span style="background:#dafbe1">+ box.classList.add("shake")</span></div></div></div>
+</div>
+<div class="note warn r" style="margin-top:14px;display:grid;grid-template-columns:auto 1fr 1fr;gap:14px 22px;align-items:start;font-size:15px;line-height:1.6;padding:14px 20px">
+<b style="font-size:16px">⚠ Commit 時<br>選哪一個？</b>
+<div><b>◉ Commit directly to the main branch</b>　✅ 選這個<br>直接存進 main，一兩分鐘後網址就是新版。</div>
+<div><b>○ Create a new branch…pull request</b><br>先存成草稿，要再到 Pull requests 按 Merge 才會上線。選錯了就重新上傳一次。</div>
 </div>
 <p class="small r">另一種做法：點開檔案、按右上角鉛筆，全選刪除後貼上新程式碼再 Commit。畫面為示意；貼上 Padlet 時把「第一版」改成「第二版」。</p>
 </div></section>
