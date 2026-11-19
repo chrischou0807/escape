@@ -93,7 +93,7 @@ function drag2(e){let d=null;const k=()=>stage.getBoundingClientRect().width/120
   const up=()=>{d=null;e.style.cursor="grab"};e.addEventListener("pointerup",up);e.addEventListener("pointercancel",up)}
 const scenes=[];let cur=0;
 function scene(build){const sc=mk("div","scene");const api={el:sc,enter:null};build(sc,api);scenes.push(api);return scenes.length-1}
-function go(i){scenes[cur].el.classList.remove("on");cur=i;scenes[i].el.classList.add("on");if(scenes[i].enter)scenes[i].enter();try{sessionStorage.setItem("pearl-scene",i)}catch(e){}}
+function go(i){if(scenes[cur].leave)scenes[cur].leave();scenes[cur].el.classList.remove("on");cur=i;scenes[i].el.classList.add("on");if(scenes[i].enter)scenes[i].enter();try{sessionStorage.setItem("pearl-scene",i)}catch(e){}}
 const next=()=>go(cur+1), back=()=>go(Math.max(0,cur-1));
 const navBack=sc=>btn(sc,12,558,52,52,"‹",back,"font-size:34px");
 const navNext=(sc,label)=>btn(sc,156,513,60,60,label||"›",next,"font-size:34px");
@@ -183,12 +183,50 @@ report({base:[["625c34165bc367001879284f/0fa07f31-e236-4dee-9a3b-8a82100ba25b.pn
   [P.pKeris,202,260,123,123,0,20],[P.pBatik,51,156,166,166,0,21]],
   cover:[["625c34165bc367001879284f/ee5fba09-9bdd-47d2-8812-d8876d422482.png",295,-20,478,677],["625c34165bc367001879284f/119d5420-e6d0-45df-b825-85756a908e58.png",727,2,362,633]]});
 
+/* ===== 峇里島風格背景音樂（Web Audio 即時合成，不用音檔） =====
+   音階：峇里島佩洛格（selisir）五音；搖竹＝兩支差八度的竹管快速連擊；
+   大鑼兩個音高略有差距，產生峇里島甘美朗特有的「ombak」波動。 */
+const BALI=(()=>{
+  let ac=null,master=null,timer=null,next=0,step=0,on=false,muted=false;
+  const BASE=293.7, SC=[1,1.066,1.19,1.5,1.59];           // ding dong deng dung dang
+  const f=(d,o)=>BASE*SC[((d%5)+5)%5]*Math.pow(2,Math.floor(d/5)+(o||0));
+  const MEL=[0,2,3,2, 4,3,2,0, 2,3,4,5, 4,3,2,-1,  0,-1,0,2, 3,2,3,4, 5,4,3,2, 3,2,0,-1];  // 32 拍一輪
+  const BEAT=60/84;
+  function ctx(){if(!ac){const A=window.AudioContext||window.webkitAudioContext;if(!A)return null;ac=new A();master=ac.createGain();master.gain.value=0;
+      const comp=ac.createDynamicsCompressor();master.connect(comp);comp.connect(ac.destination)}return ac}
+  // 一次敲擊竹管：基音＋八度＋竹子的不諧和泛音，加一點竹管碰撞的雜音
+  function tube(t,fr,amp){
+    [[1,1,.22],[2,.45,.12],[3.94,.18,.05]].forEach(([m,a,dec])=>{const o=ac.createOscillator(),g=ac.createGain();o.type="sine";o.frequency.value=fr*m;
+      g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(amp*a,t+.004);g.gain.exponentialRampToValueAtTime(.0001,t+dec);o.connect(g);g.connect(master);o.start(t);o.stop(t+dec+.02)});
+    const n=ac.createBufferSource(),b=ac.createBuffer(1,ac.sampleRate*.03,ac.sampleRate),d=b.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*(1-i/d.length);
+    const bp=ac.createBiquadFilter(),g=ac.createGain();bp.type="bandpass";bp.frequency.value=fr*5;bp.Q.value=4;g.gain.value=amp*.25;n.buffer=b;n.connect(bp);bp.connect(g);g.connect(master);n.start(t)}
+  // 搖竹一個音：一直搖，所以是連續的快速連擊，兩支竹管輪流響
+  function angklung(t,fr,dur,amp){const rate=1/15;for(let k=0,x=0;x<dur;k++,x+=rate*(.85+Math.random()*.3)){const env=Math.min(1,x/.05)*Math.min(1,(dur-x)/.12);
+      tube(t+x,k%2?fr*2.004:fr,amp*env*(k%2?.55:1))}}
+  function gong(t,fr,amp){[fr,fr*1.008].forEach(x=>{const o=ac.createOscillator(),g=ac.createGain();o.frequency.value=x;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(amp,t+.03);g.gain.exponentialRampToValueAtTime(.0001,t+4.5);o.connect(g);g.connect(master);o.start(t);o.stop(t+4.6)})}
+  function tick(t,amp){const o=ac.createOscillator(),g=ac.createGain();o.frequency.value=1250;g.gain.setValueAtTime(amp,t);g.gain.exponentialRampToValueAtTime(.0001,t+.05);o.connect(g);g.connect(master);o.start(t);o.stop(t+.06)}
+  function sched(){while(next<ac.currentTime+.6){const i=step%MEL.length,t=next;
+      angklung(t,f(MEL[i]),BEAT*.92,.16);
+      if(i%4===2)angklung(t,f(MEL[i]+2,-1),BEAT*.9,.08);               // 低音搖竹補和聲
+      if(i%16===0)gong(t,f(0,-2),.35); else if(i%8===0)gong(t,f(3,-2),.18); // 大鑼、小鑼
+      if(i%2===1)tick(t,.05);                                         // 打拍子的小鑼
+      next+=BEAT;step++}}
+  return{
+    play(){if(on)return;const a=ctx();if(!a)return;a.resume&&a.resume();on=true;next=a.currentTime+.1;step=0;
+      master.gain.cancelScheduledValues(a.currentTime);master.gain.setValueAtTime(master.gain.value,a.currentTime);master.gain.linearRampToValueAtTime(muted?0:.9,a.currentTime+1.5);
+      sched();timer=setInterval(sched,150)},
+    stop(){if(!on)return;on=false;clearInterval(timer);const t=ac.currentTime;master.gain.cancelScheduledValues(t);master.gain.setValueAtTime(master.gain.value,t);master.gain.linearRampToValueAtTime(0,t+.8)},
+    mute(m){muted=m;if(ac&&on){const t=ac.currentTime;master.gain.cancelScheduledValues(t);master.gain.setValueAtTime(master.gain.value,t);master.gain.linearRampToValueAtTime(m?0:.9,t+.3)}},
+    shake(d){const a=ctx();if(!a)return;a.resume&&a.resume();if(!on){master.gain.cancelScheduledValues(a.currentTime);master.gain.setValueAtTime(.9,a.currentTime)}angklung(a.currentTime+.01,f(d==null?Math.floor(Math.random()*5):d),.6,.2)},
+    get muted(){return muted}
+  }})();
+
 /* ===== 6 搖竹：保險箱密碼 ===== */
 scene((sc,api)=>{
   img(sc,"625c34165bc367001879284f/ed5faa1e-2580-40ff-b27b-a64865ff2adb.jpeg",0,0,1204,677,0,1);
   // 兩支搖竹可以拖著在畫面上移動，玩家自己判斷要對到底圖哪裡
   const ANG=[[125,350,31.1],[526,50,-33.8]];
-  const angs=ANG.map(([x,y,r],i)=>{const e=img(sc,"625c34165bc367001879284f/e2bb252c-327c-4e69-ba13-fb785e901306.png",x,y,195,276,r,6+i);e.style.pointerEvents="auto";e.style.cursor="grab";e.style.touchAction="none";drag2(e);return e});
+  const angs=ANG.map(([x,y,r],i)=>{const e=img(sc,"625c34165bc367001879284f/e2bb252c-327c-4e69-ba13-fb785e901306.png",x,y,195,276,r,6+i);e.style.pointerEvents="auto";e.style.cursor="grab";e.style.touchAction="none";drag2(e);e.addEventListener("pointerdown",()=>{if(!BALI.muted)BALI.shake(i?3:0)});return e});
   const safe=img(sc,"625c34165bc367001879284f/e0f473b0-2a48-41d0-9a06-cefffddb37bf.png",801,267,379,399,0,4);
   const opened=img(sc,"625c34165bc367001879284f/d72d2e55-7e94-4618-9699-4a8f2bd61c21.png",754,232,438,447,0,5);
   const scr=mk("div","screen","left:930px;top:296px;width:120px;height:34px;font-size:24px;background:#10202a;border-radius:4px",sc);
@@ -198,8 +236,10 @@ scene((sc,api)=>{
       if(typed.length===3){if(typed==="817"){solved=true;scr.textContent="開啟";scr.style.color="#7fe39a";setTimeout(()=>{safe.classList.add("hide");keys.forEach(k=>k.classList.add("hide"));scr.classList.add("hide");opened.classList.remove("hide");opened.classList.add("pop");ph.classList.remove("hide");toast("保險箱打開了！點珍珠收下它")},500)}
         else{scr.textContent="錯誤";scr.style.color="#ff7a6a";scr.classList.add("shake");setTimeout(()=>{scr.classList.remove("shake");typed="";show()},900)}}}});
   const ph=hit(sc,860,320,320,280,next,"收下珍珠");
-  api.enter=()=>{if(!solved){opened.classList.add("hide");ph.classList.add("hide");typed="";show()}};
-  mk("div","","position:absolute;left:60px;top:12px;font-size:20px;color:#444;z-index:5",sc).textContent="搖竹可以拖著移動。";
+  const mus=btn(sc,1108,12,76,44,"🔊",()=>{BALI.mute(!BALI.muted);mus.innerHTML=BALI.muted?"🔇":"🔊"},"border-radius:22px;font-size:22px;z-index:20");mus.title="背景音樂開／關";
+  api.enter=()=>{if(!solved){opened.classList.add("hide");ph.classList.add("hide");typed="";show()}BALI.play()};
+  api.leave=()=>BALI.stop();
+  mk("div","","position:absolute;left:60px;top:12px;font-size:20px;color:#444;z-index:5",sc).textContent="搖竹可以拖著移動，拿起來會響。";
   navBack(sc);
   hintBtn(sc,["這種竹製樂器叫「搖竹（Angklung）」，印尼國家慶典會演奏。","印尼的國家慶典是哪一天？","印尼的獨立紀念日是 8 月 17 日。","答案：817"]);
 });
